@@ -1,0 +1,356 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f7f9;
+}
+
+.dashboard-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #0a3d62;
+  color: white;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.sidebar .logo {
+  display: flex;
+  margin-top: 15px; /* Adjust the value as needed to move the logo image down */
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.logo-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)); /* Add a glowing effect */
+  transition: filter 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.logo-img:hover {
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 1)); /* Intensify glow on hover */
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1.2;
+  text-align: left;
+  color: white;
+}
+
+.logo-text .tagline {
+  display: block;
+  font-size: 12px;
+  font-weight: normal;
+  color: #d1ecf1;
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 25px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar li:hover,
+.sidebar li.active {
+  background-color: #f4f7f9;   /* Matches main content */
+  color: #0a3d62;              /* Matches your text color */
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  font-weight: 600;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #f4f7f9;
+}
+
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 20px 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #0a3d62;
+}
+
+.header-tools {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+}
+
+.notif-icon {
+  position: relative;
+  font-size: 25px;
+  cursor: pointer;
+  color: #0a3d62;
+}
+
+.notif-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #e55039;
+  color: white;
+  font-size: 8px;
+  padding: 5px 10px;
+  border-radius: 50%;
+}
+
+.profile-wrapper {
+  position: relative;
+  cursor: pointer;
+}
+
+.profile-img {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  padding: 10px;
+  width: 150px;
+  z-index: 100;
+}
+
+.profile-dropdown p {
+  margin: 8px 0;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.profile-dropdown p:hover {
+  background-color: #f0f0f0;
+}
+
+.hero-banner {
+  margin-bottom: 20px;
+  background: linear-gradient(to right, #0a3d62, #3c6382);
+  color: white;
+  font-size:32;
+  font-weight: bold;
+  padding: 20px 30px;
+  border-radius: 10px;
+  margin: 5px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Enhance shadow for emphasis */
+  animation: fadeSlideUp 0.7s ease-out both;
+}
+
+.hero-banner h2 {
+
+  margin: 0;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.subtext {
+  font-size: 13px;
+  opacity: 0.9;
+  margin-top: 4px;
+}
+
+/* Animations */
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animated {
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+}
+
+.fadeIn {
+  animation-name: fadeIn;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+.floating-notif {
+  position: fixed;               /* Make it float */
+  top: 37px;
+  right: 30px;
+  background: #0a3d62;
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 999;                  /* Ensure it’s above everything */
+}
+
+.wiggle-bell {
+  animation: wiggle 1s infinite ease-in-out;
+  font-size: 20px;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(10deg); }
+  50% { transform: rotate(-10deg); }
+  75% { transform: rotate(6deg); }
+}
+.dashboard-overview {
+  padding: 20px 10px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animated-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #0a3d62;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.dashboard-subtext {
+  font-size: 14px;
+  margin-bottom: 30px;
+  color: #555;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.stats-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #0a3d62, #3c6382);
+  color: white;
+  flex: 1;
+  min-width: 220px;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: scale(0.98);
+  animation: popIn 0.5s ease forwards;
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: scale(1.03);
+}
+
+.stat-number {
+  font-size: 30px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.delay-1 { animation-delay: 0.3s; }
+.delay-2 { animation-delay: 0.6s; }
+
+.dashboard-charts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.chart-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  flex: 1 1 45%;
+  min-width: 300px;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.chart-section h4 {
+  margin-bottom: 15px;
+  font-size: 16px;
+  color: #0a3d62;
+}
+
+.stat-bubble {
+  font-size: 24px;
+  font-weight: bold;
+  color: #3c6382;
+  background: #dff9fb;
+  border-radius: 50px;
+  width: fit-content;
+  padding: 10px 20px;
+  margin-top: 10px;
+}
+.main-content {
+  flex: 1;
+  background-color: #f4f7f9;
+  padding: 30px;
+  overflow-y: auto; /* This allows vertical scrolling */
+  height: 100vh;     /* Ensure it fills the screen */
+}
+
+
+
+
