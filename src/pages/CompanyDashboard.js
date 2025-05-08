@@ -141,8 +141,37 @@ const allInternships = [
       status: 'Closed',
       industry: 'Technology',
       compensation: 'Paid',
+      salary: '$500/month',
+      skills: ['Node.js', 'Express', 'MongoDB'],
+      social: {
+        linkedin: 'https://linkedin.com/company/techcorp',
+        twitter: 'https://twitter.com/techcorp',
+        website: 'https://techcorp.com'
+      },
+      description: 'Join our team as a Backend Developer Intern. You will work on building and maintaining our backend systems. The ideal candidate should have experience with Node.js and MongoDB.',
       applications: 10,
       newApps: 2,
+    },
+    {
+      id: 3,
+      title: 'Data Analyst Intern',
+      company: 'TechCorp',
+      logo: 'https://via.placeholder.com/50',
+      majors: 'MET, BI',
+      date: '2025-03-10',
+      duration: '4 months',
+      status: 'Active',
+      industry: 'Technology',
+      compensation: 'Unpaid',
+      skills: ['Python', 'SQL', 'Data Visualization'],
+      social: {
+        linkedin: 'https://linkedin.com/company/techcorp',
+        twitter: 'https://twitter.com/techcorp',
+        website: 'https://techcorp.com'
+      },
+      description: 'Join our team as a Data Analyst Intern. You will work on analyzing data and creating reports. The ideal candidate should have experience with Python and SQL.',
+      applications: 8,
+      newApps: 5,
     },
     // Add more entries as needed
   ];
