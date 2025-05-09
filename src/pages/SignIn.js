@@ -21,11 +21,11 @@ function SignIn() {
     }
 
     //  Hardcoded credentials
-    if (email === 'company@guc.edu.eg' && password === 'company123') {
+    if (email === 'company@gmail.com' && password === '123') {
       navigate('/company-dashboard');
-    } else if (email === 'student@guc.edu.eg' && password === 'student123') {
+    } else if (email === 'student@gmail.com' && password === '123') {
       alert('Redirect to student dashboard coming soon!');
-    } else if (email === 'admin@guc.edu.eg' && password === 'admin123') {
+    } else if (email === 'admin@gmail.com' && password === '123') {
       alert('Redirect to admin dashboard coming soon!');
     } else {
       setError('Invalid email or password.');}

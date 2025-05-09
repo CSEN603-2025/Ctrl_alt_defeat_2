@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   FaTh, FaSearch, FaFileAlt, FaComments, FaChartBar, FaNewspaper, FaBell,
-  FaFilter, FaSortAmountDown
+  FaFilter, FaSortAmountDown, FaUsers, FaClipboardList, FaBriefcase
 } from 'react-icons/fa';
 
 import './CompanyDashboard.css';
@@ -642,10 +642,10 @@ const allInternships = [
         </div>
 
         <ul>
-          <li className={activeSection === 'dashboard' ? 'active' : ''} onClick={() => setActiveSection('dashboard')}><FaTh /> Dashboard</li>
-          <li className={activeSection === 'search' ? 'active' : ''} onClick={() => setActiveSection('search')}><FaSearch /> Search Internships</li>
+          <li className={activeSection === 'dashboard' ? 'active' : ''} onClick={() => setActiveSection('dashboard')}><FaTh /> Dashboard</li>   
+          <li className={activeSection === 'search' ? 'active' : ''} onClick={() => setActiveSection('search')}><FaBriefcase /> Internship  Postings</li>
           <li className={activeSection === 'applications' ? 'active' : ''} onClick={() => setActiveSection('applications')}><FaFileAlt /> Applications</li>
-          <li className={activeSection === 'messages' ? 'active' : ''} onClick={() => setActiveSection('messages')}><FaComments /> Messages</li>
+          <li className={activeSection === 'messages' ? 'active' : ''} onClick={() => setActiveSection('messages')}><FaUsers /> Current Interns</li>
           <li className={activeSection === 'statistics' ? 'active' : ''} onClick={() => setActiveSection('statistics')}><FaChartBar /> Statistics</li>
           <li className={activeSection === 'news' ? 'active' : ''} onClick={() => setActiveSection('news')}><FaNewspaper /> News</li>
         </ul>
