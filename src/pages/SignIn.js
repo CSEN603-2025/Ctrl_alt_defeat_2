@@ -27,7 +27,10 @@ function SignIn() {
       alert('Redirect to student dashboard coming soon!');
     } else if (email === 'admin@gmail.com' && password === '123') {
       alert('Redirect to admin dashboard coming soon!');
-    } else {
+    } 
+     else if (email === 'facultymember@gmail.com' && password === '123') {
+      navigate('/faculty-dashboard');;}
+      else {
       setError('Invalid email or password.');}
     };
   
