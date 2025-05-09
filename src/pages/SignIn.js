@@ -4,7 +4,8 @@ import './signin.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-function SignIn() {
+
+function signIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
@@ -27,7 +28,10 @@ function SignIn() {
       alert('Redirect to student dashboard coming soon!');
     } else if (email === 'admin@gmail.com' && password === '123') {
       alert('Redirect to admin dashboard coming soon!');
-    } else {
+    } else if(email == 'facultymemeber@gmail.com' && password == '123'){
+      navigate('/faculty-dashboard');
+      }
+      else {
       setError('Invalid email or password.');}
     };
   
@@ -88,4 +92,4 @@ return (
 
 
 
-export default SignIn;
+export default signIn;
