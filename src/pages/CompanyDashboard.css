@@ -783,7 +783,6 @@ body {
   height: 60px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid #fff;
   background-image: "/images/bosta.png";
   background-color: #fff;
   /* background-size: cover;
@@ -804,6 +803,27 @@ body {
   font-size: 13px;
   color: #b0d7f7;
 }
+.sidebar-logout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #fff;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.sidebar-logout:hover {
+  color: #fff;
+  transform: translateX(4px);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* Add glowing effect */
+}
+
+.logout-icon {
+  font-size: 16px;
+}
+
 
 
 

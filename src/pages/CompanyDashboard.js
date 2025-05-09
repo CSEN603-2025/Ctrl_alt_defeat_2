@@ -5,6 +5,7 @@ import {
   FaTh, FaSearch, FaFileAlt, FaComments, FaChartBar, FaNewspaper, FaBell,
   FaFilter, FaSortAmountDown, FaUsers, FaClipboardList, FaBriefcase
 } from 'react-icons/fa';
+import { FiLogOut } from 'react-icons/fi';
 
 import './CompanyDashboard.css';
 import {
@@ -34,6 +35,12 @@ function CompanyDashboard() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
   const navigate = useNavigate();
+  const handleLogout = () => {
+  // Optional: clear auth data
+  // localStorage.clear();
+  
+  navigate("/SignIn");
+};
   const [searchTerm, setSearchTerm] = useState('');
 const [filterIndustry, setFilterIndustry] = useState('');
 const [filterDuration, setFilterDuration] = useState('');
@@ -1034,6 +1041,10 @@ if (card) {
   <div className="sidebar-footer-info">
     <p className="sidebar-footer-name">Bosta</p>
     <p className="sidebar-footer-role">Company Admin</p>
+    <div className="sidebar-logout" onClick={handleLogout}>
+  <FiLogOut className="logout-icon" />
+  <span>Logout</span>
+</div>
   </div>
 </div>
 
