@@ -41,6 +41,7 @@ const [filterCompensation, setFilterCompensation] = useState('');
 const [sortOrder, setSortOrder] = useState('newest');
 const [selectedInternship, setSelectedInternship] = useState(null);
 
+
 const filterAndSort = (list) => {
   return list
     .filter(i =>
@@ -133,8 +134,8 @@ const allInternships = [
     {
       id: 3,
       title: 'Backend Developer Intern',
-      company: 'TechCorp',
-      logo: 'https://via.placeholder.com/50',
+      company: 'Bosta',
+      logo: '/images/bosta.png',
       majors: 'Software Engineering',
       date: '2025-03-10',
       duration: '4 months',
@@ -155,8 +156,8 @@ const allInternships = [
     {
       id: 3,
       title: 'Data Analyst Intern',
-      company: 'TechCorp',
-      logo: 'https://via.placeholder.com/50',
+      company: 'Bosta',
+      logo: '/images/bosta.png',
       majors: 'MET, BI',
       date: '2025-03-10',
       duration: '4 months',
@@ -207,7 +208,121 @@ const allInternships = [
         photo: "/images/man2.png"
       }
     ]);
-  
+  // 🧠 Interns Section States
+const [interns, setInterns] = useState([
+  {
+    id: 1,
+    name: "Fatima Khaled",
+    title: "UI/UX Designer Intern",
+    photo: "/images/woman.png",
+    status: "Current Intern"
+  },
+  {
+    id: 2,
+    name: "Youssef Adel",
+    title: "Full Stack Developer Intern",
+    photo: "/images/man1.png",
+    status: "Internship Complete"
+  },
+  {
+    id: 3,
+    name: "Omar Nasser",
+    title: "Data Science Intern",
+    photo: "/images/man2.png",
+    status: "Accepted Applicant"
+  }
+]);
+
+const [internSearch, setInternSearch] = useState("");
+const [internFilterStatus, setInternFilterStatus] = useState("");
+const [evaluationForm, setEvaluationForm] = useState({
+  rating: 0,
+  strengths: [],
+  weaknesses: [],
+  comments: '',
+  recommendation: '',
+  editable: true,
+});
+const [selectedInternForEval, setSelectedInternForEval] = useState(null);
+const [evaluations, setEvaluations] = useState({});
+const updateInternStatus = (id, newStatus) => {
+  setInterns(prev => prev.map(intern => intern.id === id ? { ...intern, status: newStatus } : intern));
+};
+
+const handleEvaluationOpen = (intern) => {
+  const existing = evaluations[intern.id];
+  setSelectedInternForEval(intern);
+  if (existing) {
+    setEvaluationForm({ ...existing, editable: false });
+  } else {
+    setEvaluationForm({
+      rating: 0,
+      strengths: [],
+      weaknesses: [],
+      comments: '',
+      recommendation: '',
+      editable: true
+    });
+  }
+};
+
+const handleTagInput = (e, type) => {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const value = e.target.value.trim();
+    if (value && !evaluationForm[type].includes(value)) {
+      setEvaluationForm(prev => ({
+        ...prev,
+        [type]: [...prev[type], value]
+      }));
+    }
+    e.target.value = '';
+  }
+};
+
+
+
+const removeTag = (type, tag) => {
+  setEvaluationForm({ ...evaluationForm, [type]: evaluationForm[type].filter(t => t !== tag) });
+};
+
+const submitEvaluation = (e) => {
+  e.preventDefault();
+  const { id } = selectedInternForEval;
+
+  const formCopy = {
+    rating: evaluationForm.rating,
+    strengths: [...evaluationForm.strengths],
+    weaknesses: [...evaluationForm.weaknesses],
+    comments: evaluationForm.comments,
+    recommendation: evaluationForm.recommendation,
+    editable: false
+  };
+
+  setEvaluations(prev => ({ ...prev, [id]: formCopy }));
+  setStatusMessage(`✔️ Evaluation for ${selectedInternForEval.name} saved.`);
+
+  const card = document.querySelector('.details-card');
+  if (card) {
+    card.classList.add('fade-out-message');
+    setTimeout(() => setSelectedInternForEval(null), 600);
+  }
+
+  setTimeout(() => setStatusMessage(''), 3000);
+};
+
+
+
+// 🎯 Status Color Helper
+const getStatusColor = (status) => {
+  switch (status) {
+    case "Current Intern": return "#f6b93b";
+    case "Internship Complete": return "#1e3799";
+    case "Accepted Applicant": return "#60a3d9";
+    default: return "#ccc";
+  }
+};
+
   const [statusMessage, setStatusMessage] = useState('');
   
   
@@ -624,6 +739,271 @@ const allInternships = [
         return "#ccc"; // Default Gray
     }
   }
+case 'interns':
+  return (
+    <div className="internship-section animated fadeInUp">
+      <div className="tab-buttons slide-in-left">
+        <div className="icon-field">
+          <FaSearch className="input-icon" />
+          <input
+            type="text"
+            placeholder="Search by name or job title"
+            value={internSearch}
+            onChange={(e) => setInternSearch(e.target.value)}
+          />
+        </div>
+        <div className="icon-field">
+          <FaFilter className="input-icon" />
+          <select value={internFilterStatus} onChange={(e) => setInternFilterStatus(e.target.value)}>
+            <option value="">All</option>
+            <option value="Accepted Applicant">Accepted Applicant</option>
+            <option value="Current Intern">Current Intern</option>
+            <option value="Internship Complete">Internship Complete</option>
+          </select>
+        </div>
+      </div>
+
+     {statusMessage && (
+  <div className="fade-out-message" style={{
+    background: '#38ada9',
+    padding: '10px 20px',
+    color: 'white',
+    borderRadius: '8px',
+    marginBottom: '15px',
+    fontWeight: 'bold',
+    boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+    transition: 'opacity 0.6s ease'
+  }}>
+    {statusMessage}
+  </div>
+)}
+
+      <div className="internship-table-container fade-in-delayed">
+        <table className="internship-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Internship</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {interns
+              .filter(i =>
+                (i.name.toLowerCase().includes(internSearch.toLowerCase()) ||
+                 i.title.toLowerCase().includes(internSearch.toLowerCase())) &&
+                (!internFilterStatus || i.status === internFilterStatus)
+              )
+              .map((i, idx) => (
+                <tr key={idx} className="pop-in delay-0">
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <img src={i.photo} alt="profile" style={{ width: '30px', height: '30px', borderRadius: '50%' }} />
+                      {i.name}
+                    </div>
+                  </td>
+                  <td>{i.title}</td>
+                  <td>
+  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: '240px' }}>
+    <select
+      value={i.status}
+      onChange={(e) => {
+        const newStatus = e.target.value;
+        updateInternStatus(i.id, newStatus);
+        if (newStatus === "Internship Complete") {
+          setSelectedInternForEval(null);
+        }
+      }}
+      className="status-dropdown"
+    >
+      <option value="Accepted Applicant">Accepted Applicant</option>
+      <option value="Current Intern">Current Intern</option>
+      <option value="Internship Complete">Internship Complete</option>
+    </select>
+
+    <div style={{ width: '100px' }}>
+      {i.status === "Internship Complete" && (
+        <button
+          className="evaluate-btn"
+          style={{
+            backgroundColor: '#f4f7f9', borderRadius: '8px',border: '1px solid #0a3d62'}}
+          onClick={() => handleEvaluationOpen(i)}
+        >
+<button
+  className="status-btn"
+  onClick={() => handleEvaluationOpen(i)}
+  style={{ display: 'inline-flex', alignItems: 'center',gap:'10px', backgroundColor:'0a3d62'
+ }}
+>
+  📝 <span>Evaluate</span>
+</button>
+
+        </button>
+      )}
+    </div>
+  </div>
+</td>
+
+
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+
+      {selectedInternForEval && (
+        <div className="details-card animated fadeInUp" style={{ marginTop: '30px' }}>
+          <div className="details-header">
+            <img src={selectedInternForEval.photo} alt="profile" />
+            <h3>Evaluation for {selectedInternForEval.name}</h3>
+            <button
+  className="close-eval-btn"
+  onClick={() => {
+    const card = document.querySelector('.details-card');
+    card.classList.add('fade-out-message');
+    setTimeout(() => setSelectedInternForEval(null), 600);
+  }}
+>
+  ✖
+</button>
+
+          </div>
+
+          {evaluationForm.editable ? (
+            <form onSubmit={submitEvaluation}>
+              <p><strong>Rating:</strong></p>
+              <div style={{ fontSize: '24px', color: '#f6b93b' }}>
+                {[1, 2, 3, 4, 5].map(n => (
+                  <span
+                    key={n}
+                    onClick={() => setEvaluationForm({ ...evaluationForm, rating: n })}
+                    style={{ cursor: 'pointer', marginRight: '5px' }}
+                  >
+                    {evaluationForm.rating >= n ? '★' : '☆'}
+                  </span>
+                ))}
+              </div>
+
+              <p><strong>Strengths:</strong></p>
+              <div className="tag-input" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '8px' }}>
+                {evaluationForm.strengths.map((tag, i) => (
+                  <span key={i} style={{
+                    background: '#d1ecf1',
+                    padding: '5px 10px',
+                    borderRadius: '12px',
+                    fontSize: '13px',
+                    color: '#0a3d62'
+                  }}>
+                    {tag}
+                    <span style={{ marginLeft: '6px', cursor: 'pointer' }} onClick={() => removeTag('strengths', tag)}>✕</span>
+                  </span>
+                ))}
+              </div>
+              <input type="text" placeholder="Add a strength..." className="evaluation-input" onKeyDown={(e) => handleTagInput(e, 'strengths')} />
+
+              <p><strong>Weaknesses:</strong></p>
+              <div className="tag-input" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '8px' }}>
+                {evaluationForm.weaknesses.map((tag, i) => (
+                  <span key={i} style={{
+                    background: '#f8d7da',
+                    padding: '5px 10px',
+                    borderRadius: '12px',
+                    fontSize: '13px',
+                    color: '#721c24'
+                  }}>
+                    {tag}
+                    <span style={{ marginLeft: '6px', cursor: 'pointer' }} onClick={() => removeTag('weaknesses', tag)}>✕</span>
+                  </span>
+                ))}
+              </div>
+              <input type="text" placeholder="Add a weakness..." className="evaluation-input" onKeyDown={(e) => handleTagInput(e, 'weaknesses')} />
+              <p><strong>Comments:</strong> {evaluationForm.comments}</p>
+<textarea
+  rows="3"
+  className="evaluation-textarea"
+  value={evaluationForm.comments || ''}
+  onChange={(e) =>
+    setEvaluationForm({ ...evaluationForm, comments: e.target.value })
+  }
+/>
+<p><strong>Recommendation:</strong></p>
+<label style={{ marginRight: '10px' }}>
+  <input
+    type="radio"
+    value="Yes"
+    checked={evaluationForm.recommendation === 'Yes'}
+    onChange={(e) =>
+      setEvaluationForm({ ...evaluationForm, recommendation: e.target.value })
+    }
+  /> Yes
+</label>
+<label>
+  <input
+    type="radio"
+    value="No"
+    checked={evaluationForm.recommendation === 'No'}
+    onChange={(e) =>
+      setEvaluationForm({ ...evaluationForm, recommendation: e.target.value })
+    }
+  /> No
+</label>
+
+
+              <br /><br />
+              <button type="submit" className="status-btn">💾 Save Evaluation</button>
+
+              <button
+  type="button"
+  className="status-btn"
+  onClick={() =>
+    setEvaluationForm({
+      rating: 0,
+      strengths: [],
+      weaknesses: [],
+      recommendation: '',
+      comments: '',
+      editable: true
+    })
+  }
+>
+  Clear
+</button>
+
+            </form>
+          ) : (
+            <div>
+              <p><strong>Rating:</strong> {'★'.repeat(evaluationForm.rating)}{'☆'.repeat(5 - evaluationForm.rating)}</p>
+              <p><strong>Strengths:</strong> {evaluationForm.strengths.join(', ')}</p>
+              <p><strong>Weaknesses:</strong> {evaluationForm.weaknesses.join(', ')}</p>
+              <p><strong>Comments:</strong> {evaluationForm.comments}</p>
+              <p><strong>Recommendation:</strong> {evaluationForm.recommendation}</p>
+              <button className="status-btn" onClick={() => setEvaluationForm({ ...evaluationForm, editable: true })}>✏️ Edit</button>
+              <button
+  className="status-btn"
+  onClick={() => {
+    const id = selectedInternForEval.id;
+    const newEvals = { ...evaluations };
+    delete newEvals[id];
+    setEvaluations(newEvals);
+    const card = document.querySelector('.details-card');
+if (card) {
+  card.classList.add('fade-out-message');
+  setTimeout(() => setSelectedInternForEval(null), 600);
+}
+    setStatusMessage("🗑️ Evaluation deleted.");
+    setTimeout(() => setStatusMessage(""), 3000);
+  }}
+>
+  🗑️ Delete
+</button>
+
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+
 
 
       default:
@@ -645,10 +1025,18 @@ const allInternships = [
           <li className={activeSection === 'dashboard' ? 'active' : ''} onClick={() => setActiveSection('dashboard')}><FaTh /> Dashboard</li>   
           <li className={activeSection === 'search' ? 'active' : ''} onClick={() => setActiveSection('search')}><FaBriefcase /> Internship  Postings</li>
           <li className={activeSection === 'applications' ? 'active' : ''} onClick={() => setActiveSection('applications')}><FaFileAlt /> Applications</li>
-          <li className={activeSection === 'messages' ? 'active' : ''} onClick={() => setActiveSection('messages')}><FaUsers /> Current Interns</li>
+          <li className={activeSection === 'interns' ? 'active' : ''} onClick={() => setActiveSection('interns')}><FaUsers /> Current Interns</li>
           <li className={activeSection === 'statistics' ? 'active' : ''} onClick={() => setActiveSection('statistics')}><FaChartBar /> Statistics</li>
           <li className={activeSection === 'news' ? 'active' : ''} onClick={() => setActiveSection('news')}><FaNewspaper /> News</li>
         </ul>
+        <div className="sidebar-footer">
+<img src="/images/bosta.png" alt="User" className="sidebar-footer-img" />
+  <div className="sidebar-footer-info">
+    <p className="sidebar-footer-name">Bosta</p>
+    <p className="sidebar-footer-role">Company Admin</p>
+  </div>
+</div>
+
       </aside>
 
       <main className="main-content">
@@ -656,7 +1044,7 @@ const allInternships = [
           <FaBell className="wiggle-bell" />
         </div>
         <section className="hero-banner animated fadeSlideUp">
-          <h2>Welcome back, TechCorp 👋</h2>
+          <h2>Welcome back, Bosta 👋</h2>
           <p className="subtext">
             Today is {new Date().toLocaleString('en-US', {
               weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
