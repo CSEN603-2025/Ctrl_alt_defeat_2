@@ -1,0 +1,13 @@
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f7f9;
+}
