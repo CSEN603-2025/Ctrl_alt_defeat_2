@@ -814,7 +814,7 @@ body {
 .status-btn:hover {
   background: #0a3d62;
   color: white;
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 .status-btn.selected {
@@ -1092,4 +1092,16 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+@keyframes fadeInUpSubmitter {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  FaTh, FaSearch, FaFileAlt, FaChartBar, FaBell, FaFilter, FaSortAmountDown, FaClipboardList
+  FaTh, FaSearch, FaFileAlt, FaChartBar, FaBell, FaFilter, FaSortAmountDown, FaClipboardList, FaEdit, FaRegCalendarAlt
 } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
 import './facultymemberDashboard.css';
@@ -37,7 +37,11 @@ function FacultyMemberDashboard() {
   const [selectedReport, setSelectedReport] = useState(null);
   const [selectedEvaluation, setSelectedEvaluation] = useState(null);
   const [clarification, setClarification] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [submittedClarification, setSubmittedClarification] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
+  const [isClarificationVisible, setIsClarificationVisible] = useState(true);
+  const clarificationRef = useRef(null);
   const navigate = useNavigate();
 
 
@@ -240,16 +244,35 @@ Average: 3.5 days\\\\
       setTimeout(() => setStatusMessage(''), 3000);
       return;
     }
+    setSubmittedClarification(clarification);
+    setIsEditing(false);
     setStatusMessage(`✔️ Clarification for report ${reportId} submitted.`);
-    setClarification('');
     setTimeout(() => setStatusMessage(''), 3000);
+  };
+
+  const startEditing = () => {
+    setClarification(submittedClarification);
+    setIsEditing(true);
   };
 
   const updateReportStatus = (newStatus) => {
     if (selectedReport) {
-      setSelectedReport({ ...selectedReport, status: newStatus });
-      setStatusMessage(`✔️ Report status updated to ${newStatus}.`);
-      setTimeout(() => setStatusMessage(''), 3000);
+      if (newStatus === 'Accepted' && (selectedReport.status === 'Rejected' || selectedReport.status === 'Flagged')) {
+        setIsClarificationVisible(false);
+        setTimeout(() => {
+          setSelectedReport({ ...selectedReport, status: newStatus });
+          setSubmittedClarification('');
+          setIsEditing(false);
+        }, 300);
+      } else {
+        if (newStatus === 'Rejected' || newStatus === 'Flagged') {
+          setIsClarificationVisible(true);
+          setTimeout(() => {
+            clarificationRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 100);
+        }
+        setSelectedReport({ ...selectedReport, status: newStatus });
+      }
     }
   };
 
@@ -284,7 +307,7 @@ Average: 3.5 days\\\\
                 <p className="stat-number">3.5 days</p>
               </div>
             </div>
-            <div className="dashboard-charts">
+            <div className="dashboard-charts" style={{ marginTop: '40px' }}>
               <div className="chart-section">
                 <h4>Reports Status per Cycle</h4>
                 <Bar
@@ -325,54 +348,129 @@ Average: 3.5 days\\\\
                 <button onClick={() => setSelectedReport(null)} className="back-btn">← Back to Reports</button>
                 <div className="details-card-grid">
                   {/* 📸 Box 1: Student Profile */}
-                  <div className="details-box">
+                  <div className="details-box" style={{ animation: 'fadeInUpSubmitter 0.6s cubic-bezier(0.23, 1, 0.32, 1)', position: 'relative' }}>
                     <div className="details-header">
                       <img src={selectedReport.photo} alt={selectedReport.student} />
                       <div>
-                        <h3>{selectedReport.student}</h3>
-                        <p>{selectedReport.title}</p>
+                        <h3 style={{ color: '#0a3d62' }}>{selectedReport.student}</h3>
+                        <p style={{ color: '#0a3d62', fontWeight: 'bold' }}>{selectedReport.title}</p>
+                        <p style={{ color: '#0a3d62', fontSize: '0.9em', marginTop: '5px' }}>{selectedReport.company}</p>
+                        <div style={{ display: 'flex', alignItems: 'center', marginTop: '8px', fontSize: '0.98em' }}>
+                          <span style={{ marginRight: '18px' }}><b>Major:</b> {selectedReport.major}</span>
+                          <span><b>Cycle:</b> {selectedReport.cycle}</span>
+                        </div>
                       </div>
                     </div>
+                    <span style={{ position: 'absolute', top: '18px', right: '24px', color: '#0a3d62', fontWeight: 500, fontSize: '1em', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <FaRegCalendarAlt style={{ fontSize: '1.1em', marginRight: '3px' }} />
+                      {selectedReport.date}
+                    </span>
                   </div>
 
-                  {/* 📂 Box 2: Report Content */}
-                  <div className="details-box">
-                    <h3>Intern Details & Submissions</h3>
-                    <p><strong>Company:</strong> {selectedReport.company}</p>
-                    <p><strong>Major:</strong> {selectedReport.major}</p>
-                    <p><strong>Submitted On:</strong> {selectedReport.date}</p>
-                    <p><strong>Cycle:</strong> {selectedReport.cycle}</p>
-                    <p><strong>Document:</strong> <a href={selectedReport.document} target="_blank" rel="noreferrer">{selectedReport.document}</a></p>
-                    <button className="status-btn" onClick={() => downloadReportPDF(selectedReport)}>📄 Download PDF</button>
+                  {/* 📄 Box 2: Report Preview */}
+                  <div className="details-box" style={{ animation: 'slideInRight 0.5s ease-out 0.25s' }}>
+                    <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Report Preview</h3>
+                    <div style={{ minHeight: '80px', color: '#222', fontSize: '15px', marginBottom: '18px', fontFamily: 'Georgia, Times, \"Times New Roman\", serif', lineHeight: '1.7', background: '#fff', border: '1.5px solid #b0b0b0', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', padding: '28px 24px', position: 'relative' }}>
+                      <h2 style={{ color: '#0a3d62', margin: '0 0 10px 0', fontSize: '1.4em' }}>{selectedReport.title}</h2>
+                      <p style={{ margin: '0 0 8px 0', fontWeight: 'bold' }}>
+                        Student: <span style={{ color: '#111' }}>{selectedReport.student}</span> &nbsp; | &nbsp; Company: <span style={{ color: '#111' }}>{selectedReport.company}</span>
+                      </p>
+                      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', fontSize: '0.98em' }}>
+                        <span style={{ marginRight: '18px' }}><b>Major:</b> <span style={{ color: '#111' }}>{selectedReport.major}</span></span>
+                        <span><b>Cycle:</b> <span style={{ color: '#111' }}>{selectedReport.cycle}</span></span>
+                      </div>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Introduction</h3>
+                      <p>This report outlines my experience as a <b style={{ color: '#111' }}>{selectedReport.title.replace('Internship Report', 'Intern')}</b> at <b style={{ color: '#111' }}>{selectedReport.company}</b> during the <span style={{ color: '#111' }}>{selectedReport.cycle}</span> internship cycle. The internship provided valuable hands-on exposure to real-world projects and professional work environments.</p>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Objectives</h3>
+                      <ul style={{ margin: '0 0 8px 18px' }}>
+                        <li>Apply academic knowledge to practical tasks in a professional setting.</li>
+                        <li>Develop technical and soft skills relevant to the industry.</li>
+                        <li>Contribute to ongoing projects and collaborate with team members.</li>
+                      </ul>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Key Tasks & Responsibilities</h3>
+                      <ul style={{ margin: '0 0 8px 18px' }}>
+                        <li>Participated in daily stand-up meetings and sprint planning sessions.</li>
+                        <li>Worked on feature development, bug fixing, and code reviews.</li>
+                        <li>Prepared documentation and presented progress to supervisors.</li>
+                      </ul>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Outcomes & Achievements</h3>
+                      <ul style={{ margin: '0 0 8px 18px' }}>
+                        <li>Successfully delivered assigned project modules on time.</li>
+                        <li>Improved proficiency in industry-standard tools and technologies.</li>
+                        <li>Received positive feedback from mentors and team leads.</li>
+                      </ul>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Conclusion</h3>
+                      <p>The internship at <b style={{ color: '#111' }}>{selectedReport.company}</b> was a transformative experience that enhanced my professional and personal growth. I am grateful for the opportunity and look forward to applying these learnings in my future career.</p>
+                    </div>
+                    <button className="status-btn" style={{ width: '100%', height: '38px', marginTop: '5px' }} onClick={() => downloadReportPDF(selectedReport)}>
+                      📄 Download Report as PDF
+                    </button>
                   </div>
 
-                  {/* 🛠 Box 3: Status Control */}
-                  <div className="details-box">
-                    <h3>Update Report Status</h3>
+                  {/* 🛠 Box 3: Status Control (moved below Report Preview) */}
+                  <div className="details-box" style={{ animation: 'slideInRight 0.5s ease-out 0.2s' }}>
+                    <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Update Report Status</h3>
                     <div className="status-buttons">
                       {['Accepted', 'Rejected', 'Flagged'].map((option) => (
                         <button
                           key={option}
-                          className={`status-btn-outline ${option.toLowerCase()} ${selectedReport.status === option ? 'active' : ''}`} onClick={() => updateReportStatus(option)}
+                          className={`status-btn-outline ${option.toLowerCase()} ${selectedReport.status === option ? 'active' : ''}`}
+                          onClick={() => updateReportStatus(option)}
+                          style={{ height: '36px' }}
                         >
                           {option}
                         </button>
                       ))}
                     </div>
-
                   </div>
 
-                  {/* 📝 Box 4: Clarification (only for rejected/flagged) */}
+                  {/* 📝 Box 5: Clarification (only for rejected/flagged) */}
                   {(selectedReport.status === 'Rejected' || selectedReport.status === 'Flagged') && (
-                    <div className="details-box">
-                      <h3>Submit Clarification</h3>
-                      <textarea
-                        className="evaluation-textarea"
-                        value={clarification}
-                        onChange={(e) => setClarification(e.target.value)}
-                        placeholder="Explain why this report was flagged or rejected..."
-                      />
-                      <button className="status-btn" onClick={() => submitClarification(selectedReport.id)}>Submit Clarification</button>
+                    <div
+                      ref={clarificationRef}
+                      className="details-box"
+                      style={{
+                        opacity: isClarificationVisible ? 1 : 0,
+                        transform: `translateY(${isClarificationVisible ? '0' : '-20px'})`,
+                        transition: 'all 0.3s ease-out',
+                        height: isClarificationVisible ? 'auto' : '0',
+                        overflow: 'hidden',
+                        marginBottom: isClarificationVisible ? '20px' : '0',
+                        animation: 'slideInRight 0.5s ease-out 0.3s'
+                      }}
+                    >
+                      <h3 style={{ marginBottom: '15px', color: '#0a3d62' }}>Clarification</h3>
+                      {isEditing ? (
+                        <>
+                          <textarea
+                            className="evaluation-textarea"
+                            value={clarification}
+                            onChange={(e) => setClarification(e.target.value)}
+                            placeholder="Explain why this report was flagged or rejected..."
+                          />
+                          <button className="status-btn" style={{ height: '36px' }} onClick={() => submitClarification(selectedReport.id)}>Submit Clarification</button>
+                        </>
+                      ) : (
+                        <div>
+                          <p style={{
+                            whiteSpace: 'pre-wrap',
+                            marginBottom: '15px',
+                            backgroundColor: '#f5f6fa',
+                            padding: '15px',
+                            borderRadius: '8px',
+                            border: '1px solid #e0e0e0',
+                            color: submittedClarification ? 'inherit' : '#888',
+                            fontFamily: 'Consolas, \"Liberation Mono\", Menlo, Courier, monospace',
+                            fontSize: '14px',
+                            lineHeight: '1.5',
+                            fontStyle: 'normal',
+                            fontWeight: 'normal'
+                          }}>{submittedClarification || 'Add clarification on why report is rejected/flagged'}</p>
+                          <button className="status-btn" style={{ height: '36px' }} onClick={startEditing}>
+                            {submittedClarification ? '✏️ Edit' : 'Add Clarification'}
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -393,15 +491,6 @@ Average: 3.5 days\\\\
                   </div>
                   <div className="icon-field">
                     <FaFilter className="input-icon" />
-                    <select value={filterMajor} onChange={(e) => setFilterMajor(e.target.value)}>
-                      {/* <option value="">All Majors</option> */}
-                      <option value="CS">CS</option>
-                      <option value="Marketing">Marketing</option>
-                      <option value="Finance">Finance</option>
-                    </select>
-                  </div>
-                  <div className="icon-field">
-                    <FaFilter className="input-icon" />
                     <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
                       <option value="">Status</option>
                       <option value="Pending">Pending</option>
@@ -411,10 +500,12 @@ Average: 3.5 days\\\\
                     </select>
                   </div>
                   <div className="icon-field">
-                    <FaSortAmountDown className="input-icon" />
-                    <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-                      <option value="newest">Newest First</option>
-                      <option value="oldest">Oldest First</option>
+                    <FaFilter className="input-icon" />
+                    <select value={filterMajor} onChange={(e) => setFilterMajor(e.target.value)}>
+                      <option value="">All Majors</option>
+                      <option value="CS">CS</option>
+                      <option value="Marketing">Marketing</option>
+                      <option value="Finance">Finance</option>
                     </select>
                   </div>
                 </div>
@@ -693,14 +784,18 @@ Average: 3.5 days\\\\
         </section>
         {statusMessage && (
           <div className="fade-out-message" style={{
+            position: 'fixed',
+            top: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
             background: '#38ada9',
             padding: '10px 20px',
             color: 'white',
             borderRadius: '8px',
-            marginBottom: '15px',
             fontWeight: 'bold',
             boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
-            transition: 'opacity 0.6s ease'
+            transition: 'opacity 0.6s ease',
+            zIndex: 1000
           }}>
             {statusMessage}
           </div>
@@ -712,3 +807,18 @@ Average: 3.5 days\\\\
 }
 
 export default FacultyMemberDashboard;
+
+<style>
+  {`
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  `}
+</style>
