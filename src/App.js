@@ -17,6 +17,7 @@ import ProStudentInternshipManagement from './pages/ProStudentInternshipManageme
 import ProStudentWorkshops from './pages/ProStudentWorkshops';
 import ProStudentWorkshopRegistration from './pages/ProStudentWorkshopRegistration';
 import ProStudentWorkshopDetails from './pages/ProStudentWorkshopDetails';
+import ScadOfficeDashboard from './pages/ScadOfficeDashboard';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
         <Route path="/pro-student/workshops" element={<ProStudentWorkshops />} />
         <Route path="/pro-student/workshops/:id" element={<ProStudentWorkshopDetails />} />
         <Route path="/pro-student/workshops/:id/register" element={<ProStudentWorkshopRegistration />} />
+        <Route path="/scad-office/dashboard" element={<ScadOfficeDashboard />} />
       </Routes>
     </Router>
   );

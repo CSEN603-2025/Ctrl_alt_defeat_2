@@ -28,6 +28,8 @@ function SignIn() {
       alert('Redirect to student dashboard coming soon!');
     } else if (email === 'admin@gmail.com' && password === '123') {
       alert('Redirect to admin dashboard coming soon!');
+    } else if (email === 'scad.office@guc.edu.eg' && password === '123') {
+      navigate('/scad-office/dashboard');
     } else {
       setError('Invalid email or password.');
     }
