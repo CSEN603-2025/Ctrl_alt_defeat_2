@@ -23,29 +23,56 @@ const ProStudentSuggestedCompanies = () => {
   const suggestedCompanies = [
     {
       id: 1,
-      name: 'Tech Solutions Inc.',
-      industry: 'Technology',
+      name: 'Quantum Computing Corp',
+      logo: '/images/instabug.png',
+      industry: 'Quantum Computing',
       matchScore: 95,
-      reason: 'Matches your interest in software development and previous internship experience',
-      pastInterns: 12,
-      rating: 4.8,
+      reason: 'Matches your interest in cutting-edge technology and strong programming skills',
+      pastInterns: 15,
+      rating: 4.9,
       location: 'Cairo, Egypt',
-      description: 'Leading technology company specializing in enterprise software solutions...',
-      recommendedBy: ['Previous interns', 'Industry experts']
+      description: 'Leading quantum computing company developing next-generation quantum algorithms and software. We focus on creating innovative solutions that push the boundaries of computational capabilities.',
+      recommendedBy: ['Industry experts', 'Research partners']
     },
     {
       id: 2,
-      name: 'Global Finance Group',
-      industry: 'Finance',
-      matchScore: 88,
-      reason: 'Based on your finance courses and business analysis skills',
-      pastInterns: 8,
-      rating: 4.6,
+      name: 'RoboTech Industries',
+      logo: '/images/breadfast.png',
+      industry: 'Robotics',
+      matchScore: 92,
+      reason: 'Based on your robotics projects and automation experience',
+      pastInterns: 28,
+      rating: 4.8,
       location: 'Alexandria, Egypt',
-      description: 'International financial services company with focus on investment banking...',
-      recommendedBy: ['Career center', 'Faculty members']
+      description: 'Innovative robotics company developing autonomous systems and robotic solutions. We create cutting-edge robots for industrial, commercial, and research applications.',
+      recommendedBy: ['Career center', 'Industry leaders']
     },
-    // Add more mock companies as needed
+    {
+      id: 3,
+      name: 'BioTech Innovations',
+      logo: '/images/bosta.png',
+      industry: 'Biotechnology',
+      matchScore: 88,
+      reason: 'Matches your computational biology background and data analysis skills',
+      pastInterns: 32,
+      rating: 4.7,
+      location: 'Giza, Egypt',
+      description: 'Pioneering biotech company combining computational biology with cutting-edge research. We develop innovative solutions for healthcare and biological research.',
+      recommendedBy: ['Research partners', 'Healthcare experts']
+    },
+    {
+      id: 4,
+      name: 'GreenTech Solutions',
+      logo: '/images/valeo.png',
+      industry: 'Clean Energy',
+      matchScore: 90,
+      reason: 'Based on your interest in sustainable technology and software development',
+      pastInterns: 25,
+      rating: 4.8,
+      location: 'Cairo, Egypt',
+      description: 'Leading clean energy technology company developing smart grid solutions. We create innovative software for managing renewable energy systems and optimizing power distribution.',
+      recommendedBy: ['Environmental experts', 'Energy sector leaders']
+    }
   ];
 
   const filteredCompanies = suggestedCompanies.filter(company => {

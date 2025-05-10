@@ -9,13 +9,16 @@ import ProStudentApplications from './pages/ProStudentApplications';
 import ProStudentNotifications from './pages/ProStudentNotifications';
 import ProStudentRegistration from './pages/ProStudentRegistration';
 import ProStudentInternships from './pages/ProStudentInternships';
+import ProStudentInternshipDetails from './pages/ProStudentInternshipDetails';
+import ProStudentInternshipApplication from './pages/ProStudentInternshipApplication';
 import ProStudentApplicationDetails from './pages/ProStudentApplicationDetails';
 import ScheduleInterviewForm from './pages/ScheduleInterviewForm';
 import ProStudentInternshipManagement from './pages/ProStudentInternshipManagement';
-import ProStudentInternshipDetails from './pages/ProStudentInternshipDetails';
 import ProStudentWorkshops from './pages/ProStudentWorkshops';
 import ProStudentWorkshopRegistration from './pages/ProStudentWorkshopRegistration';
 import ProStudentWorkshopDetails from './pages/ProStudentWorkshopDetails';
+import ProStudentInternshipEvaluation from './pages/ProStudentInternshipEvaluation';
+import ProStudentInternshipReport from './pages/ProStudentInternshipReport';
 
 function App() {
   return (
@@ -31,12 +34,15 @@ function App() {
         <Route path="/pro-student/registration" element={<ProStudentRegistration />} />
         <Route path="/pro-student/internships" element={<ProStudentInternships />} />
         <Route path="/pro-student/internships/:id" element={<ProStudentInternshipDetails />} />
+        <Route path="/pro-student/internships/:id/apply" element={<ProStudentInternshipApplication />} />
         <Route path="/pro-student/application/:id" element={<ProStudentApplicationDetails />} />
         <Route path="/pro-student/schedule-interview/:id" element={<ScheduleInterviewForm />} />
         <Route path="/pro-student/internship-management" element={<ProStudentInternshipManagement />} />
         <Route path="/pro-student/workshops" element={<ProStudentWorkshops />} />
         <Route path="/pro-student/workshops/:id" element={<ProStudentWorkshopDetails />} />
         <Route path="/pro-student/workshops/:id/register" element={<ProStudentWorkshopRegistration />} />
+        <Route path="/pro-student/internships/:id/evaluation" element={<ProStudentInternshipEvaluation />} />
+        <Route path="/pro-student/internships/:id/report" element={<ProStudentInternshipReport />} />
       </Routes>
     </Router>
   );

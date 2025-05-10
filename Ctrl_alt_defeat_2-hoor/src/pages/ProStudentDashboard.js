@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaBell } from 'react-icons/fa';
 import ProStudentSidebar from '../components/ProStudentSidebar';
 import './ProStudentDashboard.css';
 
@@ -20,17 +21,16 @@ const ProStudentDashboard = () => {
     <div className="pro-student-layout">
       <ProStudentSidebar />
       <div className="pro-student-content">
-        <div className="dashboard-header">
-          <h1>Welcome to Your Dashboard</h1>
-          <div 
-            className={`notification-bell ${isBellAnimating ? 'animate' : ''}`} 
-            onClick={handleBellClick}
-          >
-            <span className="bell-icon">🔔</span>
+        <div className="hero-banner">
+          <h2>Welcome to Your Dashboard</h2>
+          <p className="subtext">Here's a quick look at your current internship activity.</p>
+        </div>
+        
+        <div className="floating-notif" onClick={handleBellClick}>
+          <FaBell className="wiggle-bell" />
             {unreadNotifications > 0 && (
               <span className="notification-badge">{unreadNotifications}</span>
             )}
-          </div>
         </div>
         
         <div className="dashboard-stats">

@@ -179,6 +179,7 @@ body {
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Enhance shadow for emphasis */
   animation: fadeSlideUp 0.7s ease-out both;
+  margin-left: 50px; /* Align with the padding of the hero banner */
 }
 
 .hero-banner h2 {
@@ -229,7 +230,7 @@ body {
   border-radius: 50%;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   cursor: pointer;
-  z-index: 999;                  /* Ensure it’s above everything */
+  z-index: 999;                  /* Ensure it's above everything */
 }
 
 .wiggle-bell {
@@ -274,9 +275,8 @@ body {
   flex: 1;
   min-width: 220px;
   background: linear-gradient(to right, #0a3d62, #3c6382);
-  background-color: #0a3d62;
   border-radius: 12px;
-  padding: 10px;
+  padding: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transform: scale(0.98);
   animation: popIn 0.5s ease forwards;
@@ -287,7 +287,15 @@ body {
   transform: scale(1.03);
 }
 
+.stat-card h3 {
+  color: #ffffff;
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
 .stat-number {
+  color: #ffffff;
   font-size: 30px;
   font-weight: bold;
   margin-top: 8px;
@@ -356,6 +364,8 @@ body {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
+  margin-left: auto; /* Push the buttons to the right */
+  margin-right: 500px; /* Align with the padding of the hero banner */
 }
 
 .tab-buttons button {
@@ -386,7 +396,7 @@ body {
   flex: 1;
 }
 .hero-banner {
-  margin-left: -5px; /* Adjust this value to move the hero banner to the left */
+  margin-left: 50px; /* Align with the padding of the hero banner */
 }
 .internship-cards {
   display: grid;
@@ -546,11 +556,6 @@ body {
   animation-delay: 0.2s;
 }
 
-  margin-left: 50px; /* Align with the padding of the hero banner */
-  .tab-buttons {
-    margin-left: auto; /* Push the buttons to the right */
-    margin-right: 500px; /* Align with the padding of the hero banner */
-  }
 /* Tab buttons */
 .tab-buttons button {
   background: #ffffff;

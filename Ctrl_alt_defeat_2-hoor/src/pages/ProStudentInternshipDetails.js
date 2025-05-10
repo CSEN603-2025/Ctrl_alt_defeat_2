@@ -1,228 +1,420 @@
-import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { FaBuilding, FaClock, FaMoneyBillWave, FaGraduationCap, FaCalendarAlt } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { FaBuilding, FaClock, FaMoneyBillWave, FaGraduationCap, FaCalendarAlt, FaIndustry, FaLinkedin, FaTwitter, FaGlobe, FaFileAlt, FaDownload, FaFileDownload } from 'react-icons/fa';
 import ProStudentSidebar from '../components/ProStudentSidebar';
 import BackButton from '../components/BackButton';
-import './ProStudentInternshipDetails.css';
+import './ProStudentInternships.css';
+
+// Import html2pdf
+import html2pdf from 'html2pdf.js';
 
 const ProStudentInternshipDetails = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
-  const { companyId } = useParams();
-  const [showApplicationForm, setShowApplicationForm] = useState(false);
-  const [applicationFiles, setApplicationFiles] = useState({
-    cv: null,
-    coverLetter: null,
-    certificates: []
-  });
+  const location = useLocation();
+  const [internship, setInternship] = useState(null);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [isCurrent, setIsCurrent] = useState(false);
 
-  // Mock data for internship details
-  const internshipDetails = {
-    id: 1,
-    title: 'Software Development Intern',
-    company: 'Tech Solutions Inc.',
-    duration: '3 months',
-    type: 'Full-time',
-    salary: '$25/hour',
-    requirements: ['Python', 'JavaScript', 'React'],
-    description: 'Join our development team to work on cutting-edge web applications. You will be responsible for developing and maintaining web applications, collaborating with team members on project features, and participating in code reviews and testing.',
-    major: 'Computer Science',
-    semester: 'Semester 5',
-    location: 'New Cairo, Egypt',
-    startDate: '2024-06-01',
-    endDate: '2024-08-31',
-    responsibilities: [
-      'Develop and maintain web applications using modern technologies',
-      'Collaborate with team members on project features',
-      'Participate in code reviews and testing',
-      'Learn and apply best practices in software development'
-    ],
-    benefits: [
-      'Competitive salary',
-      'Flexible working hours',
-      'Professional development opportunities',
-      'Networking events',
-      'Potential for full-time employment'
-    ]
-  };
-
-  const handleFileUpload = (e, type) => {
-    const file = e.target.files[0];
-    if (type === 'certificates') {
-      setApplicationFiles(prev => ({
-        ...prev,
-        certificates: [...prev.certificates, file]
-      }));
+  useEffect(() => {
+    // Get internship data from navigation state
+    if (location.state?.internship) {
+      setInternship(location.state.internship);
+      setIsCompleted(location.state.isCompleted || false);
+      setIsCurrent(location.state.isCurrent || false);
     } else {
-      setApplicationFiles(prev => ({
-        ...prev,
-        [type]: file
-      }));
+      // If no state is passed, redirect back to internships page
+      navigate('/pro-student/internships');
     }
-  };
+  }, [location.state, navigate]);
 
   const handleApply = () => {
-    setShowApplicationForm(true);
+    navigate(`/pro-student/internships/${id}/apply`);
   };
 
-  const handleSubmitApplication = (e) => {
-    e.preventDefault();
-    // Handle application submission
-    alert('Application submitted successfully!');
-    navigate('/pro-student/applications');
+  const handleDownloadCertificate = () => {
+    // Create a sample certificate content
+    const certificateContent = {
+      studentName: "John Doe",
+      internshipTitle: internship.title,
+      company: internship.company,
+      startDate: internship.startDate,
+      endDate: internship.endDate,
+      grade: internship.finalGrade,
+      mentor: internship.mentor,
+      certificateId: "CERT-" + Math.random().toString(36).substr(2, 9),
+      issueDate: new Date().toLocaleDateString()
+    };
+
+    // Create a more professional certificate with HTML and CSS
+    const certificateHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
+          
+          body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background: #f5f5f5;
+          }
+          
+          .certificate {
+            width: 800px;
+            height: 600px;
+            margin: 20px auto;
+            padding: 40px;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            position: relative;
+            border: 2px solid #0a3d62;
+          }
+          
+          .certificate::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 1px solid #0a3d62;
+            pointer-events: none;
+          }
+          
+          .header {
+            text-align: center;
+            margin-bottom: 40px;
+          }
+          
+          .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            background: #0a3d62;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+          }
+          
+          .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            color: #0a3d62;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+          }
+          
+          .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin: 10px 0;
+          }
+          
+          .content {
+            text-align: center;
+            margin: 40px 0;
+          }
+          
+          .student-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            color: #0a3d62;
+            margin: 20px 0;
+            font-weight: bold;
+          }
+          
+          .details {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.6;
+            margin: 20px 0;
+          }
+          
+          .footer {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            right: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+          
+          .signature {
+            text-align: center;
+          }
+          
+          .signature-line {
+            width: 200px;
+            border-top: 1px solid #0a3d62;
+            margin: 10px auto;
+          }
+          
+          .certificate-id {
+            font-size: 14px;
+            color: #666;
+            text-align: right;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="certificate">
+          <div class="header">
+            <div class="logo">${internship.company.charAt(0)}</div>
+            <h1 class="title">Certificate of Completion</h1>
+            <p class="subtitle">This is to certify that</p>
+          </div>
+          
+          <div class="content">
+            <div class="student-name">${certificateContent.studentName}</div>
+            <div class="details">
+              has successfully completed the internship program at<br>
+              <strong>${certificateContent.company}</strong><br><br>
+              Position: ${certificateContent.internshipTitle}<br>
+              Duration: ${certificateContent.startDate} to ${certificateContent.endDate}<br>
+              Grade: ${certificateContent.grade}<br>
+              Mentor: ${certificateContent.mentor}
+            </div>
+          </div>
+          
+          <div class="footer">
+            <div class="signature">
+              <div class="signature-line"></div>
+              <p>Mentor's Signature</p>
+            </div>
+            <div class="certificate-id">
+              Certificate ID: ${certificateContent.certificateId}<br>
+              Issue Date: ${certificateContent.issueDate}
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Convert HTML to PDF using html2pdf.js
+    const element = document.createElement('div');
+    element.innerHTML = certificateHTML;
+    document.body.appendChild(element);
+
+    // Use html2pdf to generate PDF
+    const opt = {
+      margin: 1,
+      filename: `certificate_${internship.company}_${internship.title}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }
+    };
+
+    // Generate PDF
+    html2pdf().set(opt).from(element).save().then(() => {
+      document.body.removeChild(element);
+    });
   };
+
+  const handleEvaluation = () => {
+    navigate(`/pro-student/internships/${id}/evaluation`, {
+      state: { internship }
+    });
+  };
+
+  const handleReport = () => {
+    navigate(`/pro-student/internships/${id}/report`, {
+      state: { internship }
+    });
+  };
+
+  if (!internship) {
+    return (
+      <div className="pro-student-layout">
+        <ProStudentSidebar />
+        <div className="pro-student-content">
+          <BackButton />
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Loading internship details...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="pro-student-layout">
       <ProStudentSidebar />
-      <div className="internship-details-content">
+      <div className="pro-student-content">
         <BackButton />
-        
-        {!showApplicationForm ? (
-          <div className="internship-details-container">
+        <div className="internship-details-container">
+          <div className="details-card">
             <div className="details-header">
-              <h1>{internshipDetails.title}</h1>
+              <div className="logo-container">
+                <img 
+                  src={internship.logo} 
+                  alt={internship.company} 
+                  className="company-logo-large"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/images/default-company.png';
+                  }}
+                />
+              </div>
               <div className="company-info">
-                <FaBuilding className="icon" />
-                <h2>{internshipDetails.company}</h2>
-              </div>
-            </div>
-
-            <div className="details-grid">
-              <div className="detail-item">
-                <FaClock className="icon" />
-                <div>
-                  <label>Duration</label>
-                  <p>{internshipDetails.duration}</p>
-                </div>
-              </div>
-              <div className="detail-item">
-                <FaMoneyBillWave className="icon" />
-                <div>
-                  <label>Salary</label>
-                  <p>{internshipDetails.salary}</p>
-                </div>
-              </div>
-              <div className="detail-item">
-                <FaGraduationCap className="icon" />
-                <div>
-                  <label>Major</label>
-                  <p>{internshipDetails.major}</p>
-                </div>
-              </div>
-              <div className="detail-item">
-                <FaCalendarAlt className="icon" />
-                <div>
-                  <label>Semester</label>
-                  <p>{internshipDetails.semester}</p>
+                <h2>{internship.company}</h2>
+                <p className="internship-title">{internship.title}</p>
+                <div className="tags-container">
+                  <span className="badge">{internship.industry}</span>
+                  <span className="status-tag">{internship.type}</span>
+                  {isCompleted ? (
+                    <>
+                      <span className="status-tag completed">Completed</span>
+                      <span className="grade-tag">Grade: {internship.finalGrade}</span>
+                    </>
+                  ) : isCurrent ? (
+                    <span className="status-tag current">In Progress</span>
+                  ) : (
+                    <span className="date-tag">📅 {internship.date}</span>
+                  )}
                 </div>
               </div>
             </div>
 
-            <div className="details-section">
-              <h3>Description</h3>
-              <p>{internshipDetails.description}</p>
-            </div>
-
-            <div className="details-section">
-              <h3>Responsibilities</h3>
-              <ul>
-                {internshipDetails.responsibilities.map((resp, index) => (
-                  <li key={index}>{resp}</li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="details-section">
-              <h3>Requirements</h3>
-              <div className="requirements-grid">
-                {internshipDetails.requirements.map((req, index) => (
-                  <span key={index} className="requirement-tag">{req}</span>
-                ))}
-              </div>
-            </div>
-
-            <div className="details-section">
-              <h3>Benefits</h3>
-              <ul>
-                {internshipDetails.benefits.map((benefit, index) => (
-                  <li key={index}>{benefit}</li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="details-section">
-              <h3>Additional Information</h3>
+            <div className="details-content">
               <div className="info-grid">
                 <div className="info-item">
-                  <label>Location</label>
-                  <p>{internshipDetails.location}</p>
+                  <FaClock />
+                  <div>
+                    <label>Duration</label>
+                    <p>{internship.duration}</p>
+                  </div>
                 </div>
                 <div className="info-item">
-                  <label>Start Date</label>
-                  <p>{new Date(internshipDetails.startDate).toLocaleDateString()}</p>
+                  <FaMoneyBillWave />
+                  <div>
+                    <label>Compensation</label>
+                    <p>{internship.compensation} {internship.salary}</p>
+                  </div>
                 </div>
                 <div className="info-item">
-                  <label>End Date</label>
-                  <p>{new Date(internshipDetails.endDate).toLocaleDateString()}</p>
+                  <FaGraduationCap />
+                  <div>
+                    <label>Major</label>
+                    <p>{internship.major}</p>
+                  </div>
                 </div>
                 <div className="info-item">
-                  <label>Type</label>
-                  <p>{internshipDetails.type}</p>
+                  <FaCalendarAlt />
+                  <div>
+                    <label>Semester</label>
+                    <p>{internship.semester}</p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <button className="apply-button" onClick={handleApply}>
-              Apply Now
-            </button>
+              {isCompleted && (
+                <div className="completed-info">
+                  <div className="info-item">
+                    <label>Start Date</label>
+                    <p>{internship.startDate}</p>
+                  </div>
+                  <div className="info-item">
+                    <label>End Date</label>
+                    <p>{internship.endDate}</p>
+                  </div>
+                  <div className="info-item">
+                    <label>Mentor</label>
+                    <p>{internship.mentor}</p>
+                  </div>
+                  <div className="info-item">
+                    <label>Certificate</label>
+                    <button className="download-button" onClick={handleDownloadCertificate}>
+                      <FaDownload /> Download Certificate
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <div className="description-documents-container">
+                <div className="description">
+                  <h4>Description</h4>
+                  <p className="description-text">{internship.description}</p>
+                </div>
+
+                <div className="documents-section">
+                  <h4>Required Documents</h4>
+                  <ul className="documents-list">
+                    <li>
+                      <FaFileAlt />
+                      <span>CV/Resume</span>
+                    </li>
+                    <li>
+                      <FaFileAlt />
+                      <span>Cover Letter</span>
+                    </li>
+                    <li>
+                      <FaFileAlt />
+                      <span>Academic Transcript</span>
+                    </li>
+                    <li>
+                      <FaFileAlt />
+                      <span>ID/Passport Copy</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="requirements-section">
+                <h4>Required Skills</h4>
+                <div className="skills-list">
+                  {internship.requirements.map((skill, index) => (
+                    <span key={index} className="skill-tag">{skill}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="social-links">
+                {internship.social.linkedin && (
+                  <a href={internship.social.linkedin} target="_blank" rel="noopener noreferrer">
+                    <FaLinkedin />
+                  </a>
+                )}
+                {internship.social.twitter && (
+                  <a href={internship.social.twitter} target="_blank" rel="noopener noreferrer">
+                    <FaTwitter />
+                  </a>
+                )}
+                {internship.social.website && (
+                  <a href={internship.social.website} target="_blank" rel="noopener noreferrer">
+                    <FaGlobe />
+                  </a>
+                )}
+              </div>
+
+              <div className="action-buttons-container">
+                {isCompleted ? (
+                  <>
+                    <button className="action-button evaluate" onClick={handleEvaluation}>
+                      <FaFileAlt /> Evaluation Form
+                    </button>
+                    <button className="action-button report" onClick={handleReport}>
+                      <FaFileAlt /> Report Form
+                    </button>
+                  </>
+                ) : !isCurrent && (
+                  <button className="action-button apply" onClick={handleApply}>
+                    Apply Now
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
-        ) : (
-          <form className="application-form" onSubmit={handleSubmitApplication}>
-            <h2>Submit Application</h2>
-            
-            <div className="form-group">
-              <label>Resume/CV</label>
-              <input 
-                type="file" 
-                accept=".pdf,.doc,.docx" 
-                onChange={(e) => handleFileUpload(e, 'cv')}
-                required 
-              />
-              <small>Upload your resume in PDF or Word format</small>
-            </div>
-
-            <div className="form-group">
-              <label>Cover Letter</label>
-              <input 
-                type="file" 
-                accept=".pdf,.doc,.docx" 
-                onChange={(e) => handleFileUpload(e, 'coverLetter')}
-                required 
-              />
-              <small>Upload your cover letter in PDF or Word format</small>
-            </div>
-
-            <div className="form-group">
-              <label>Certificates (Optional)</label>
-              <input 
-                type="file" 
-                accept=".pdf,.doc,.docx" 
-                onChange={(e) => handleFileUpload(e, 'certificates')}
-                multiple 
-              />
-              <small>Upload any relevant certificates or achievements</small>
-            </div>
-
-            <div className="form-actions">
-              <button type="button" className="cancel-button" onClick={() => setShowApplicationForm(false)}>
-                Cancel
-              </button>
-              <button type="submit" className="submit-button">
-                Submit Application
-              </button>
-            </div>
-          </form>
-        )}
+        </div>
       </div>
     </div>
   );

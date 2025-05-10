@@ -1,13 +1,15 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './ProStudentSidebar.css';
 import { FiLogOut } from 'react-icons/fi';
 
 const ProStudentSidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Add logout logic here
+    // Add any logout logic here (e.g., clearing session/tokens)
+    navigate('/'); // Redirect to sign-in page
   };
 
   return (
@@ -46,7 +48,7 @@ const ProStudentSidebar = () => {
       <div className="sidebar-footer">
         <img src="/images/woman.png" alt="User" className="sidebar-footer-img" />
         <div className="sidebar-footer-info">
-          <p className="sidebar-footer-name">Bosta</p>
+          <p className="sidebar-footer-name">Sara Emad</p>
           <p className="sidebar-footer-role">Pro Student Admin</p>
           <div className="sidebar-logout" onClick={handleLogout}>
             <FiLogOut className="logout-icon" />

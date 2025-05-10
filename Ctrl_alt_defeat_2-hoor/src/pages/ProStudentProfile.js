@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaBuilding, FaEye, FaCheck, FaTimes, FaChartBar, FaLock, FaUnlock, FaFilter, FaEdit, FaPlus } from 'react-icons/fa';
+import { FaBuilding, FaEye, FaCheck, FaTimes, FaChartBar, FaLock, FaUnlock, FaFilter, FaEdit, FaPlus, FaTrash } from 'react-icons/fa';
 import ProStudentSidebar from '../components/ProStudentSidebar';
 import BackButton from '../components/BackButton';
 import AssessmentQuestions from './AssessmentQuestions';
@@ -12,8 +12,75 @@ const ProStudentProfile = () => {
   const [assessmentFilter, setAssessmentFilter] = useState('all');
   const [isEditing, setIsEditing] = useState(false);
   const [postedScores, setPostedScores] = useState([]);
+  const [assessments, setAssessments] = useState([
+    {
+      id: 1,
+      title: 'Software Development Assessment',
+      duration: '60 minutes',
+      questions: 30,
+      topics: ['Algorithms', 'Data Structures', 'Problem Solving'],
+      status: 'available'
+    },
+    {
+      id: 2,
+      title: 'Data Science Assessment',
+      duration: '90 minutes',
+      questions: 40,
+      topics: ['Statistics', 'Machine Learning', 'Data Analysis'],
+      status: 'completed',
+      score: 85
+    },
+    {
+      id: 3,
+      title: 'Web Development Assessment',
+      duration: '45 minutes',
+      questions: 25,
+      topics: ['HTML/CSS', 'JavaScript', 'React'],
+      status: 'available'
+    },
+    {
+      id: 4,
+      title: 'Mobile App Development',
+      duration: '75 minutes',
+      questions: 35,
+      topics: ['iOS Development', 'Android Development', 'React Native'],
+      status: 'available'
+    },
+    {
+      id: 5,
+      title: 'Database Management',
+      duration: '50 minutes',
+      questions: 30,
+      topics: ['SQL', 'NoSQL', 'Database Design'],
+      status: 'available'
+    },
+    {
+      id: 6,
+      title: 'Cloud Computing',
+      duration: '65 minutes',
+      questions: 35,
+      topics: ['AWS', 'Azure', 'Cloud Architecture'],
+      status: 'available'
+    },
+    {
+      id: 7,
+      title: 'Cybersecurity Fundamentals',
+      duration: '55 minutes',
+      questions: 30,
+      topics: ['Network Security', 'Cryptography', 'Security Best Practices'],
+      status: 'available'
+    },
+    {
+      id: 8,
+      title: 'DevOps Practices',
+      duration: '70 minutes',
+      questions: 40,
+      topics: ['CI/CD', 'Containerization', 'Infrastructure as Code'],
+      status: 'available'
+    }
+  ]);
 
-  // Mock data for student profile
+  // Mock data for student profile with state management
   const [profileData, setProfileData] = useState({
     personalInfo: {
       name: 'John Doe',
@@ -67,15 +134,6 @@ const ProStudentProfile = () => {
         description: 'Organized workshops and coding competitions',
         startDate: '2023-09-01',
         endDate: 'Present'
-      },
-      {
-        id: 2,
-        name: 'Hackathon Team',
-        role: 'Team Lead',
-        duration: '6 months',
-        description: 'Led team to win regional hackathon',
-        startDate: '2023-03-01',
-        endDate: '2023-08-31'
       }
     ]
   });
@@ -105,34 +163,147 @@ const ProStudentProfile = () => {
     }
   ];
 
-  // Mock data for online assessments
-  const assessments = [
-    {
-      id: 1,
-      title: 'Software Development Assessment',
-      duration: '60 minutes',
-      questions: 30,
-      topics: ['Algorithms', 'Data Structures', 'Problem Solving'],
-      status: 'available'
-    },
-    {
-      id: 2,
-      title: 'Data Science Assessment',
-      duration: '90 minutes',
-      questions: 40,
-      topics: ['Statistics', 'Machine Learning', 'Data Analysis'],
-      status: 'completed',
-      score: 85
-    },
-    {
-      id: 3,
-      title: 'Web Development Assessment',
-      duration: '45 minutes',
-      questions: 25,
-      topics: ['HTML/CSS', 'JavaScript', 'React'],
-      status: 'available'
-    }
-  ];
+  // Handle personal info changes
+  const handlePersonalInfoChange = (field, value) => {
+    setProfileData(prev => ({
+      ...prev,
+      personalInfo: {
+        ...prev.personalInfo,
+        [field]: value
+      }
+    }));
+  };
+
+  // Handle job interests changes
+  const handleJobInterestChange = (index, value) => {
+    const newInterests = [...profileData.jobInterests];
+    newInterests[index] = value;
+    setProfileData(prev => ({
+      ...prev,
+      jobInterests: newInterests
+    }));
+  };
+
+  // Add new job interest
+  const handleAddJobInterest = () => {
+    setProfileData(prev => ({
+      ...prev,
+      jobInterests: [...prev.jobInterests, '']
+    }));
+  };
+
+  // Remove job interest
+  const handleRemoveJobInterest = (index) => {
+    setProfileData(prev => ({
+      ...prev,
+      jobInterests: prev.jobInterests.filter((_, i) => i !== index)
+    }));
+  };
+
+  // Handle internship changes
+  const handleInternshipChange = (id, field, value) => {
+    setProfileData(prev => ({
+      ...prev,
+      previousInternships: prev.previousInternships.map(internship => 
+        internship.id === id ? { ...internship, [field]: value } : internship
+      )
+    }));
+  };
+
+  // Add new internship
+  const handleAddInternship = () => {
+    const newInternship = {
+      id: Date.now(),
+      company: '',
+      position: '',
+      duration: '',
+      responsibilities: [''],
+      startDate: '',
+      endDate: ''
+    };
+    setProfileData(prev => ({
+      ...prev,
+      previousInternships: [...prev.previousInternships, newInternship]
+    }));
+  };
+
+  // Remove internship
+  const handleRemoveInternship = (id) => {
+    setProfileData(prev => ({
+      ...prev,
+      previousInternships: prev.previousInternships.filter(internship => internship.id !== id)
+    }));
+  };
+
+  // Handle part-time job changes
+  const handlePartTimeJobChange = (id, field, value) => {
+    setProfileData(prev => ({
+      ...prev,
+      partTimeJobs: prev.partTimeJobs.map(job => 
+        job.id === id ? { ...job, [field]: value } : job
+      )
+    }));
+  };
+
+  // Add new part-time job
+  const handleAddPartTimeJob = () => {
+    const newJob = {
+      id: Date.now(),
+      company: '',
+      position: '',
+      duration: '',
+      responsibilities: [''],
+      startDate: '',
+      endDate: ''
+    };
+    setProfileData(prev => ({
+      ...prev,
+      partTimeJobs: [...prev.partTimeJobs, newJob]
+    }));
+  };
+
+  // Remove part-time job
+  const handleRemovePartTimeJob = (id) => {
+    setProfileData(prev => ({
+      ...prev,
+      partTimeJobs: prev.partTimeJobs.filter(job => job.id !== id)
+    }));
+  };
+
+  // Handle college activity changes
+  const handleCollegeActivityChange = (id, field, value) => {
+    setProfileData(prev => ({
+      ...prev,
+      collegeActivities: prev.collegeActivities.map(activity => 
+        activity.id === id ? { ...activity, [field]: value } : activity
+      )
+    }));
+  };
+
+  // Add new college activity
+  const handleAddCollegeActivity = () => {
+    const newActivity = {
+      id: Date.now(),
+      name: '',
+      role: '',
+      duration: '',
+      description: '',
+      startDate: '',
+      endDate: 'Present'
+    };
+    setProfileData(prev => ({
+      ...prev,
+      collegeActivities: [...prev.collegeActivities, newActivity]
+    }));
+  };
+
+  // Remove college activity
+  const handleRemoveCollegeActivity = (id) => {
+    setProfileData(prev => ({
+      ...prev,
+      collegeActivities: prev.collegeActivities.filter(activity => activity.id !== id)
+    }));
+  };
 
   const handleStartAssessment = (assessmentId) => {
     setCurrentAssessment(assessmentId);
@@ -151,6 +322,16 @@ const ProStudentProfile = () => {
       return assessment;
     });
     
+    // Sort assessments to put completed ones at the top
+    const sortedAssessments = updatedAssessments.sort((a, b) => {
+      if (a.status === 'completed' && b.status !== 'completed') return -1;
+      if (a.status !== 'completed' && b.status === 'completed') return 1;
+      return 0;
+    });
+    
+    // Update the assessments state with sorted array
+    setAssessments(sortedAssessments);
+    
     // Reset current assessment
     setCurrentAssessment(null);
   };
@@ -166,11 +347,13 @@ const ProStudentProfile = () => {
   const handleSave = () => {
     setIsEditing(false);
     // Here you would typically save the changes to a backend
+    console.log('Saving profile data:', profileData);
   };
 
   const handleCancel = () => {
     setIsEditing(false);
     // Reset form data to original values
+    setProfileData(profileData);
   };
 
   const handlePostScore = (assessment) => {
@@ -209,26 +392,62 @@ const ProStudentProfile = () => {
             <div className="info-item">
               <label>Name</label>
               {isEditing ? (
-                <input type="text" value={profileData.personalInfo.name} />
+                <input 
+                  type="text" 
+                  value={profileData.personalInfo.name}
+                  onChange={(e) => handlePersonalInfoChange('name', e.target.value)}
+                />
               ) : (
                 <p>{profileData.personalInfo.name}</p>
               )}
             </div>
             <div className="info-item">
               <label>Email</label>
+              {isEditing ? (
+                <input 
+                  type="email" 
+                  value={profileData.personalInfo.email}
+                  onChange={(e) => handlePersonalInfoChange('email', e.target.value)}
+                />
+              ) : (
               <p>{profileData.personalInfo.email}</p>
+              )}
             </div>
             <div className="info-item">
               <label>Major</label>
+              {isEditing ? (
+                <input 
+                  type="text" 
+                  value={profileData.personalInfo.major}
+                  onChange={(e) => handlePersonalInfoChange('major', e.target.value)}
+                />
+              ) : (
               <p>{profileData.personalInfo.major}</p>
+              )}
             </div>
             <div className="info-item">
               <label>Semester</label>
+              {isEditing ? (
+                <input 
+                  type="text" 
+                  value={profileData.personalInfo.semester}
+                  onChange={(e) => handlePersonalInfoChange('semester', e.target.value)}
+                />
+              ) : (
               <p>{profileData.personalInfo.semester}</p>
+              )}
             </div>
             <div className="info-item">
               <label>GPA</label>
+              {isEditing ? (
+                <input 
+                  type="text" 
+                  value={profileData.personalInfo.gpa}
+                  onChange={(e) => handlePersonalInfoChange('gpa', e.target.value)}
+                />
+              ) : (
               <p>{profileData.personalInfo.gpa}</p>
+              )}
             </div>
           </div>
         </div>
@@ -238,7 +457,7 @@ const ProStudentProfile = () => {
           <div className="section-header">
             <h3>Job Interests</h3>
             {isEditing && (
-              <button className="add-button">
+              <button className="add-button" onClick={handleAddJobInterest}>
                 <FaPlus /> Add Interest
               </button>
             )}
@@ -247,7 +466,19 @@ const ProStudentProfile = () => {
             {profileData.jobInterests.map((interest, index) => (
               <div key={index} className="interest-item">
                 {isEditing ? (
-                  <input type="text" value={interest} />
+                  <div className="editable-interest">
+                    <input 
+                      type="text" 
+                      value={interest}
+                      onChange={(e) => handleJobInterestChange(index, e.target.value)}
+                    />
+                    <button 
+                      className="remove-button"
+                      onClick={() => handleRemoveJobInterest(index)}
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
                 ) : (
                   <span className="interest-tag">{interest}</span>
                 )}
@@ -261,7 +492,7 @@ const ProStudentProfile = () => {
           <div className="section-header">
             <h3>Previous Internships</h3>
             {isEditing && (
-              <button className="add-button">
+              <button className="add-button" onClick={handleAddInternship}>
                 <FaPlus /> Add Internship
               </button>
             )}
@@ -269,12 +500,85 @@ const ProStudentProfile = () => {
           <div className="experience-list">
             {profileData.previousInternships.map(internship => (
               <div key={internship.id} className="experience-card">
+                {isEditing && (
+                  <button 
+                    className="remove-button"
+                    onClick={() => handleRemoveInternship(internship.id)}
+                  >
+                    <FaTrash />
+                  </button>
+                )}
                 <div className="experience-header">
+                  {isEditing ? (
+                    <>
+                      <input 
+                        type="text"
+                        value={internship.position}
+                        onChange={(e) => handleInternshipChange(internship.id, 'position', e.target.value)}
+                        placeholder="Position"
+                      />
+                      <input 
+                        type="text"
+                        value={internship.company}
+                        onChange={(e) => handleInternshipChange(internship.id, 'company', e.target.value)}
+                        placeholder="Company"
+                      />
+                      <input 
+                        type="text"
+                        value={internship.duration}
+                        onChange={(e) => handleInternshipChange(internship.id, 'duration', e.target.value)}
+                        placeholder="Duration"
+                      />
+                    </>
+                  ) : (
+                    <>
                   <h4>{internship.position}</h4>
                   <p className="company-name">{internship.company}</p>
                   <p className="duration">{internship.duration}</p>
+                    </>
+                  )}
                 </div>
                 <div className="experience-details">
+                  {isEditing ? (
+                    <>
+                      <input 
+                        type="date"
+                        value={internship.startDate}
+                        onChange={(e) => handleInternshipChange(internship.id, 'startDate', e.target.value)}
+                      />
+                      <input 
+                        type="date"
+                        value={internship.endDate}
+                        onChange={(e) => handleInternshipChange(internship.id, 'endDate', e.target.value)}
+                      />
+                      <div className="responsibilities">
+                        <h5>Responsibilities:</h5>
+                        {internship.responsibilities.map((resp, index) => (
+                          <input 
+                            key={index}
+                            type="text"
+                            value={resp}
+                            onChange={(e) => {
+                              const newResponsibilities = [...internship.responsibilities];
+                              newResponsibilities[index] = e.target.value;
+                              handleInternshipChange(internship.id, 'responsibilities', newResponsibilities);
+                            }}
+                            placeholder={`Responsibility ${index + 1}`}
+                          />
+                        ))}
+                        <button 
+                          className="add-responsibility"
+                          onClick={() => {
+                            const newResponsibilities = [...internship.responsibilities, ''];
+                            handleInternshipChange(internship.id, 'responsibilities', newResponsibilities);
+                          }}
+                        >
+                          Add Responsibility
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
                   <p className="date-range">
                     {new Date(internship.startDate).toLocaleDateString()} - {new Date(internship.endDate).toLocaleDateString()}
                   </p>
@@ -284,6 +588,8 @@ const ProStudentProfile = () => {
                       <li key={index}>{resp}</li>
                     ))}
                   </ul>
+                    </>
+                  )}
                 </div>
               </div>
             ))}
@@ -295,7 +601,7 @@ const ProStudentProfile = () => {
           <div className="section-header">
             <h3>Part-Time Jobs</h3>
             {isEditing && (
-              <button className="add-button">
+              <button className="add-button" onClick={handleAddPartTimeJob}>
                 <FaPlus /> Add Job
               </button>
             )}
@@ -303,12 +609,85 @@ const ProStudentProfile = () => {
           <div className="experience-list">
             {profileData.partTimeJobs.map(job => (
               <div key={job.id} className="experience-card">
+                {isEditing && (
+                  <button 
+                    className="remove-button"
+                    onClick={() => handleRemovePartTimeJob(job.id)}
+                  >
+                    <FaTrash />
+                  </button>
+                )}
                 <div className="experience-header">
+                  {isEditing ? (
+                    <>
+                      <input 
+                        type="text"
+                        value={job.position}
+                        onChange={(e) => handlePartTimeJobChange(job.id, 'position', e.target.value)}
+                        placeholder="Position"
+                      />
+                      <input 
+                        type="text"
+                        value={job.company}
+                        onChange={(e) => handlePartTimeJobChange(job.id, 'company', e.target.value)}
+                        placeholder="Company"
+                      />
+                      <input 
+                        type="text"
+                        value={job.duration}
+                        onChange={(e) => handlePartTimeJobChange(job.id, 'duration', e.target.value)}
+                        placeholder="Duration"
+                      />
+                    </>
+                  ) : (
+                    <>
                   <h4>{job.position}</h4>
                   <p className="company-name">{job.company}</p>
                   <p className="duration">{job.duration}</p>
+                    </>
+                  )}
                 </div>
                 <div className="experience-details">
+                  {isEditing ? (
+                    <>
+                      <input 
+                        type="date"
+                        value={job.startDate}
+                        onChange={(e) => handlePartTimeJobChange(job.id, 'startDate', e.target.value)}
+                      />
+                      <input 
+                        type="date"
+                        value={job.endDate}
+                        onChange={(e) => handlePartTimeJobChange(job.id, 'endDate', e.target.value)}
+                      />
+                      <div className="responsibilities">
+                        <h5>Responsibilities:</h5>
+                        {job.responsibilities.map((resp, index) => (
+                          <input 
+                            key={index}
+                            type="text"
+                            value={resp}
+                            onChange={(e) => {
+                              const newResponsibilities = [...job.responsibilities];
+                              newResponsibilities[index] = e.target.value;
+                              handlePartTimeJobChange(job.id, 'responsibilities', newResponsibilities);
+                            }}
+                            placeholder={`Responsibility ${index + 1}`}
+                          />
+                        ))}
+                        <button 
+                          className="add-responsibility"
+                          onClick={() => {
+                            const newResponsibilities = [...job.responsibilities, ''];
+                            handlePartTimeJobChange(job.id, 'responsibilities', newResponsibilities);
+                          }}
+                        >
+                          Add Responsibility
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
                   <p className="date-range">
                     {new Date(job.startDate).toLocaleDateString()} - {new Date(job.endDate).toLocaleDateString()}
                   </p>
@@ -318,6 +697,8 @@ const ProStudentProfile = () => {
                       <li key={index}>{resp}</li>
                     ))}
                   </ul>
+                    </>
+                  )}
                 </div>
               </div>
             ))}
@@ -329,7 +710,7 @@ const ProStudentProfile = () => {
           <div className="section-header">
             <h3>College Activities</h3>
             {isEditing && (
-              <button className="add-button">
+              <button className="add-button" onClick={handleAddCollegeActivity}>
                 <FaPlus /> Add Activity
               </button>
             )}
@@ -337,16 +718,72 @@ const ProStudentProfile = () => {
           <div className="experience-list">
             {profileData.collegeActivities.map(activity => (
               <div key={activity.id} className="experience-card">
+                {isEditing && (
+                  <button 
+                    className="remove-button"
+                    onClick={() => handleRemoveCollegeActivity(activity.id)}
+                  >
+                    <FaTrash />
+                  </button>
+                )}
                 <div className="experience-header">
+                  {isEditing ? (
+                    <>
+                      <input 
+                        type="text"
+                        value={activity.name}
+                        onChange={(e) => handleCollegeActivityChange(activity.id, 'name', e.target.value)}
+                        placeholder="Activity Name"
+                      />
+                      <input 
+                        type="text"
+                        value={activity.role}
+                        onChange={(e) => handleCollegeActivityChange(activity.id, 'role', e.target.value)}
+                        placeholder="Role"
+                      />
+                      <input 
+                        type="text"
+                        value={activity.duration}
+                        onChange={(e) => handleCollegeActivityChange(activity.id, 'duration', e.target.value)}
+                        placeholder="Duration"
+                      />
+                    </>
+                  ) : (
+                    <>
                   <h4>{activity.name}</h4>
                   <p className="role">{activity.role}</p>
                   <p className="duration">{activity.duration}</p>
+                    </>
+                  )}
                 </div>
                 <div className="experience-details">
+                  {isEditing ? (
+                    <>
+                      <input 
+                        type="date"
+                        value={activity.startDate}
+                        onChange={(e) => handleCollegeActivityChange(activity.id, 'startDate', e.target.value)}
+                      />
+                      <input 
+                        type="text"
+                        value={activity.endDate}
+                        onChange={(e) => handleCollegeActivityChange(activity.id, 'endDate', e.target.value)}
+                        placeholder="End Date (or 'Present')"
+                      />
+                      <textarea 
+                        value={activity.description}
+                        onChange={(e) => handleCollegeActivityChange(activity.id, 'description', e.target.value)}
+                        placeholder="Activity Description"
+                      />
+                    </>
+                  ) : (
+                    <>
                   <p className="date-range">
                     {new Date(activity.startDate).toLocaleDateString()} - {activity.endDate}
                   </p>
                   <p className="description">{activity.description}</p>
+                    </>
+                  )}
                 </div>
               </div>
             ))}
