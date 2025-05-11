@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { FaBuilding, FaEye, FaCheck, FaTimes, FaChartBar, FaLock, FaUnlock, FaFilter, FaEdit, FaPlus, FaTrash } from 'react-icons/fa';
 import ProStudentSidebar from '../components/ProStudentSidebar';
-import BackButton from '../components/BackButton';
 import AssessmentQuestions from './AssessmentQuestions';
 import './ProStudentProfile.css';
 
@@ -204,7 +203,7 @@ const ProStudentProfile = () => {
   const handleInternshipChange = (id, field, value) => {
     setProfileData(prev => ({
       ...prev,
-      previousInternships: prev.previousInternships.map(internship => 
+      previousInternships: prev.previousInternships.map(internship =>
         internship.id === id ? { ...internship, [field]: value } : internship
       )
     }));
@@ -239,7 +238,7 @@ const ProStudentProfile = () => {
   const handlePartTimeJobChange = (id, field, value) => {
     setProfileData(prev => ({
       ...prev,
-      partTimeJobs: prev.partTimeJobs.map(job => 
+      partTimeJobs: prev.partTimeJobs.map(job =>
         job.id === id ? { ...job, [field]: value } : job
       )
     }));
@@ -274,7 +273,7 @@ const ProStudentProfile = () => {
   const handleCollegeActivityChange = (id, field, value) => {
     setProfileData(prev => ({
       ...prev,
-      collegeActivities: prev.collegeActivities.map(activity => 
+      collegeActivities: prev.collegeActivities.map(activity =>
         activity.id === id ? { ...activity, [field]: value } : activity
       )
     }));
@@ -321,17 +320,17 @@ const ProStudentProfile = () => {
       }
       return assessment;
     });
-    
+
     // Sort assessments to put completed ones at the top
     const sortedAssessments = updatedAssessments.sort((a, b) => {
       if (a.status === 'completed' && b.status !== 'completed') return -1;
       if (a.status !== 'completed' && b.status === 'completed') return 1;
       return 0;
     });
-    
+
     // Update the assessments state with sorted array
     setAssessments(sortedAssessments);
-    
+
     // Reset current assessment
     setCurrentAssessment(null);
   };
@@ -392,8 +391,8 @@ const ProStudentProfile = () => {
             <div className="info-item">
               <label>Name</label>
               {isEditing ? (
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={profileData.personalInfo.name}
                   onChange={(e) => handlePersonalInfoChange('name', e.target.value)}
                 />
@@ -404,49 +403,49 @@ const ProStudentProfile = () => {
             <div className="info-item">
               <label>Email</label>
               {isEditing ? (
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   value={profileData.personalInfo.email}
                   onChange={(e) => handlePersonalInfoChange('email', e.target.value)}
                 />
               ) : (
-              <p>{profileData.personalInfo.email}</p>
+                <p>{profileData.personalInfo.email}</p>
               )}
             </div>
             <div className="info-item">
               <label>Major</label>
               {isEditing ? (
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={profileData.personalInfo.major}
                   onChange={(e) => handlePersonalInfoChange('major', e.target.value)}
                 />
               ) : (
-              <p>{profileData.personalInfo.major}</p>
+                <p>{profileData.personalInfo.major}</p>
               )}
             </div>
             <div className="info-item">
               <label>Semester</label>
               {isEditing ? (
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={profileData.personalInfo.semester}
                   onChange={(e) => handlePersonalInfoChange('semester', e.target.value)}
                 />
               ) : (
-              <p>{profileData.personalInfo.semester}</p>
+                <p>{profileData.personalInfo.semester}</p>
               )}
             </div>
             <div className="info-item">
               <label>GPA</label>
               {isEditing ? (
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={profileData.personalInfo.gpa}
                   onChange={(e) => handlePersonalInfoChange('gpa', e.target.value)}
                 />
               ) : (
-              <p>{profileData.personalInfo.gpa}</p>
+                <p>{profileData.personalInfo.gpa}</p>
               )}
             </div>
           </div>
@@ -467,12 +466,12 @@ const ProStudentProfile = () => {
               <div key={index} className="interest-item">
                 {isEditing ? (
                   <div className="editable-interest">
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={interest}
                       onChange={(e) => handleJobInterestChange(index, e.target.value)}
                     />
-                    <button 
+                    <button
                       className="remove-button"
                       onClick={() => handleRemoveJobInterest(index)}
                     >
@@ -501,7 +500,7 @@ const ProStudentProfile = () => {
             {profileData.previousInternships.map(internship => (
               <div key={internship.id} className="experience-card">
                 {isEditing && (
-                  <button 
+                  <button
                     className="remove-button"
                     onClick={() => handleRemoveInternship(internship.id)}
                   >
@@ -511,19 +510,19 @@ const ProStudentProfile = () => {
                 <div className="experience-header">
                   {isEditing ? (
                     <>
-                      <input 
+                      <input
                         type="text"
                         value={internship.position}
                         onChange={(e) => handleInternshipChange(internship.id, 'position', e.target.value)}
                         placeholder="Position"
                       />
-                      <input 
+                      <input
                         type="text"
                         value={internship.company}
                         onChange={(e) => handleInternshipChange(internship.id, 'company', e.target.value)}
                         placeholder="Company"
                       />
-                      <input 
+                      <input
                         type="text"
                         value={internship.duration}
                         onChange={(e) => handleInternshipChange(internship.id, 'duration', e.target.value)}
@@ -532,21 +531,21 @@ const ProStudentProfile = () => {
                     </>
                   ) : (
                     <>
-                  <h4>{internship.position}</h4>
-                  <p className="company-name">{internship.company}</p>
-                  <p className="duration">{internship.duration}</p>
+                      <h4>{internship.position}</h4>
+                      <p className="company-name">{internship.company}</p>
+                      <p className="duration">{internship.duration}</p>
                     </>
                   )}
                 </div>
                 <div className="experience-details">
                   {isEditing ? (
                     <>
-                      <input 
+                      <input
                         type="date"
                         value={internship.startDate}
                         onChange={(e) => handleInternshipChange(internship.id, 'startDate', e.target.value)}
                       />
-                      <input 
+                      <input
                         type="date"
                         value={internship.endDate}
                         onChange={(e) => handleInternshipChange(internship.id, 'endDate', e.target.value)}
@@ -554,7 +553,7 @@ const ProStudentProfile = () => {
                       <div className="responsibilities">
                         <h5>Responsibilities:</h5>
                         {internship.responsibilities.map((resp, index) => (
-                          <input 
+                          <input
                             key={index}
                             type="text"
                             value={resp}
@@ -566,7 +565,7 @@ const ProStudentProfile = () => {
                             placeholder={`Responsibility ${index + 1}`}
                           />
                         ))}
-                        <button 
+                        <button
                           className="add-responsibility"
                           onClick={() => {
                             const newResponsibilities = [...internship.responsibilities, ''];
@@ -579,15 +578,15 @@ const ProStudentProfile = () => {
                     </>
                   ) : (
                     <>
-                  <p className="date-range">
-                    {new Date(internship.startDate).toLocaleDateString()} - {new Date(internship.endDate).toLocaleDateString()}
-                  </p>
-                  <h5>Responsibilities:</h5>
-                  <ul>
-                    {internship.responsibilities.map((resp, index) => (
-                      <li key={index}>{resp}</li>
-                    ))}
-                  </ul>
+                      <p className="date-range">
+                        {new Date(internship.startDate).toLocaleDateString()} - {new Date(internship.endDate).toLocaleDateString()}
+                      </p>
+                      <h5>Responsibilities:</h5>
+                      <ul>
+                        {internship.responsibilities.map((resp, index) => (
+                          <li key={index}>{resp}</li>
+                        ))}
+                      </ul>
                     </>
                   )}
                 </div>
@@ -610,7 +609,7 @@ const ProStudentProfile = () => {
             {profileData.partTimeJobs.map(job => (
               <div key={job.id} className="experience-card">
                 {isEditing && (
-                  <button 
+                  <button
                     className="remove-button"
                     onClick={() => handleRemovePartTimeJob(job.id)}
                   >
@@ -620,19 +619,19 @@ const ProStudentProfile = () => {
                 <div className="experience-header">
                   {isEditing ? (
                     <>
-                      <input 
+                      <input
                         type="text"
                         value={job.position}
                         onChange={(e) => handlePartTimeJobChange(job.id, 'position', e.target.value)}
                         placeholder="Position"
                       />
-                      <input 
+                      <input
                         type="text"
                         value={job.company}
                         onChange={(e) => handlePartTimeJobChange(job.id, 'company', e.target.value)}
                         placeholder="Company"
                       />
-                      <input 
+                      <input
                         type="text"
                         value={job.duration}
                         onChange={(e) => handlePartTimeJobChange(job.id, 'duration', e.target.value)}
@@ -641,21 +640,21 @@ const ProStudentProfile = () => {
                     </>
                   ) : (
                     <>
-                  <h4>{job.position}</h4>
-                  <p className="company-name">{job.company}</p>
-                  <p className="duration">{job.duration}</p>
+                      <h4>{job.position}</h4>
+                      <p className="company-name">{job.company}</p>
+                      <p className="duration">{job.duration}</p>
                     </>
                   )}
                 </div>
                 <div className="experience-details">
                   {isEditing ? (
                     <>
-                      <input 
+                      <input
                         type="date"
                         value={job.startDate}
                         onChange={(e) => handlePartTimeJobChange(job.id, 'startDate', e.target.value)}
                       />
-                      <input 
+                      <input
                         type="date"
                         value={job.endDate}
                         onChange={(e) => handlePartTimeJobChange(job.id, 'endDate', e.target.value)}
@@ -663,7 +662,7 @@ const ProStudentProfile = () => {
                       <div className="responsibilities">
                         <h5>Responsibilities:</h5>
                         {job.responsibilities.map((resp, index) => (
-                          <input 
+                          <input
                             key={index}
                             type="text"
                             value={resp}
@@ -675,7 +674,7 @@ const ProStudentProfile = () => {
                             placeholder={`Responsibility ${index + 1}`}
                           />
                         ))}
-                        <button 
+                        <button
                           className="add-responsibility"
                           onClick={() => {
                             const newResponsibilities = [...job.responsibilities, ''];
@@ -688,15 +687,15 @@ const ProStudentProfile = () => {
                     </>
                   ) : (
                     <>
-                  <p className="date-range">
-                    {new Date(job.startDate).toLocaleDateString()} - {new Date(job.endDate).toLocaleDateString()}
-                  </p>
-                  <h5>Responsibilities:</h5>
-                  <ul>
-                    {job.responsibilities.map((resp, index) => (
-                      <li key={index}>{resp}</li>
-                    ))}
-                  </ul>
+                      <p className="date-range">
+                        {new Date(job.startDate).toLocaleDateString()} - {new Date(job.endDate).toLocaleDateString()}
+                      </p>
+                      <h5>Responsibilities:</h5>
+                      <ul>
+                        {job.responsibilities.map((resp, index) => (
+                          <li key={index}>{resp}</li>
+                        ))}
+                      </ul>
                     </>
                   )}
                 </div>
@@ -719,7 +718,7 @@ const ProStudentProfile = () => {
             {profileData.collegeActivities.map(activity => (
               <div key={activity.id} className="experience-card">
                 {isEditing && (
-                  <button 
+                  <button
                     className="remove-button"
                     onClick={() => handleRemoveCollegeActivity(activity.id)}
                   >
@@ -729,19 +728,19 @@ const ProStudentProfile = () => {
                 <div className="experience-header">
                   {isEditing ? (
                     <>
-                      <input 
+                      <input
                         type="text"
                         value={activity.name}
                         onChange={(e) => handleCollegeActivityChange(activity.id, 'name', e.target.value)}
                         placeholder="Activity Name"
                       />
-                      <input 
+                      <input
                         type="text"
                         value={activity.role}
                         onChange={(e) => handleCollegeActivityChange(activity.id, 'role', e.target.value)}
                         placeholder="Role"
                       />
-                      <input 
+                      <input
                         type="text"
                         value={activity.duration}
                         onChange={(e) => handleCollegeActivityChange(activity.id, 'duration', e.target.value)}
@@ -750,27 +749,27 @@ const ProStudentProfile = () => {
                     </>
                   ) : (
                     <>
-                  <h4>{activity.name}</h4>
-                  <p className="role">{activity.role}</p>
-                  <p className="duration">{activity.duration}</p>
+                      <h4>{activity.name}</h4>
+                      <p className="role">{activity.role}</p>
+                      <p className="duration">{activity.duration}</p>
                     </>
                   )}
                 </div>
                 <div className="experience-details">
                   {isEditing ? (
                     <>
-                      <input 
+                      <input
                         type="date"
                         value={activity.startDate}
                         onChange={(e) => handleCollegeActivityChange(activity.id, 'startDate', e.target.value)}
                       />
-                      <input 
+                      <input
                         type="text"
                         value={activity.endDate}
                         onChange={(e) => handleCollegeActivityChange(activity.id, 'endDate', e.target.value)}
                         placeholder="End Date (or 'Present')"
                       />
-                      <textarea 
+                      <textarea
                         value={activity.description}
                         onChange={(e) => handleCollegeActivityChange(activity.id, 'description', e.target.value)}
                         placeholder="Activity Description"
@@ -778,10 +777,10 @@ const ProStudentProfile = () => {
                     </>
                   ) : (
                     <>
-                  <p className="date-range">
-                    {new Date(activity.startDate).toLocaleDateString()} - {activity.endDate}
-                  </p>
-                  <p className="description">{activity.description}</p>
+                      <p className="date-range">
+                        {new Date(activity.startDate).toLocaleDateString()} - {activity.endDate}
+                      </p>
+                      <p className="description">{activity.description}</p>
                     </>
                   )}
                 </div>
@@ -802,7 +801,7 @@ const ProStudentProfile = () => {
                 <div key={assessment.id} className="posted-score-card">
                   <div className="score-header">
                     <h4>{assessment.title}</h4>
-                    <button 
+                    <button
                       className="remove-score-button"
                       onClick={() => handlePostScore(assessment)}
                     >
@@ -912,7 +911,7 @@ const ProStudentProfile = () => {
                     <div className="score-header">
                       <FaChartBar />
                       <h4>Your Score</h4>
-                      <button 
+                      <button
                         className="visibility-toggle"
                         onClick={handleToggleScoreVisibility}
                       >
@@ -922,7 +921,7 @@ const ProStudentProfile = () => {
                     {showScore ? (
                       <div className="score-display">
                         <span className="score-value">{assessment.score}%</span>
-                        <button 
+                        <button
                           className={`post-score-button ${postedScores.includes(assessment.id) ? 'posted' : ''}`}
                           onClick={() => handlePostScore(assessment)}
                         >
@@ -938,7 +937,7 @@ const ProStudentProfile = () => {
                 )}
               </div>
               {assessment.status === 'available' && (
-                <button 
+                <button
                   className="start-assessment-button"
                   onClick={() => handleStartAssessment(assessment.id)}
                 >
@@ -956,8 +955,15 @@ const ProStudentProfile = () => {
     <div className="pro-student-layout">
       <ProStudentSidebar />
       <div className="pro-student-content">
-        <BackButton />
-        <h1>My Profile</h1>
+        <div className="hero-banner">
+          <h2>My Profile</h2>
+          <p className="subtext">
+            Today is {new Date().toLocaleString('en-US', {
+              weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+              hour: '2-digit', minute: '2-digit'
+            })}
+          </p>
+        </div>
 
         <div className="profile-tabs">
           <button
@@ -980,9 +986,9 @@ const ProStudentProfile = () => {
           </button>
         </div>
 
-        {selectedTab === 'main-profile' ? renderMainProfile() : 
-         selectedTab === 'profile-views' ? renderProfileViews() : 
-         renderAssessments()}
+        {selectedTab === 'main-profile' ? renderMainProfile() :
+          selectedTab === 'profile-views' ? renderProfileViews() :
+            renderAssessments()}
       </div>
     </div>
   );

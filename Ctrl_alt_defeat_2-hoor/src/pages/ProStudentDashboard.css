@@ -30,7 +30,7 @@
   color: #0a3d62;
   padding: 10px;
   border-radius: 50%;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   z-index: 999;
 }
@@ -41,10 +41,23 @@
 }
 
 @keyframes wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(10deg); }
-  50% { transform: rotate(-10deg); }
-  75% { transform: rotate(6deg); }
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(10deg);
+  }
+
+  50% {
+    transform: rotate(-10deg);
+  }
+
+  75% {
+    transform: rotate(6deg);
+  }
 }
 
 .notification-badge {
@@ -62,9 +75,17 @@
 }
 
 @keyframes badgePulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 .pro-student-content h1 {
@@ -152,25 +173,29 @@
 }
 
 .quick-actions {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
 }
 
 .action-button {
-  padding: 12px;
-  background-color: #0a3d62;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 14px;
-  font-weight: 500;
+  padding: 12px 20px;
+  background: #f4f7f9;
+  border: 1px solid #0a3d62;
+  color: #0a3d62;
+  border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  width: 100%;
+  text-align: center;
 }
 
 .action-button:hover {
-  background-color: #0c4b6e;
+  background: #0a3d62;
+  color: white;
+  transform: scale(1.02);
 }
 
 @media (max-width: 768px) {
@@ -217,8 +242,9 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
   }
-} 
+}

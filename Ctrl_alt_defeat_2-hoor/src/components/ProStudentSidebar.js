@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import './ProStudentSidebar.css';
+import { FaTh, FaUser, FaFileAlt, FaBriefcase, FaNewspaper, FaBell } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
+import './ProStudentSidebar.css';
 
 const ProStudentSidebar = () => {
   const location = useLocation();
@@ -14,33 +15,36 @@ const ProStudentSidebar = () => {
 
   return (
     <div className="pro-student-sidebar">
-      <div className="sidebar-header">
-        <h2>Pro Student Portal</h2>
+      <div className="logo">
+        <img src="/images/guc-logo.png" alt="GUC Logo" className="logo-img" />
+        <div className="logo-text">
+          <span className="tagline"></span>
+        </div>
       </div>
-      
+
       <nav className="sidebar-nav">
         <Link to="/pro-student/dashboard" className={`nav-item ${location.pathname === '/pro-student/dashboard' ? 'active' : ''}`}>
-          <span className="nav-icon">📊</span>
+          <FaTh className="nav-icon" />
           <span className="nav-label">Dashboard</span>
         </Link>
         <Link to="/pro-student/profile" className={`nav-item ${location.pathname === '/pro-student/profile' ? 'active' : ''}`}>
-          <span className="nav-icon">👤</span>
+          <FaUser className="nav-icon" />
           <span className="nav-label">Profile</span>
         </Link>
         <Link to="/pro-student/applications" className={`nav-item ${location.pathname === '/pro-student/applications' ? 'active' : ''}`}>
-          <span className="nav-icon">📝</span>
+          <FaFileAlt className="nav-icon" />
           <span className="nav-label">Applications</span>
         </Link>
         <Link to="/pro-student/internships" className={`nav-item ${location.pathname === '/pro-student/internships' ? 'active' : ''}`}>
-          <span className="nav-icon">💼</span>
+          <FaBriefcase className="nav-icon" />
           <span className="nav-label">My Internships</span>
         </Link>
         <Link to="/pro-student/workshops" className={`nav-item ${location.pathname === '/pro-student/workshops' ? 'active' : ''}`}>
-          <span className="nav-icon">🎓</span>
+          <FaNewspaper className="nav-icon" />
           <span className="nav-label">Career Workshops</span>
         </Link>
         <Link to="/pro-student/notifications" className={`nav-item ${location.pathname === '/pro-student/notifications' ? 'active' : ''}`}>
-          <span className="nav-icon">🔔</span>
+          <FaBell className="nav-icon" />
           <span className="nav-label">Notifications</span>
         </Link>
       </nav>

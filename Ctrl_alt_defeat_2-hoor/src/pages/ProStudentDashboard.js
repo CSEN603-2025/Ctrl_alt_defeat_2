@@ -22,17 +22,22 @@ const ProStudentDashboard = () => {
       <ProStudentSidebar />
       <div className="pro-student-content">
         <div className="hero-banner">
-          <h2>Welcome to Your Dashboard</h2>
-          <p className="subtext">Here's a quick look at your current internship activity.</p>
+          <h2>Welcome back, Sara 👋</h2>
+          <p className="subtext">
+            Today is {new Date().toLocaleString('en-US', {
+              weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+              hour: '2-digit', minute: '2-digit'
+            })}
+          </p>
         </div>
-        
+
         <div className="floating-notif" onClick={handleBellClick}>
           <FaBell className="wiggle-bell" />
-            {unreadNotifications > 0 && (
-              <span className="notification-badge">{unreadNotifications}</span>
-            )}
+          {unreadNotifications > 0 && (
+            <span className="notification-badge">{unreadNotifications}</span>
+          )}
         </div>
-        
+
         <div className="dashboard-stats">
           <div className="stat-card">
             <h3>Active Applications</h3>
@@ -91,6 +96,12 @@ const ProStudentDashboard = () => {
               </button>
               <button className="action-button" onClick={() => navigate('/pro-student/internships')}>
                 View Internships
+              </button>
+              <button className="action-button" onClick={() => navigate('/pro-student/profile', { state: { tab: 'assessments' } })}>
+                Online Assessments
+              </button>
+              <button className="action-button" onClick={() => navigate('/pro-student/internship-management')}>
+                Internship Management
               </button>
             </div>
           </div>
