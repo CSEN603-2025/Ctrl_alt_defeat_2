@@ -24,7 +24,8 @@ body {
 
 .sidebar .logo {
   display: flex;
-  margin-top: 15px; /* Adjust the value as needed to move the logo image down */
+  margin-top: 15px;
+  /* Adjust the value as needed to move the logo image down */
   align-items: center;
   justify-content: center;
   gap: 10px;
@@ -35,12 +36,15 @@ body {
   width: 40px;
   height: 40px;
   object-fit: contain;
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)); /* Add a glowing effect */
-  transition: filter 0.3s ease; /* Smooth transition for hover effect */
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+  /* Add a glowing effect */
+  transition: filter 0.3s ease;
+  /* Smooth transition for hover effect */
 }
 
 .logo-img:hover {
-  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 1)); /* Intensify glow on hover */
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 1));
+  /* Intensify glow on hover */
 }
 
 .logo-text {
@@ -78,8 +82,10 @@ body {
 
 .sidebar li:hover,
 .sidebar li.active {
-  background-color: #f4f7f9;   /* Matches main content */
-  color: #0a3d62;              /* Matches your text color */
+  background-color: #f4f7f9;
+  /* Matches main content */
+  color: #0a3d62;
+  /* Matches your text color */
   border-top-left-radius: 12px;
   border-bottom-left-radius: 12px;
   font-weight: 600;
@@ -88,18 +94,46 @@ body {
 /* Main Content */
 .main-content {
   flex: 1;
-  display: flex;
-  flex-direction: column;
   background-color: #f4f7f9;
+  padding: 0 30px 30px 30px;
+  overflow-y: auto;
+  height: 100vh;
+  position: relative;
 }
 
-.main-header {
+.header-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: white;
-  padding: 20px 30px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  background: white;
+  margin: -33px -30px 10px -30px;
+  padding: 10px 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.header-left {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: #0a3d62;
+  font-size: 16px;
+  padding: 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-btn:hover {
+  background: #f4f7f9;
+  transform: scale(1.05);
 }
 
 .header-title {
@@ -173,11 +207,12 @@ body {
   margin-bottom: 20px;
   background: linear-gradient(to right, #0a3d62, #3c6382);
   color: white;
-  font-size:32;
+  font-size: 32;
   font-weight: bold;
   padding: 20px 30px;
   border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Enhance shadow for emphasis */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  /* Enhance shadow for emphasis */
   animation: fadeSlideUp 0.7s ease-out both;
 }
 
@@ -200,6 +235,7 @@ body {
     opacity: 0;
     transform: translateY(20px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -216,20 +252,28 @@ body {
 }
 
 @keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
+
 .floating-notif {
-  position: fixed;               /* Make it float */
+  position: fixed;
+  /* Make it float */
   top: 37px;
   right: 30px;
   background: #ffffff;
   color: #0a3d62;
   padding: 10px;
   border-radius: 50%;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   cursor: pointer;
-  z-index: 999;                  /* Ensure it’s above everything */
+  z-index: 999;
+  /* Ensure it's above everything */
 }
 
 .wiggle-bell {
@@ -238,11 +282,25 @@ body {
 }
 
 @keyframes wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(10deg); }
-  50% { transform: rotate(-10deg); }
-  75% { transform: rotate(6deg); }
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(10deg);
+  }
+
+  50% {
+    transform: rotate(-10deg);
+  }
+
+  75% {
+    transform: rotate(6deg);
+  }
 }
+
 .dashboard-overview {
   padding: 20px 10px;
   animation: fadeInUp 0.6s ease-out;
@@ -267,6 +325,7 @@ body {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
+  margin-bottom: 40px;
 }
 
 .stat-card {
@@ -295,13 +354,27 @@ body {
 
 /* Animations */
 @keyframes fadeInUp {
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes popIn {
-  0% { opacity: 0; transform: scale(0.9); }
-  100% { opacity: 1; transform: scale(1); }
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .fade-in {
@@ -309,8 +382,13 @@ body {
   animation: fadeInUp 0.6s ease forwards;
 }
 
-.delay-1 { animation-delay: 0.3s; }
-.delay-2 { animation-delay: 0.6s; }
+.delay-1 {
+  animation-delay: 0.3s;
+}
+
+.delay-2 {
+  animation-delay: 0.6s;
+}
 
 .dashboard-charts {
   display: flex;
@@ -322,7 +400,7 @@ body {
   background: white;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
   flex: 1 1 45%;
   min-width: 300px;
   animation: fadeIn 0.5s ease-in;
@@ -345,20 +423,16 @@ body {
   padding: 10px 20px;
   margin-top: 10px;
 }
-.main-content {
-  flex: 1;
-  background-color: #f4f7f9;
-  padding: 30px;
-  overflow-y: auto; /* This allows vertical scrolling */
-  height: 100vh;     /* Ensure it fills the screen */
-}
+
 .tab-buttons {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 12px;
+  margin: 0 10px 20px 10px;
+  width: calc(100% - 20px);
 }
 
 .tab-buttons button {
+  flex: 1;
   background: #ffffff;
   border: 1px solid #0a3d62;
   padding: 10px 20px;
@@ -366,6 +440,17 @@ body {
   font-weight: bold;
   border-radius: 8px;
   cursor: pointer;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+
+.tab-buttons button:hover {
+  background: #ffffff;
+  color: #0a3d62;
 }
 
 .tab-buttons button.active {
@@ -379,29 +464,35 @@ body {
   margin-bottom: 20px;
 }
 
-.filter-bar input, .filter-bar select {
+.filter-bar input,
+.filter-bar select {
   padding: 8px;
   border-radius: 6px;
   border: 1px solid #ccc;
   flex: 1;
 }
+
 .hero-banner {
-  margin-left: -5px; /* Adjust this value to move the hero banner to the left */
+  margin-left: -5px;
+  /* Adjust this value to move the hero banner to the left */
 }
+
 .internship-cards {
   display: grid;
   gap: 20px;
 }
 
-.internship-card, .my-internship-card {
+.internship-card,
+.my-internship-card {
   background: white;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease;
 }
 
-.internship-card:hover, .my-internship-card:hover {
+.internship-card:hover,
+.my-internship-card:hover {
   transform: scale(1.02);
 }
 
@@ -419,8 +510,13 @@ body {
   color: white;
 }
 
-.status-tag.active { background: #38ada9; }
-.status-tag.closed { background: #e55039; }
+.status-tag.active {
+  background: #38ada9;
+}
+
+.status-tag.closed {
+  background: #e55039;
+}
 
 .badge {
   background: #e55039;
@@ -449,29 +545,41 @@ body {
   color: #000000;
   font-weight: 600;
   border: 1px solid #dcdcdc;
-  box-shadow: 0 0 6px rgba(0,0,0,0.05);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
   border-radius: 12px;
   cursor: pointer;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
+
 .internship-card:hover,
 .my-internship-card:hover {
   transform: scale(1.01);
   transition: transform 0.3s ease;
 }
+
 @keyframes slideInLeft {
   0% {
     opacity: 0;
     transform: translateX(-20px);
   }
+
   100% {
     opacity: 1;
     transform: translateX(10);
   }
 }
-.delay-0 { animation-delay: 0.1s; }
-.delay-1 { animation-delay: 0.2s; }
-.delay-2 { animation-delay: 0.3s; }
+
+.delay-0 {
+  animation-delay: 0.1s;
+}
+
+.delay-1 {
+  animation-delay: 0.2s;
+}
+
+.delay-2 {
+  animation-delay: 0.3s;
+}
 
 /* Fade-in animation */
 @keyframes fadeInUp {
@@ -479,6 +587,7 @@ body {
     opacity: 0;
     transform: translateY(20px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -500,6 +609,7 @@ body {
     opacity: 0;
     transform: translateX(-20px);
   }
+
   100% {
     opacity: 1;
     transform: translateX(0);
@@ -526,6 +636,7 @@ body {
     opacity: 0;
     transform: scale(0.9);
   }
+
   100% {
     opacity: 1;
     transform: scale(1);
@@ -546,11 +657,16 @@ body {
   animation-delay: 0.2s;
 }
 
-  margin-left: 50px; /* Align with the padding of the hero banner */
-  .tab-buttons {
-    margin-left: auto; /* Push the buttons to the right */
-    margin-right: 500px; /* Align with the padding of the hero banner */
-  }
+margin-left: 50px;
+
+/* Align with the padding of the hero banner */
+.tab-buttons {
+  margin-left: auto;
+  /* Push the buttons to the right */
+  margin-right: 500px;
+  /* Align with the padding of the hero banner */
+}
+
 /* Tab buttons */
 .tab-buttons button {
   background: #ffffff;
@@ -560,12 +676,17 @@ body {
   font-weight: bold;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease; /* Add smooth transition for hover effect */
+  transition: all 0.3s ease;
+  font-size: 16px;
 }
+
 .tab-buttons button:hover {
-  background: #ffffff; /* Lighten the background color */
-  color: #0a3d62; /* Keep the text color consistent */
-  transform: scale(1.05); /* Add a slight zoom effect */
+  background: #ffffff;
+  /* Lighten the background color */
+  color: #0a3d62;
+  /* Keep the text color consistent */
+  /* transform: scale(1.001); */
+  /* Add a slight zoom effect */
 }
 
 
@@ -573,6 +694,7 @@ body {
   background: #0a3d62;
   color: white;
 }
+
 .internship-table-container {
   margin-top: 20px;
   overflow-x: auto;
@@ -585,7 +707,8 @@ body {
   font-size: 14px;
 }
 
-.internship-table th, .internship-table td {
+.internship-table th,
+.internship-table td {
   padding: 12px 16px;
   border-bottom: 1px solid #ddd;
   text-align: left;
@@ -612,20 +735,24 @@ body {
   cursor: pointer;
   margin-right: 8px;
 }
+
 .icon-field {
   position: relative;
-  flex: 1; /* Make each field take equal width */
+  flex: 1;
+  /* Make each field take equal width */
 }
 
 .icon-field input,
 .icon-field select {
   width: 100%;
-  padding: 10px 12px 10px 36px; /* space for icon */
+  padding: 10px 12px 10px 36px;
+  /* space for icon */
   border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 14px;
   box-sizing: border-box;
 }
+
 .input-icon {
   position: absolute;
   top: 50%;
@@ -635,6 +762,7 @@ body {
   font-size: 16px;
   pointer-events: none;
 }
+
 .internship-details-container {
   padding: 20px;
   animation: fadeInUp 0.5s ease-out;
@@ -654,20 +782,20 @@ body {
   background: white;
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .details-header {
   display: flex;
   align-items: center;
   gap: 20px;
-  margin-bottom: 20px;
 }
 
 .details-header img {
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .details-body h3 {
@@ -683,16 +811,36 @@ body {
 .details-body .description {
   margin-top: 20px;
 }
+
+.status-btn-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+  align-items: center;
+  margin-top: 5px;
+  width: 100%;
+}
+
 .status-btn {
-  margin: 6px;
-  padding: 4px 14px;
-  background: #f4f7f9;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+  flex: 1;
+  height: 32px;
+  box-sizing: border-box;
+  padding: 0 15px;
   border: 1px solid #0a3d62;
+  border-radius: 6px;
+  background: #ffffff;
   color: #0a3d62;
-  border-radius: 8px;
-  font-weight: bold;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
+}
+
+.status-btn:last-child {
+  margin-right: 0;
 }
 
 .status-btn:hover {
@@ -700,29 +848,53 @@ body {
   color: white;
   transform: scale(1.05);
 }
+
 .status-btn.selected {
   color: white !important;
   background-color: var(--btn-color);
   border-color: var(--btn-color);
 }
+
 .status-dropdown {
-  padding: 6px 10px;
+  padding: 4px 8px;
   border-radius: 6px;
   border: 1px solid #ccc;
   background: #fff;
   font-weight: 500;
   cursor: pointer;
   color: #0a3d62;
+  font-size: 13px;
+  min-width: 120px;
+  max-width: 160px;
+  height: 32px;
 }
 
-.evaluate-button {  padding: 6px 12px;
+.evaluate-btn {
+  padding: 4px 8px;
   border: 1px solid #0a3d62;
-  border-radius: 8px;
+  border-radius: 6px;
   background: #f4f7f9;
-  border: 1px solid #0a3d62;
+  color: #0a3d62;
   font-weight: bold;
   cursor: pointer;
+  font-size: 13px;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  min-width: 120px;
+  max-width: 160px;
+  box-sizing: border-box;
+}
+
+.evaluate-btn:hover {
+  background: #0a3d62;
+  color: #fff;
+  border-color: #0a3d62;
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(10, 61, 98, 0.12);
 }
 
 .fade-out-message {
@@ -731,17 +903,25 @@ body {
 }
 
 @keyframes fadeOutSmooth {
-  0% { opacity: 1; }
-  80% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
   100% {
     opacity: 0;
     transform: scale(0.95);
     display: none;
   }
 }
+
 .details-card.fade-out-message {
   animation: fadeOutSmooth 0.5s forwards;
 }
+
 .evaluation-input,
 .evaluation-textarea {
   width: 100%;
@@ -750,8 +930,9 @@ body {
   border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 14px;
-  margin-bottom: 12px;
+  margin-bottom: 4px;
 }
+
 .close-eval-btn {
   position: absolute;
   top: 15px;
@@ -768,6 +949,7 @@ body {
   color: #e55039;
   transform: scale(1.2);
 }
+
 .sidebar-footer {
   margin-top: auto;
   padding: 20px 18px;
@@ -803,6 +985,7 @@ body {
   font-size: 13px;
   color: #b0d7f7;
 }
+
 .sidebar-logout {
   display: flex;
   align-items: center;
@@ -817,16 +1000,23 @@ body {
 .sidebar-logout:hover {
   color: #fff;
   transform: translateX(4px);
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* Add glowing effect */
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  /* Add glowing effect */
 }
 
 .logout-icon {
   font-size: 16px;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+}
 
-
-
-
-
-
+.floating-notif {
+  position: relative;
+  top: 0;
+  right: 0;
+  background: none;
+  box-shadow: none;
+}

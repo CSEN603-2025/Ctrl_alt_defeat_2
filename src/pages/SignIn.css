@@ -34,7 +34,7 @@ body {
 .signin-form label {
   display: block;
   margin-bottom: 5px;
-  color: #3c6382;
+  color: #0a3d62;
   font-weight: 600;
 }
 
@@ -62,6 +62,15 @@ body {
   align-items: center;
   gap: 5px;
   color: #333;
+  margin: 0;
+}
+
+.remember-label input[type="checkbox"] {
+  margin: 0;
+  width: auto;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
 }
 
 .forgot-link {
