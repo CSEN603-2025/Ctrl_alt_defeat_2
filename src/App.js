@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SignIn from './pages/signIn';
+import SignIn from './pages/signin';
 import CompanyRegistration from './pages/CompanyRegistration';
 import CompanyDashboard from './pages/CompanyDashboard'; // ✅ Add this line
 import FacultyMemberDashboard from './pages/facultymemberDashboard';
