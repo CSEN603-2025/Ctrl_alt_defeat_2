@@ -971,6 +971,16 @@ body {
   background: #ccc;
 }
 
+.status-tag.yes {
+  background-color: #38ada9;
+
+}
+
+.status-tag.no {
+  background-color: #e55039;
+
+}
+
 .details-card-grid {
   display: flex;
   flex-direction: column;

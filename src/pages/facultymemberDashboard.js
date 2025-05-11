@@ -44,7 +44,6 @@ function FacultyMemberDashboard() {
   const clarificationRef = useRef(null);
   const navigate = useNavigate();
 
-
   const handleLogout = () => {
     navigate('/SignIn');
   };
@@ -61,7 +60,7 @@ function FacultyMemberDashboard() {
       date: '2025-04-01',
       document: 'report1.pdf',
       cycle: 'Cycle 1',
-      reviewTime: 3 // days
+      reviewTime: 3
     },
     {
       id: 2,
@@ -80,7 +79,7 @@ function FacultyMemberDashboard() {
       id: 3,
       title: 'Finance Analyst Internship Report',
       student: 'Ali Mostafa',
-      photo: '/images/user.png',
+      photo: '/images/man3.png',
       company: 'Valeo',
       major: 'Finance',
       status: 'Rejected',
@@ -95,11 +94,13 @@ function FacultyMemberDashboard() {
     {
       id: 1,
       student: 'John Doe',
+      photo: '/images/man2.png',
       company: 'InstaBug',
       title: 'Frontend Developer Intern',
       supervisor: 'Jane Smith',
       startDate: '2025-01-01',
       endDate: '2025-04-01',
+      date: '2025-04-02',
       rating: 4,
       strengths: ['JavaScript', 'Teamwork'],
       weaknesses: ['Time Management'],
@@ -111,11 +112,13 @@ function FacultyMemberDashboard() {
     {
       id: 2,
       student: 'Sarah Smith',
+      photo: '/images/woman.png',
       company: 'Breadfast',
       title: 'Marketing Intern',
       supervisor: 'Mark Johnson',
       startDate: '2025-02-01',
       endDate: '2025-04-01',
+      date: '2025-04-03',
       rating: 3,
       strengths: ['Creativity', 'Communication'],
       weaknesses: ['Analytical Skills'],
@@ -141,7 +144,6 @@ function FacultyMemberDashboard() {
 ${content}
 \\end{document}
     `;
-    // Simulate PDF generation (in a real app, this would involve a backend service)
     console.log(`Generating PDF: ${filename}.tex`);
     return latexContent;
   };
@@ -238,7 +240,22 @@ Average: 3.5 days\\\\
       );
   };
 
-  const submitClarification = (reportId) => {
+  const filterAndSortEvaluations = (list) => {
+    return list
+      .filter(e =>
+        (e.student.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          e.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          e.title.toLowerCase().includes(searchTerm.toLowerCase())) &&
+        (!filterMajor || e.major === filterMajor) &&
+        (!filterStatus || e.recommendation === filterStatus)
+      )
+      .sort((a, b) => sortOrder === 'newest'
+        ? new Date(b.date) - new Date(a.date)
+        : new Date(a.date) - new Date(b.date)
+      );
+  };
+
+  const submitClarification = (evaluationId) => {
     if (!clarification) {
       setStatusMessage('⚠️ Please provide a clarification.');
       setTimeout(() => setStatusMessage(''), 3000);
@@ -246,13 +263,34 @@ Average: 3.5 days\\\\
     }
     setSubmittedClarification(clarification);
     setIsEditing(false);
-    setStatusMessage(`✔️ Clarification for report ${reportId} submitted.`);
+    setStatusMessage(`✔️ Clarification for evaluation ${evaluationId} submitted.`);
     setTimeout(() => setStatusMessage(''), 3000);
   };
 
   const startEditing = () => {
     setClarification(submittedClarification);
     setIsEditing(true);
+  };
+
+  const updateEvaluationStatus = (newRecommendation) => {
+    if (selectedEvaluation) {
+      if (newRecommendation === 'Yes' && selectedEvaluation.recommendation === 'No') {
+        setIsClarificationVisible(false);
+        setTimeout(() => {
+          setSelectedEvaluation({ ...selectedEvaluation, recommendation: newRecommendation });
+          setSubmittedClarification('');
+          setIsEditing(false);
+        }, 300);
+      } else {
+        if (newRecommendation === 'No') {
+          setIsClarificationVisible(true);
+          setTimeout(() => {
+            clarificationRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 100);
+        }
+        setSelectedEvaluation({ ...selectedEvaluation, recommendation: newRecommendation });
+      }
+    }
   };
 
   const updateReportStatus = (newStatus) => {
@@ -278,11 +316,18 @@ Average: 3.5 days\\\\
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Accepted': return '#38ada9';
-      case 'Rejected': return '#e55039';
-      case 'Flagged': return '#f6b93b';
-      case 'Pending': return '#ccc';
-      default: return '#ccc';
+      case 'Accepted':
+      case 'Yes':
+        return '#38ada9';
+      case 'Rejected':
+      case 'No':
+        return '#e55039';
+      case 'Flagged':
+        return '#f6b93b';
+      case 'Pending':
+        return '#ccc';
+      default:
+        return '#ccc';
     }
   };
 
@@ -347,7 +392,6 @@ Average: 3.5 days\\\\
               <div className="internship-details-container fadeIn">
                 <button onClick={() => setSelectedReport(null)} className="back-btn">← Back to Reports</button>
                 <div className="details-card-grid">
-                  {/* 📸 Box 1: Student Profile */}
                   <div className="details-box" style={{ animation: 'fadeInUpSubmitter 0.6s cubic-bezier(0.23, 1, 0.32, 1)', position: 'relative' }}>
                     <div className="details-header">
                       <img src={selectedReport.photo} alt={selectedReport.student} />
@@ -366,8 +410,6 @@ Average: 3.5 days\\\\
                       {selectedReport.date}
                     </span>
                   </div>
-
-                  {/* 📄 Box 2: Report Preview */}
                   <div className="details-box" style={{ animation: 'slideInRight 0.5s ease-out 0.25s' }}>
                     <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Report Preview</h3>
                     <div style={{ minHeight: '80px', color: '#222', fontSize: '15px', marginBottom: '18px', fontFamily: 'Georgia, Times, \"Times New Roman\", serif', lineHeight: '1.7', background: '#fff', border: '1.5px solid #b0b0b0', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', padding: '28px 24px', position: 'relative' }}>
@@ -406,8 +448,6 @@ Average: 3.5 days\\\\
                       📄 Download Report as PDF
                     </button>
                   </div>
-
-                  {/* 🛠 Box 3: Status Control (moved below Report Preview) */}
                   <div className="details-box" style={{ animation: 'slideInRight 0.5s ease-out 0.2s' }}>
                     <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Update Report Status</h3>
                     <div className="status-buttons">
@@ -423,8 +463,6 @@ Average: 3.5 days\\\\
                       ))}
                     </div>
                   </div>
-
-                  {/* 📝 Box 5: Clarification (only for rejected/flagged) */}
                   {(selectedReport.status === 'Rejected' || selectedReport.status === 'Flagged') && (
                     <div
                       ref={clarificationRef}
@@ -451,7 +489,7 @@ Average: 3.5 days\\\\
                           <button className="status-btn" style={{ height: '36px' }} onClick={() => submitClarification(selectedReport.id)}>Submit Clarification</button>
                         </>
                       ) : (
-                        <div>
+                        <>
                           <p style={{
                             whiteSpace: 'pre-wrap',
                             marginBottom: '15px',
@@ -469,13 +507,11 @@ Average: 3.5 days\\\\
                           <button className="status-btn" style={{ height: '36px' }} onClick={startEditing}>
                             {submittedClarification ? '✏️ Edit' : 'Add Clarification'}
                           </button>
-                        </div>
+                        </>
                       )}
                     </div>
                   )}
                 </div>
-
-
               </div>
             ) : (
               <>
@@ -559,23 +595,137 @@ Average: 3.5 days\\\\
             {selectedEvaluation ? (
               <div className="internship-details-container fadeIn">
                 <button onClick={() => setSelectedEvaluation(null)} className="back-btn">← Back to Evaluations</button>
-                <div className="details-card">
-                  <div className="details-header">
-                    <h2>Evaluation for {selectedEvaluation.student}</h2>
+                <div className="details-card-grid">
+                  {/* Box 1: Student Profile */}
+                  <div className="details-box" style={{ animation: 'fadeInUpSubmitter 0.6s cubic-bezier(0.23, 1, 0.32, 1)', position: 'relative' }}>
+                    <div className="details-header">
+                      <img src={selectedEvaluation.photo} alt={selectedEvaluation.student} />
+                      <div>
+                        <h3 style={{ color: '#0a3d62' }}>{selectedEvaluation.student}</h3>
+                        <p style={{ color: '#0a3d62', fontWeight: 'bold' }}>{selectedEvaluation.title}</p>
+                        <p style={{ color: '#0a3d62', fontSize: '0.9em', marginTop: '5px' }}>{selectedEvaluation.company}</p>
+                        <div style={{ display: 'flex', alignItems: 'center', marginTop: '8px', fontSize: '0.98em' }}>
+                          <span style={{ marginRight: '18px' }}><b>Major:</b> {selectedEvaluation.major}</span>
+                          <span><b>Cycle:</b> {selectedEvaluation.cycle}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <span style={{ position: 'absolute', top: '18px', right: '24px', color: '#0a3d62', fontWeight: 500, fontSize: '1em', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <FaRegCalendarAlt style={{ fontSize: '1.1em', marginRight: '3px' }} />
+                      {selectedEvaluation.date}
+                    </span>
                   </div>
-                  <p><strong>Company:</strong> {selectedEvaluation.company}</p>
-                  <p><strong>Title:</strong> {selectedEvaluation.title}</p>
-                  <p><strong>Supervisor:</strong> {selectedEvaluation.supervisor}</p>
-                  <p><strong>Start Date:</strong> {selectedEvaluation.startDate}</p>
-                  <p><strong>End Date:</strong> {selectedEvaluation.endDate}</p>
-                  <p><strong>Rating:</strong> {'★'.repeat(selectedEvaluation.rating)}{'☆'.repeat(5 - selectedEvaluation.rating)}</p>
-                  <p><strong>Strengths:</strong> {selectedEvaluation.strengths.join(', ')}</p>
-                  <p><strong>Weaknesses:</strong> {selectedEvaluation.weaknesses.join(', ')}</p>
-                  <p><strong>Comments:</strong> {selectedEvaluation.comments}</p>
-                  <p><strong>Recommendation:</strong> {selectedEvaluation.recommendation}</p>
-                  <p><strong>Major:</strong> {selectedEvaluation.major}</p>
-                  <p><strong>Cycle:</strong> {selectedEvaluation.cycle}</p>
-                  <button className="status-btn" onClick={() => downloadEvaluationPDF(selectedEvaluation)}>📄 Download PDF</button>
+
+                  {/* Box 2: Evaluation Preview */}
+                  <div className="details-box" style={{ animation: 'slideInRight 0.5s ease-out 0.25s' }}>
+                    <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Evaluation Preview</h3>
+                    <div style={{ minHeight: '80px', color: '#222', fontSize: '15px', marginBottom: '18px', fontFamily: 'Georgia, Times, \"Times New Roman\", serif', lineHeight: '1.7', background: '#fff', border: '1.5px solid #b0b0b0', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', padding: '28px 24px', position: 'relative' }}>
+                      <h2 style={{ color: '#0a3d62', margin: '0 0 10px 0', fontSize: '1.4em' }}>{selectedEvaluation.title} Evaluation</h2>
+                      <p style={{ margin: '0 0 8px 0', fontWeight: 'bold' }}>
+                        Student: <span style={{ color: '#111' }}>{selectedEvaluation.student}</span> &nbsp; | &nbsp; Company: <span style={{ color: '#111' }}>{selectedEvaluation.company}</span>
+                      </p>
+                      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', fontSize: '0.98em' }}>
+                        <span style={{ marginRight: '18px' }}><b>Major:</b> <span style={{ color: '#111' }}>{selectedEvaluation.major}</span></span>
+                        <span><b>Cycle:</b> <span style={{ color: '#111' }}>{selectedEvaluation.cycle}</span></span>
+                      </div>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Supervisor</h3>
+                      <p>{selectedEvaluation.supervisor}</p>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Period</h3>
+                      <p>From <b style={{ color: '#111' }}>{selectedEvaluation.startDate}</b> to <b style={{ color: '#111' }}>{selectedEvaluation.endDate}</b></p>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Rating</h3>
+                      <p>{'★'.repeat(selectedEvaluation.rating)}{'☆'.repeat(5 - selectedEvaluation.rating)} ({selectedEvaluation.rating}/5)</p>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Strengths</h3>
+                      <ul style={{ margin: '0 0 8px 18px' }}>
+                        {selectedEvaluation.strengths.map((strength, idx) => (
+                          <li key={idx}>{strength}</li>
+                        ))}
+                      </ul>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Weaknesses</h3>
+                      <ul style={{ margin: '0 0 8px 18px' }}>
+                        {selectedEvaluation.weaknesses.map((weakness, idx) => (
+                          <li key={idx}>{weakness}</li>
+                        ))}
+                      </ul>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Comments</h3>
+                      <p>{selectedEvaluation.comments}</p>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Recommendation</h3>
+                      <p>{selectedEvaluation.recommendation}</p>
+                    </div>
+                    <button className="status-btn" style={{ width: '100%', height: '38px', marginTop: '5px' }} onClick={() => downloadEvaluationPDF(selectedEvaluation)}>
+                      📄 Download Evaluation as PDF
+                    </button>
+                  </div>
+
+                  {/* Box 3: Status Control */}
+                  <div className="details-box" style={{ animation: 'slideInRight 0.5s ease-out 0.2s' }}>
+                    <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Update Recommendation</h3>
+                    <div className="status-buttons">
+                      {['Yes', 'No'].map((option) => (
+                        <button
+                          key={option}
+                          className={`status-btn-outline ${option.toLowerCase()} ${selectedEvaluation.recommendation === option ? 'active' : ''}`}
+                          onClick={() => updateEvaluationStatus(option)}
+                          style={{ height: '36px' }}
+                        >
+                          {option}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Box 4: Clarification (for No recommendation) */}
+                  {selectedEvaluation.recommendation === 'No' && (
+                    <div
+                      ref={clarificationRef}
+                      className="details-box"
+                      style={{
+                        opacity: isClarificationVisible ? 1 : 0,
+                        transform: `translateY(${isClarificationVisible ? '0' : '-20px'})`,
+                        transition: 'all 0.3s ease-out',
+                        height: isClarificationVisible ? 'auto' : '0',
+                        overflow: 'hidden',
+                        marginBottom: isClarificationVisible ? '20px' : '0',
+                        animation: 'slideInRight 0.5s ease-out 0.3s'
+                      }}
+                    >
+                      <h3 style={{ marginBottom: '15px', color: '#0a3d62' }}>Clarification</h3>
+                      {isEditing ? (
+                        <>
+                          <textarea
+                            className="evaluation-textarea"
+                            value={clarification}
+                            onChange={(e) => setClarification(e.target.value)}
+                            placeholder="Explain why this evaluation is not recommended..."
+                          />
+                          <button className="status-btn" style={{ height: '36px' }} onClick={() => submitClarification(selectedEvaluation.id)}>
+                            Submit Clarification
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <p style={{
+                            whiteSpace: 'pre-wrap',
+                            marginBottom: '15px',
+                            backgroundColor: '#f5f6fa',
+                            padding: '15px',
+                            borderRadius: '8px',
+                            border: '1px solid #e0e0e0',
+                            color: submittedClarification ? 'inherit' : '#888',
+                            fontFamily: 'Consolas, \"Liberation Mono\", Menlo, Courier, monospace',
+                            fontSize: '14px',
+                            lineHeight: '1.5',
+                            fontStyle: 'normal',
+                            fontWeight: 'normal'
+                          }}>
+                            {submittedClarification || 'Add clarification on why evaluation is not recommended'}
+                          </p>
+                          <button className="status-btn" style={{ height: '36px' }} onClick={startEditing}>
+                            {submittedClarification ? '✏️ Edit' : 'Add Clarification'}
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
@@ -585,10 +735,18 @@ Average: 3.5 days\\\\
                     <FaSearch className="input-icon" />
                     <input
                       type="text"
-                      placeholder="Search by student or company"
+                      placeholder="Search by student, company, or title"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
+                  </div>
+                  <div className="icon-field">
+                    <FaFilter className="input-icon" />
+                    <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+                      <option value="">Recommendation</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </select>
                   </div>
                   <div className="icon-field">
                     <FaFilter className="input-icon" />
@@ -605,28 +763,37 @@ Average: 3.5 days\\\\
                     <thead>
                       <tr>
                         <th>Student</th>
-                        <th>Company</th>
                         <th>Title</th>
-                        <th>Major</th>
-                        <th>Rating</th>
+                        <th>Company</th>
+                        <th>Submission Date</th>
+                        <th>Recommendation</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {evaluations
-                        .filter(e =>
-                          (e.student.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            e.company.toLowerCase().includes(searchTerm.toLowerCase())) &&
-                          (!filterMajor || e.major === filterMajor)
-                        )
-                        .map((evaluation, idx) => (
-                          <tr key={idx} className="pop-in delay-0" onClick={() => setSelectedEvaluation(evaluation)} style={{ cursor: 'pointer' }}>
-                            <td>{evaluation.student}</td>
-                            <td>{evaluation.company}</td>
-                            <td>{evaluation.title}</td>
-                            <td>{evaluation.major}</td>
-                            <td>{'★'.repeat(evaluation.rating)}{'☆'.repeat(5 - evaluation.rating)}</td>
-                          </tr>
-                        ))}
+                      {filterAndSortEvaluations(evaluations).map((evaluation, idx) => (
+                        <tr key={idx} className="pop-in delay-0" onClick={() => setSelectedEvaluation(evaluation)} style={{ cursor: 'pointer' }}>
+                          <td>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                              <img
+                                src={evaluation.photo}
+                                alt={evaluation.student}
+                                style={{
+                                  width: '35px',
+                                  height: '35px',
+                                  borderRadius: '50%',
+                                  objectFit: 'cover',
+                                  border: '1px solid #ccc'
+                                }}
+                              />
+                              {evaluation.student}
+                            </div>
+                          </td>
+                          <td>{evaluation.title}</td>
+                          <td>{evaluation.company}</td>
+                          <td>{evaluation.date}</td>
+                          <td><span className={`status-tag ${evaluation.recommendation.toLowerCase()}`}>{evaluation.recommendation}</span></td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -640,11 +807,8 @@ Average: 3.5 days\\\\
           <div className="internship-section animated fadeInUp">
             <h2 className="animated-title">Internship Statistics</h2>
             <p className="dashboard-subtext">Insights into internship reports, review activity, and company rankings.</p>
-
             <button className="status-btn" onClick={downloadStatisticsPDF}>📄 Generate Statistics Report</button>
-
             <div className="statistics-grid">
-              {/* Chart 1 */}
               <div className="statistics-tile fade-in delay-1">
                 <h3>Reports Status per Cycle</h3>
                 <div className="chart-box">
@@ -662,8 +826,6 @@ Average: 3.5 days\\\\
                   />
                 </div>
               </div>
-
-              {/* Chart 2 */}
               <div className="statistics-tile fade-in delay-2">
                 <h3>Average Review Time (Days)</h3>
                 <div className="chart-box">
@@ -680,8 +842,6 @@ Average: 3.5 days\\\\
                   />
                 </div>
               </div>
-
-              {/* Row of 2 Pie Charts */}
               <div className="double-pie-row">
                 <div className="statistics-tile fade-in delay-3">
                   <h3>Most Used Courses in Internships</h3>
@@ -697,7 +857,6 @@ Average: 3.5 days\\\\
                     options={{ responsive: true, plugins: { legend: { position: 'bottom' } } }}
                   />
                 </div>
-
                 <div className="statistics-tile fade-in delay-4">
                   <h3>Top Companies by Internship Count</h3>
                   <Pie
@@ -713,8 +872,6 @@ Average: 3.5 days\\\\
                   />
                 </div>
               </div>
-
-              {/* Chart 5 */}
               <div className="statistics-tile fade-in delay-5">
                 <h3>Top Rated Companies (Student Evaluations)</h3>
                 <div className="chart-box">
@@ -734,8 +891,6 @@ Average: 3.5 days\\\\
             </div>
           </div>
         );
-
-
 
       default:
         return <h2 className="animated fadeIn">Loading...</h2>;

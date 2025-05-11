@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './signin.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -23,18 +23,25 @@ function SignIn() {
     //  Hardcoded credentials
     if (email === 'company@gmail.com' && password === '123') {
       navigate('/company-dashboard');
-    } else if (email === 'student@gmail.com' && password === '123') {
+    }
+    else if (email === 'student@gmail.com' && password === '123') {
       alert('Redirect to student dashboard coming soon!');
-    } else if (email === 'admin@gmail.com' && password === '123') {
+    }
+    else if (email === 'prostudent@gmail.com' && password === '123') {
+      navigate('/pro-student/dashboard');
+    }
+    else if (email === 'admin@gmail.com' && password === '123') {
       alert('Redirect to admin dashboard coming soon!');
-    } 
-     else if (email === 'facultymember@gmail.com' && password === '123') {
-      navigate('/faculty-dashboard');;}
-      else {
-      setError('Invalid email or password.');}
-    };
-  
-return (
+    }
+    else if (email === 'facultymember@gmail.com' && password === '123') {
+      navigate('/faculty-dashboard');;
+    }
+    else {
+      setError('Invalid email or password.');
+    }
+  };
+
+  return (
     <>
       <Header />
       <div className="signin-container">
@@ -77,18 +84,14 @@ return (
             <span>New to the platform?</span>
           </div>
 
-          <a href="/company-signup" className="alt-button">
+          <Link to="/company-registration" className="alt-button">
             <i className="fas fa-building"></i> Register as Company
-          </a>
+          </Link>
         </form>
       </div>
       <Footer />
     </>
-    
   );
-
 }
-
-
 
 export default SignIn;

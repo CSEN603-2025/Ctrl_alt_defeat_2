@@ -79,7 +79,7 @@ function CompanyRegistration() {
                 checked={companySize === 'small'}
                 onChange={() => setCompanySize('small')}
               />
-              Less than 50 employees
+              <span className="size-label">Small</span> <span className="employee-count">Less than 50 employees</span>
             </label>
             <label>
               <input
@@ -88,7 +88,7 @@ function CompanyRegistration() {
                 checked={companySize === 'medium'}
                 onChange={() => setCompanySize('medium')}
               />
-              50–100 employees
+              <span className="size-label">Medium</span> <span className="employee-count">50–100 employees</span>
             </label>
             <label>
               <input
@@ -97,7 +97,16 @@ function CompanyRegistration() {
                 checked={companySize === 'large'}
                 onChange={() => setCompanySize('large')}
               />
-              More than 100 employees
+              <span className="size-label">Large</span> <span className="employee-count">100-500 employees</span>
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="enterprise"
+                checked={companySize === 'enterprise'}
+                onChange={() => setCompanySize('enterprise')}
+              />
+              <span className="size-label">Corporate</span> <span className="employee-count">More than 500 employees</span>
             </label>
           </div>
 
@@ -136,9 +145,9 @@ function CompanyRegistration() {
             {loading ? 'Submitting...' : 'Submit Registration'}
           </button>
         </form>
-        
+
       </div>
-      
+
       <Footer />
     </>
   );
