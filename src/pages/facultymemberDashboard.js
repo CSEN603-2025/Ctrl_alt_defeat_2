@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  FaTh, FaSearch, FaFileAlt, FaChartBar, FaBell, FaFilter, FaSortAmountDown, FaClipboardList, FaEdit, FaRegCalendarAlt
+  FaTh, FaSearch, FaFileAlt, FaChartBar, FaBell, FaFilter, FaSortAmountDown, FaClipboardList, FaEdit, FaRegCalendarAlt, FaArrowLeft, FaArrowRight
 } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
 import './facultymemberDashboard.css';
@@ -79,7 +79,7 @@ function FacultyMemberDashboard() {
       id: 3,
       title: 'Finance Analyst Internship Report',
       student: 'Ali Mostafa',
-      photo: '/images/user.png',
+      photo: '/images/man3.png',
       company: 'Valeo',
       major: 'Finance',
       status: 'Rejected',
@@ -390,12 +390,11 @@ Average: 3.5 days\\\\
           <div className="internship-section animated fadeInUp">
             {selectedReport ? (
               <div className="internship-details-container fadeIn">
-                <button onClick={() => setSelectedReport(null)} className="back-btn">← Back to Reports</button>
                 <div className="details-card-grid">
                   <div className="details-box" style={{ animation: 'fadeInUpSubmitter 0.6s cubic-bezier(0.23, 1, 0.32, 1)', position: 'relative' }}>
                     <div className="details-header">
                       <img src={selectedReport.photo} alt={selectedReport.student} />
-                      <div>
+                      <div style={{ textAlign: 'left' }}>
                         <h3 style={{ color: '#0a3d62' }}>{selectedReport.student}</h3>
                         <p style={{ color: '#0a3d62', fontWeight: 'bold' }}>{selectedReport.title}</p>
                         <p style={{ color: '#0a3d62', fontSize: '0.9em', marginTop: '5px' }}>{selectedReport.company}</p>
@@ -415,7 +414,7 @@ Average: 3.5 days\\\\
                     <div style={{ minHeight: '80px', color: '#222', fontSize: '15px', marginBottom: '18px', fontFamily: 'Georgia, Times, \"Times New Roman\", serif', lineHeight: '1.7', background: '#fff', border: '1.5px solid #b0b0b0', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', padding: '28px 24px', position: 'relative' }}>
                       <h2 style={{ color: '#0a3d62', margin: '0 0 10px 0', fontSize: '1.4em' }}>{selectedReport.title}</h2>
                       <p style={{ margin: '0 0 8px 0', fontWeight: 'bold' }}>
-                        Student: <span style={{ color: '#111' }}>{selectedReport.student}</span> &nbsp; | &nbsp; Company: <span style={{ color: '#111' }}>{selectedReport.company}</span>
+                        Student: <span style={{ color: '#111' }}>{selectedReport.student}</span>   |   Company: <span style={{ color: '#111' }}>{selectedReport.company}</span>
                       </p>
                       <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', fontSize: '0.98em' }}>
                         <span style={{ marginRight: '18px' }}><b>Major:</b> <span style={{ color: '#111' }}>{selectedReport.major}</span></span>
@@ -594,13 +593,12 @@ Average: 3.5 days\\\\
           <div className="internship-section animated fadeInUp">
             {selectedEvaluation ? (
               <div className="internship-details-container fadeIn">
-                <button onClick={() => setSelectedEvaluation(null)} className="back-btn">← Back to Evaluations</button>
                 <div className="details-card-grid">
                   {/* Box 1: Student Profile */}
                   <div className="details-box" style={{ animation: 'fadeInUpSubmitter 0.6s cubic-bezier(0.23, 1, 0.32, 1)', position: 'relative' }}>
                     <div className="details-header">
                       <img src={selectedEvaluation.photo} alt={selectedEvaluation.student} />
-                      <div>
+                      <div style={{ textAlign: 'left' }}>
                         <h3 style={{ color: '#0a3d62' }}>{selectedEvaluation.student}</h3>
                         <p style={{ color: '#0a3d62', fontWeight: 'bold' }}>{selectedEvaluation.title}</p>
                         <p style={{ color: '#0a3d62', fontSize: '0.9em', marginTop: '5px' }}>{selectedEvaluation.company}</p>
@@ -622,7 +620,7 @@ Average: 3.5 days\\\\
                     <div style={{ minHeight: '80px', color: '#222', fontSize: '15px', marginBottom: '18px', fontFamily: 'Georgia, Times, \"Times New Roman\", serif', lineHeight: '1.7', background: '#fff', border: '1.5px solid #b0b0b0', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', padding: '28px 24px', position: 'relative' }}>
                       <h2 style={{ color: '#0a3d62', margin: '0 0 10px 0', fontSize: '1.4em' }}>{selectedEvaluation.title} Evaluation</h2>
                       <p style={{ margin: '0 0 8px 0', fontWeight: 'bold' }}>
-                        Student: <span style={{ color: '#111' }}>{selectedEvaluation.student}</span> &nbsp; | &nbsp; Company: <span style={{ color: '#111' }}>{selectedEvaluation.company}</span>
+                        Student: <span style={{ color: '#111' }}>{selectedEvaluation.student}</span>   |   Company: <span style={{ color: '#111' }}>{selectedEvaluation.company}</span>
                       </p>
                       <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', fontSize: '0.98em' }}>
                         <span style={{ marginRight: '18px' }}><b>Major:</b> <span style={{ color: '#111' }}>{selectedEvaluation.major}</span></span>
@@ -913,67 +911,49 @@ Average: 3.5 days\\\\
           <li className={activeSection === 'statistics' ? 'active' : ''} onClick={() => setActiveSection('statistics')}><FaChartBar /> Statistics</li>
         </ul>
         <div className="sidebar-footer">
-          <img src="/images/man1.png" alt="User" className="sidebar-footer-img" />
+          <img src="/images/man1.png" alt="Faculty Member" className="sidebar-footer-img" />
           <div className="sidebar-footer-info">
-            <p className="sidebar-footer-name">Dr. Ahmed Salem</p>
+            <p className="sidebar-footer-name">Dr. Ahmed Hassan</p>
             <p className="sidebar-footer-role">Faculty Member</p>
             <div className="sidebar-logout" onClick={handleLogout}>
-              <FiLogOut className="logout-icon" />
-              <span>Logout</span>
+              <FiLogOut className="logout-icon" /> Log Out
             </div>
           </div>
         </div>
       </aside>
       <main className="main-content">
-        <div className="floating-notif">
-          <FaBell className="wiggle-bell" />
+        <div className="header-bar">
+          <div className="header-left">
+            <button className="nav-btn"><FaArrowLeft /></button>
+            <button className="nav-btn"><FaArrowRight /></button>
+            <h2 className="header-title">{activeSection.charAt(0).toUpperCase() + activeSection.slice(1)}</h2>
+          </div>
+          <div className="header-tools">
+            <div className="notif-icon">
+              <FaBell />
+              <span className="notif-badge">3</span>
+            </div>
+            <div className="profile-wrapper" onClick={() => setShowProfileMenu(!showProfileMenu)}>
+              <img src="/images/man1.png" alt="Profile" className="profile-img" />
+              {showProfileMenu && (
+                <div className="profile-dropdown">
+                  <p>Profile</p>
+                  <p>Settings</p>
+                  <p onClick={handleLogout}>Logout</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-        <section className="hero-banner animated fadeSlideUp">
-          <h2>Welcome back, Dr. Salem 👋</h2>
-          <p className="subtext">
-            Today is {new Date().toLocaleString('en-US', {
-              weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-              hour: '2-digit', minute: '2-digit'
-            })}
-          </p>
-        </section>
         {statusMessage && (
-          <div className="fade-out-message" style={{
-            position: 'fixed',
-            top: '20px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            background: '#38ada9',
-            padding: '10px 20px',
-            color: 'white',
-            borderRadius: '8px',
-            fontWeight: 'bold',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
-            transition: 'opacity 0.6s ease',
-            zIndex: 1000
-          }}>
+          <div className="floating-notif fade-out-message">
             {statusMessage}
           </div>
         )}
-        <section className="content-area">{renderContent()}</section>
+        {renderContent()}
       </main>
     </div>
   );
 }
 
 export default FacultyMemberDashboard;
-
-<style>
-  {`
-    @keyframes slideInRight {
-      from {
-        opacity: 0;
-        transform: translateX(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-  `}
-</style>
