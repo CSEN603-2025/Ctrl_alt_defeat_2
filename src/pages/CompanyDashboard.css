@@ -1,3 +1,4 @@
+
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
@@ -25,7 +26,6 @@ body {
 .sidebar .logo {
   display: flex;
   margin-top: 15px;
-  /* Adjust the value as needed to move the logo image down */
   align-items: center;
   justify-content: center;
   gap: 10px;
@@ -37,14 +37,11 @@ body {
   height: 40px;
   object-fit: contain;
   filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
-  /* Add a glowing effect */
   transition: filter 0.3s ease;
-  /* Smooth transition for hover effect */
 }
 
 .logo-img:hover {
   filter: drop-shadow(0 0 15px rgba(255, 255, 255, 1));
-  /* Intensify glow on hover */
 }
 
 .logo-text {
@@ -64,7 +61,6 @@ body {
   letter-spacing: 1px;
 }
 
-
 .sidebar ul {
   list-style: none;
   padding: 0;
@@ -83,9 +79,7 @@ body {
 .sidebar li:hover,
 .sidebar li.active {
   background-color: #f4f7f9;
-  /* Matches main content */
   color: #0a3d62;
-  /* Matches your text color */
   border-top-left-radius: 12px;
   border-bottom-left-radius: 12px;
   font-weight: 600;
@@ -212,12 +206,10 @@ body {
   padding: 20px 30px;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  /* Enhance shadow for emphasis */
   animation: fadeSlideUp 0.7s ease-out both;
 }
 
 .hero-banner h2 {
-
   margin: 0;
   font-size: 30px;
   font-weight: 600;
@@ -235,7 +227,6 @@ body {
     opacity: 0;
     transform: translateY(20px);
   }
-
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -255,7 +246,6 @@ body {
   0% {
     opacity: 0;
   }
-
   100% {
     opacity: 1;
   }
@@ -263,7 +253,6 @@ body {
 
 .floating-notif {
   position: fixed;
-  /* Make it float */
   top: 37px;
   right: 30px;
   background: #ffffff;
@@ -273,7 +262,6 @@ body {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   z-index: 999;
-  /* Ensure it's above everything */
 }
 
 .wiggle-bell {
@@ -282,27 +270,22 @@ body {
 }
 
 @keyframes wiggle {
-
-  0%,
-  100% {
+  0%, 100% {
     transform: rotate(0deg);
   }
-
   25% {
     transform: rotate(10deg);
   }
-
   50% {
     transform: rotate(-10deg);
   }
-
   75% {
     transform: rotate(6deg);
   }
 }
 
 .dashboard-overview {
-  padding: 20px 10px;
+  padding: 20px-10px;
   animation: fadeInUp 0.6s ease-out;
 }
 
@@ -358,7 +341,6 @@ body {
     opacity: 0;
     transform: translateY(20px);
   }
-
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -370,7 +352,6 @@ body {
     opacity: 0;
     transform: scale(0.9);
   }
-
   100% {
     opacity: 1;
     transform: scale(1);
@@ -411,7 +392,6 @@ body {
   font-size: 16px;
   color: #0a3d62;
 }
-
 
 .stat-bubble {
   font-size: 24px;
@@ -470,11 +450,6 @@ body {
   border-radius: 6px;
   border: 1px solid #ccc;
   flex: 1;
-}
-
-.hero-banner {
-  margin-left: -5px;
-  /* Adjust this value to move the hero banner to the left */
 }
 
 .internship-cards {
@@ -562,10 +537,9 @@ body {
     opacity: 0;
     transform: translateX(-20px);
   }
-
   100% {
     opacity: 1;
-    transform: translateX(10);
+    transform: translateX(0);
   }
 }
 
@@ -587,7 +561,6 @@ body {
     opacity: 0;
     transform: translateY(20px);
   }
-
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -609,7 +582,6 @@ body {
     opacity: 0;
     transform: translateX(-20px);
   }
-
   100% {
     opacity: 1;
     transform: translateX(0);
@@ -636,7 +608,6 @@ body {
     opacity: 0;
     transform: scale(0.9);
   }
-
   100% {
     opacity: 1;
     transform: scale(1);
@@ -647,52 +618,6 @@ body {
   animation-name: popIn;
   animation-duration: 0.5s;
   animation-fill-mode: both;
-}
-
-.delay-0 {
-  animation-delay: 0s;
-}
-
-.delay-1 {
-  animation-delay: 0.2s;
-}
-
-margin-left: 50px;
-
-/* Align with the padding of the hero banner */
-.tab-buttons {
-  margin-left: auto;
-  /* Push the buttons to the right */
-  margin-right: 500px;
-  /* Align with the padding of the hero banner */
-}
-
-/* Tab buttons */
-.tab-buttons button {
-  background: #ffffff;
-  border: 1px solid #0a3d62;
-  padding: 10px 20px;
-  color: #0a3d62;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 16px;
-}
-
-.tab-buttons button:hover {
-  background: #ffffff;
-  /* Lighten the background color */
-  color: #0a3d62;
-  /* Keep the text color consistent */
-  /* transform: scale(1.001); */
-  /* Add a slight zoom effect */
-}
-
-
-.tab-buttons button.active {
-  background: #0a3d62;
-  color: white;
 }
 
 .internship-table-container {
@@ -739,14 +664,12 @@ margin-left: 50px;
 .icon-field {
   position: relative;
   flex: 1;
-  /* Make each field take equal width */
 }
 
 .icon-field input,
 .icon-field select {
   width: 100%;
   padding: 10px 12px 10px 36px;
-  /* space for icon */
   border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 14px;
@@ -826,75 +749,111 @@ margin-left: 50px;
   align-items: center;
   gap: 6px;
   justify-content: center;
-  flex: 1;
   height: 32px;
   box-sizing: border-box;
   padding: 0 15px;
-  border: 1px solid #0a3d62;
+  border: 1px solid #0a3d62 !important;
   border-radius: 6px;
   background: #ffffff;
   color: #0a3d62;
   font-weight: 500;
+  font-size: 13px;
+  line-height: 1.5;
   cursor: pointer;
   transition: all 0.3s ease;
+  min-width: 120px;
+  max-width: 160px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
-.status-btn:last-child {
-  margin-right: 0;
+.status-btn svg {
+  font-size: 14px;
+  vertical-align: middle;
 }
 
-.status-btn:hover {
+.status-btn:hover,
+.status-btn:active,
+.status-btn:focus {
   background: #0a3d62;
   color: white;
+  border: 1px solid #0a3d62 !important;
   transform: scale(1.05);
+  outline: none;
 }
 
 .status-btn.selected {
   color: white !important;
   background-color: var(--btn-color);
-  border-color: var(--btn-color);
+  border: 1px solid var(--btn-color) !important;
+}
+
+.status-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  width: 280px; /* Fixed width to align evaluate-btn and status-dropdown */
 }
 
 .status-dropdown {
   padding: 4px 8px;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid #0a3d62;
   background: #fff;
   font-weight: 500;
   cursor: pointer;
   color: #0a3d62;
   font-size: 13px;
+  line-height: 1.5;
   min-width: 120px;
   max-width: 160px;
   height: 32px;
+  flex-shrink: 0; /* Prevent shrinking */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .evaluate-btn {
-  padding: 4px 8px;
-  border: 1px solid #0a3d62;
-  border-radius: 6px;
-  background: #f4f7f9;
-  color: #0a3d62;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 13px;
-  transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 6px;
+  justify-content: center;
   height: 32px;
+  box-sizing: border-box;
+  padding: 0 15px;
+  border: 1px solid #0a3d62 !important;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #0a3d62;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: all 0.3s ease;
   min-width: 120px;
   max-width: 160px;
-  box-sizing: border-box;
+  flex-shrink: 0; /* Prevent shrinking */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
-.evaluate-btn:hover {
+.evaluate-btn svg {
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.evaluate-btn:hover,
+.evaluate-btn:active,
+.evaluate-btn:focus {
   background: #0a3d62;
-  color: #fff;
-  border-color: #0a3d62;
+  color: white;
+  border: 1px solid #0a3d62 !important;
   transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(10, 61, 98, 0.12);
+  outline: none;
 }
 
 .fade-out-message {
@@ -906,11 +865,9 @@ margin-left: 50px;
   0% {
     opacity: 1;
   }
-
   80% {
     opacity: 1;
   }
-
   100% {
     opacity: 0;
     transform: scale(0.95);
@@ -953,7 +910,6 @@ margin-left: 50px;
 .sidebar-footer {
   margin-top: auto;
   padding: 20px 18px;
-  /* border-top: 1px solid rgba(255, 255, 255, 0.15); */
   display: flex;
   align-items: center;
   gap: 10px;
@@ -965,58 +921,39 @@ margin-left: 50px;
   height: 60px;
   border-radius: 50%;
   object-fit: cover;
-  background-image: "/images/bosta.png";
   background-color: #fff;
-  /* background-size: cover;
-  background-position: center; */
 }
 
 .sidebar-footer-info {
   color: #ffffff;
-  font-size: 24px;
-  line-height: 1.2;
+  font-size: 14px;
 }
 
 .sidebar-footer-name {
   font-weight: 600;
+  margin: 0;
 }
 
 .sidebar-footer-role {
-  font-size: 13px;
-  color: #b0d7f7;
+  font-size: 12px;
+  opacity: 0.8;
+  margin: 4px 0;
 }
 
 .sidebar-logout {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 8px;
-  font-size: 13px;
-  color: #fff;
   cursor: pointer;
-  transition: color 0.3s ease, transform 0.2s ease;
+  font-size: 13px;
+  margin-top: 8px;
+  transition: color 0.3s ease;
 }
 
 .sidebar-logout:hover {
-  color: #fff;
-  transform: translateX(4px);
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-  /* Add glowing effect */
+  color: #d1ecf1;
 }
 
 .logout-icon {
   font-size: 16px;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-}
-
-.floating-notif {
-  position: relative;
-  top: 0;
-  right: 0;
-  background: none;
-  box-shadow: none;
 }

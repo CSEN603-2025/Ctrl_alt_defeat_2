@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
-import { FaBuilding, FaEye, FaCheck, FaTimes, FaChartBar, FaLock, FaUnlock, FaFilter, FaEdit, FaPlus, FaTrash } from 'react-icons/fa';
-import ProStudentSidebar from '../components/ProStudentSidebar';
+import { FaBuilding, FaEye, FaCheck, FaTimes, FaChartBar, FaLock, FaUnlock, FaFilter, FaEdit, FaPlus, FaTrash, FaTh, FaFileAlt, FaUsers, FaNewspaper, FaBriefcase } from 'react-icons/fa';
+import { FiLogOut } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import AssessmentQuestions from './AssessmentQuestions';
 import './ProStudentProfile.css';
 
 const ProStudentProfile = () => {
+  const navigate = useNavigate();
+  const [activeSection, setActiveSection] = useState('dashboard');
   const [selectedTab, setSelectedTab] = useState('main-profile');
   const [showScore, setShowScore] = useState(false);
   const [currentAssessment, setCurrentAssessment] = useState(null);
   const [assessmentFilter, setAssessmentFilter] = useState('all');
   const [isEditing, setIsEditing] = useState(false);
   const [postedScores, setPostedScores] = useState([]);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [assessments, setAssessments] = useState([
     {
       id: 1,
@@ -361,6 +365,10 @@ const ProStudentProfile = () => {
     } else {
       setPostedScores(postedScores.filter(id => id !== assessment.id));
     }
+  };
+
+  const handleLogout = () => {
+    navigate('/SignIn');
   };
 
   const renderMainProfile = () => (
@@ -952,44 +960,81 @@ const ProStudentProfile = () => {
   };
 
   return (
-    <div className="pro-student-layout">
-      <ProStudentSidebar />
-      <div className="pro-student-content">
-        <div className="hero-banner">
-          <h2>My Profile</h2>
-          <p className="subtext">
-            Today is {new Date().toLocaleString('en-US', {
-              weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-              hour: '2-digit', minute: '2-digit'
-            })}
-          </p>
+    <div className="dashboard-layout">
+      <aside className="sidebar">
+        <div className="logo">
+          <img src="/images/guc-logo.png" alt="GUC Logo" className="logo-img" />
+          <div className="logo-text">
+            <span className="tagline"></span>
+          </div>
+        </div>
+        <ul>
+          <li className={activeSection === 'dashboard' ? 'active' : ''} onClick={() => navigate('/pro-student/dashboard')}><FaTh /> Dashboard</li>
+          <li className={activeSection === 'applications' ? 'active' : ''} onClick={() => navigate('/pro-student/applications')}><FaFileAlt /> Applications</li>
+          <li className={activeSection === 'internships' ? 'active' : ''} onClick={() => navigate('/pro-student/internships')}><FaBriefcase /> Internships</li>
+          <li className={activeSection === 'profile' ? 'active' : ''} onClick={() => setActiveSection('profile')}><FaUsers /> Profile</li>
+          <li className={activeSection === 'statistics' ? 'active' : ''} onClick={() => setActiveSection('statistics')}><FaChartBar /> Statistics</li>
+          <li className={activeSection === 'news' ? 'active' : ''} onClick={() => setActiveSection('news')}><FaNewspaper /> News</li>
+        </ul>
+        <div className="sidebar-footer">
+          <img src="/images/woman.png" alt="User" className="sidebar-footer-img" />
+          <div className="sidebar-footer-info">
+            <p className="sidebar-footer-name">Sara Ahmed</p>
+            <p className="sidebar-footer-role">Pro Student</p>
+            <div className="sidebar-logout" onClick={handleLogout}>
+              <FiLogOut className="logout-icon" />
+              <span>Logout</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main className="main-content">
+        <div className="header-bar">
+          <div className="header-left">
+            <h2 className="header-title">Profile</h2>
+          </div>
+          <div className="header-tools">
+            <div className="profile-wrapper" onClick={() => setShowProfileMenu(!showProfileMenu)}>
+              <img src="/images/woman.png" alt="Profile" className="profile-img" />
+              {showProfileMenu && (
+                <div className="profile-dropdown">
+                  <p onClick={() => navigate('/pro-student/profile')}>Profile</p>
+                  <p>Settings</p>
+                  <p onClick={handleLogout}>Logout</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
-        <div className="profile-tabs">
-          <button
-            className={selectedTab === 'main-profile' ? 'active' : ''}
-            onClick={() => setSelectedTab('main-profile')}
-          >
-            Main Profile
-          </button>
-          <button
-            className={selectedTab === 'profile-views' ? 'active' : ''}
-            onClick={() => setSelectedTab('profile-views')}
-          >
-            Profile Views
-          </button>
-          <button
-            className={selectedTab === 'assessments' ? 'active' : ''}
-            onClick={() => setSelectedTab('assessments')}
-          >
-            Online Assessments
-          </button>
-        </div>
+        <div className="profile-content">
+          <div className="profile-tabs">
+            <button
+              className={selectedTab === 'main-profile' ? 'active' : ''}
+              onClick={() => setSelectedTab('main-profile')}
+            >
+              Main Profile
+            </button>
+            <button
+              className={selectedTab === 'profile-views' ? 'active' : ''}
+              onClick={() => setSelectedTab('profile-views')}
+            >
+              Profile Views
+            </button>
+            <button
+              className={selectedTab === 'assessments' ? 'active' : ''}
+              onClick={() => setSelectedTab('assessments')}
+            >
+              Online Assessments
+            </button>
+          </div>
 
-        {selectedTab === 'main-profile' ? renderMainProfile() :
-          selectedTab === 'profile-views' ? renderProfileViews() :
-            renderAssessments()}
-      </div>
+          {selectedTab === 'main-profile' ? renderMainProfile() :
+            selectedTab === 'profile-views' ? renderProfileViews() :
+              renderAssessments()}
+        </div>
+      </main>
     </div>
   );
 };
