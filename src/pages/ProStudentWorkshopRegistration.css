@@ -67,7 +67,7 @@
 }
 
 .workshop-description {
-  color: #444;
+  color: #000000;
   line-height: 1.6;
   margin-bottom: 1.5rem;
 }
@@ -126,6 +126,17 @@
   box-shadow: 0 0 0 2px rgba(10, 61, 98, 0.1);
 }
 
+.form-group .input-error {
+  border-color: #e74c3c;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 0.25rem;
+  display: block;
+}
+
 .submit-button {
   width: 100%;
   padding: 1rem;
@@ -163,6 +174,6 @@
 
   .workshop-info,
   .registration-form {
-    padding: 1.5rem;
+    padding: amina.5rem;
   }
-} 
+}

@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FaArrowLeft, FaCalendarAlt, FaClock, FaUser } from 'react-icons/fa';
 import ProStudentSidebar from '../components/ProStudentSidebar';
+import { WorkshopContext } from './WorkshopContext';
 import './ProStudentWorkshopRegistration.css';
 
 const ProStudentWorkshopRegistration = () => {
   const navigate = useNavigate();
-  const { workshopId } = useParams();
+  const { id } = useParams();
+  const { workshops, setWorkshops } = useContext(WorkshopContext);
+
+  const workshop = workshops.find(w => w.id === parseInt(id));
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -18,17 +23,17 @@ const ProStudentWorkshopRegistration = () => {
     questions: ''
   });
 
-  // Mock workshop data - in a real app, this would be fetched from an API
-  const workshop = {
-    id: workshopId,
-    title: 'Career Development in Tech Industry',
-    date: '2024-04-15',
-    time: '14:00',
-    duration: '2 hours',
-    speaker: 'John Smith',
-    description: 'Learn about career paths and opportunities in the tech industry.',
-    topics: ['Career Planning', 'Industry Trends', 'Skill Development']
-  };
+  const [errors, setErrors] = useState({
+    fullName: '',
+    email: '',
+    phone: '',
+    university: '',
+    major: '',
+    semester: '',
+    interests: ''
+  });
+
+  const [showFeedback, setShowFeedback] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -36,20 +41,71 @@ const ProStudentWorkshopRegistration = () => {
       ...prev,
       [name]: value
     }));
+    setErrors(prev => ({
+      ...prev,
+      [name]: ''
+    }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
+    if (!formData.university.trim()) newErrors.university = 'University is required';
+    if (!formData.major.trim()) newErrors.major = 'Major is required';
+    if (!formData.semester.trim()) newErrors.semester = 'Current semester is required';
+    if (!formData.interests.trim()) newErrors.interests = 'Career interests are required';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here you would typically send the registration data to your backend
-    console.log('Registration data:', formData);
-    // Navigate back to workshops page after successful registration
-    navigate('/pro-student/workshops');
+    if (!validateForm()) return;
+
+    // Update workshop registration status
+    setWorkshops(prevWorkshops =>
+      prevWorkshops.map(w =>
+        w.id === parseInt(id) ? {
+          ...w,
+          isRegistered: true,
+          registrationDetails: {
+            ...formData,
+            registrationDate: new Date().toISOString()
+          }
+        } : w
+      )
+    );
+
+    // Show feedback message
+    setShowFeedback(true);
+
+    // Hide feedback after 3 seconds and navigate
+    setTimeout(() => {
+      setShowFeedback(false);
+      navigate('/pro-student/workshops');
+    }, 3000);
   };
+
+  if (!workshop) {
+    return <div className="pro-student-content">Workshop not found</div>;
+  }
 
   return (
     <div className="pro-student-layout">
       <ProStudentSidebar />
       <div className="pro-student-content">
+        {showFeedback && (
+          <div className="feedback-message">
+            Registration submitted successfully!
+          </div>
+        )}
         <button className="back-button" onClick={() => navigate('/pro-student/workshops')}>
           <FaArrowLeft /> Back to Workshops
         </button>
@@ -68,7 +124,7 @@ const ProStudentWorkshopRegistration = () => {
               </div>
               <div className="meta-item">
                 <FaUser />
-                <span>Speaker: {workshop.speaker}</span>
+                <span>Speaker: {workshop.speaker.name}</span>
               </div>
             </div>
             <p className="workshop-description">{workshop.description}</p>
@@ -81,102 +137,42 @@ const ProStudentWorkshopRegistration = () => {
 
           <form className="registration-form" onSubmit={handleSubmit}>
             <h2>Registration Form</h2>
-            
-            <div className="form-group">
-              <label htmlFor="fullName">Full Name</label>
-              <input
-                type="text"
-                id="fullName"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="phone">Phone Number</label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="university">University</label>
-              <input
-                type="text"
-                id="university"
-                name="university"
-                value={formData.university}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="major">Major</label>
-              <input
-                type="text"
-                id="major"
-                name="major"
-                value={formData.major}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="semester">Current Semester</label>
-              <input
-                type="text"
-                id="semester"
-                name="semester"
-                value={formData.semester}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="interests">What are your career interests?</label>
-              <textarea
-                id="interests"
-                name="interests"
-                value={formData.interests}
-                onChange={handleInputChange}
-                rows="3"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="questions">Do you have any specific questions for the speaker?</label>
-              <textarea
-                id="questions"
-                name="questions"
-                value={formData.questions}
-                onChange={handleInputChange}
-                rows="3"
-              />
-            </div>
-
+            {[
+              { id: 'fullName', label: 'Full Name', type: 'text', required: true },
+              { id: 'email', label: 'Email', type: 'email', required: true },
+              { id: 'phone', label: 'Phone Number', type: 'tel', required: true },
+              { id: 'university', label: 'University', type: 'text', required: true },
+              { id: 'major', label: 'Major', type: 'text', required: true },
+              { id: 'semester', label: 'Current Semester', type: 'text', required: true },
+              { id: 'interests', label: 'What are your career interests?', type: 'textarea', required: true },
+              { id: 'questions', label: 'Do you have any specific questions for the speaker?', type: 'textarea', required: false }
+            ].map(field => (
+              <div className="form-group" key={field.id}>
+                <label htmlFor={field.id}>{field.label}</label>
+                {field.type === 'textarea' ? (
+                  <textarea
+                    id={field.id}
+                    name={field.id}
+                    value={formData[field.id]}
+                    onChange={handleInputChange}
+                    rows="3"
+                    required={field.required}
+                    className={errors[field.id] ? 'input-error' : ''}
+                  />
+                ) : (
+                  <input
+                    type={field.type}
+                    id={field.id}
+                    name={field.id}
+                    value={formData[field.id]}
+                    onChange={handleInputChange}
+                    required={field.required}
+                    className={errors[field.id] ? 'input-error' : ''}
+                  />
+                )}
+                {errors[field.id] && <span className="error-message">{errors[field.id]}</span>}
+              </div>
+            ))}
             <button type="submit" className="submit-button">Register for Workshop</button>
           </form>
         </div>
@@ -185,4 +181,4 @@ const ProStudentWorkshopRegistration = () => {
   );
 };
 
-export default ProStudentWorkshopRegistration; 
+export default ProStudentWorkshopRegistration;

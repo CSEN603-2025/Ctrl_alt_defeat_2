@@ -10,7 +10,6 @@ function Header({ showBack }) {
       {showBack && (
         <button className="header-back" onClick={() => navigate(-1)}>← Back</button>
       )}
-      <h1 className="header-title">GUC Internship Portal</h1>
     </header>
   );
 }
