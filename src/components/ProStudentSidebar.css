@@ -36,7 +36,7 @@
 }
 
 .logo-text {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
   line-height: 1.2;
   text-align: left;
@@ -78,7 +78,7 @@
   text-decoration: none;
   transition: all 0.3s ease;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .nav-item:hover,
@@ -87,17 +87,24 @@
   color: #0a3d62;
   border-top-left-radius: 12px;
   border-bottom-left-radius: 12px;
+}
+
+.nav-item.active .nav-label {
   font-weight: 600;
 }
 
 .nav-icon {
   margin-right: 12px;
-  font-size: 18px;
+  font-size: 14px;
+}
+
+.nav-item:hover .nav-label {
+  font-weight: 600;
 }
 
 .nav-label {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 400;
 }
 
 .sidebar-footer {

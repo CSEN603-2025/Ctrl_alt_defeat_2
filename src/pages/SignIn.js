@@ -4,7 +4,6 @@ import './signin.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-
 function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,15 +32,16 @@ function SignIn() {
     }
     else if (email === 'admin@gmail.com' && password === '123') {
       alert('Redirect to admin dashboard coming soon!');
-    } 
-     else if (email === 'facultymember@gmail.com' && password === '123') {
-      navigate('/faculty-dashboard');
+    }
+    else if (email === 'facultymember@gmail.com' && password === '123') {
+      navigate('/faculty-dashboard');;
     }
     else {
-      setError('Invalid email or password.');}
-    };
-  
-return (
+      setError('Invalid email or password.');
+    }
+  };
+
+  return (
     <>
       <Header />
       <div className="signin-container">

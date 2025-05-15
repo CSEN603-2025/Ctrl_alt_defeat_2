@@ -1,4 +1,3 @@
-
 // CompanyDashboard.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -38,7 +37,9 @@ function CompanyDashboard() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    // Clear any stored data
     localStorage.clear();
+    // Redirect to sign in page
     navigate('/');
   };
 
@@ -48,6 +49,7 @@ function CompanyDashboard() {
   const [filterCompensation, setFilterCompensation] = useState('');
   const [sortOrder, setSortOrder] = useState('newest');
   const [selectedInternship, setSelectedInternship] = useState(null);
+
 
   const filterAndSort = (list) => {
     return list
@@ -65,6 +67,7 @@ function CompanyDashboard() {
         : new Date(a.date) - new Date(b.date)
       );
   };
+
 
   const handleSearch = (data) => {
     return data.filter((item) =>
@@ -99,9 +102,9 @@ function CompanyDashboard() {
     processedData = handleSort(processedData);
     return processedData;
   };
-
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [applicationFilter, setApplicationFilter] = useState('');
+
 
   const allInternships = [
     {
@@ -117,8 +120,8 @@ function CompanyDashboard() {
     {
       id: 2, title: 'Marketing Intern', company: 'Breadfast', logo: "/images/breadfast.png",
       majors: 'Marketing', date: '2025-04-20', duration: '2 months', status: 'Closed',
-      industry: 'Marketing', compensation: 'Unpaid', skills: ['SEO', 'Content Creation', 'Google Analytics', 'Email Marketing', 'Social Media Management', 'Copywriting', 'Paid Advertising', 'CRM Tools', 'Market Research', 'Brand Strategy'],
-      social: {
+      industry: 'Marketing', compensation: 'Unpaid', skills: ['SEO', 'Content Creation', 'Google Analytics', 'Email Marketing', 'Social Media Management', 'Copywriting', 'Paid Advertising', 'CRM Tools', 'Market Research', 'Brand Strategy']
+      , social: {
         linkedin: 'https://www.linkedin.com/company/breadfast',
         twitter: 'https://twitter.com/breadfast',
         website: 'https://www.breadfast.com'
@@ -134,6 +137,7 @@ function CompanyDashboard() {
       }, description: "Join our finance team as a Finance Analyst Intern. You will assist in financial analysis, budgeting, and forecasting. The ideal candidate should have strong analytical skills and proficiency in Excel. Knowledge of financial modeling is a plus."
     }
   ];
+
 
   const myInternships = [
     {
@@ -179,8 +183,8 @@ function CompanyDashboard() {
       applications: 8,
       newApps: 5,
     },
+    // Add more entries as needed
   ];
-
   const [applications, setApplications] = useState([
     {
       id: 1,
@@ -210,10 +214,10 @@ function CompanyDashboard() {
       phone: "8888555666",
       resumeLink: "#",
       status: "Rejected",
-      photo: "images/man2.png"
+      photo: "/images/man2.png"
     }
   ]);
-
+  // 🧠 Interns Section States
   const [interns, setInterns] = useState([
     {
       id: 1,
@@ -250,7 +254,6 @@ function CompanyDashboard() {
   });
   const [selectedInternForEval, setSelectedInternForEval] = useState(null);
   const [evaluations, setEvaluations] = useState({});
-
   const updateInternStatus = (id, newStatus) => {
     setInterns(prev => prev.map(intern => intern.id === id ? { ...intern, status: newStatus } : intern));
   };
@@ -286,6 +289,8 @@ function CompanyDashboard() {
     }
   };
 
+
+
   const removeTag = (type, tag) => {
     setEvaluationForm({ ...evaluationForm, [type]: evaluationForm[type].filter(t => t !== tag) });
   };
@@ -315,19 +320,21 @@ function CompanyDashboard() {
     setTimeout(() => setStatusMessage(''), 3000);
   };
 
+
+
+  // 🎯 Status Color Helper
   const getStatusColor = (status) => {
     switch (status) {
       case "Current Intern": return "#f6b93b";
       case "Internship Complete": return "#1e3799";
       case "Accepted Applicant": return "#60a3d9";
-      case "Finalized": return "#38ada9";
-      case "Accepted": return "#60a3d9";
-      case "Rejected": return "#e55039";
       default: return "#ccc";
     }
   };
 
   const [statusMessage, setStatusMessage] = useState('');
+
+
 
   const renderContent = () => {
     switch (activeSection) {
@@ -382,10 +389,12 @@ function CompanyDashboard() {
         );
 
       case 'search':
+
         return (
           <div className="internship-section animated fadeInUp">
             {selectedInternship ? (
               <div className="internship-details-container fadeIn">
+                {/* Box 1: Summary */}
                 <div className="details-card" style={{ marginBottom: '20px' }}>
                   <div className="details-header" style={{ display: 'flex', alignItems: 'flex-start', gap: '20px' }}>
                     <img src={selectedInternship.logo} alt="logo" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover' }} />
@@ -400,6 +409,8 @@ function CompanyDashboard() {
                     </div>
                   </div>
                 </div>
+
+                {/* Box 2: Skills and Description */}
                 <div className="details-card" style={{ marginBottom: '20px' }}>
                   <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Internship Details</h3>
                   <p><strong>Duration:</strong> {selectedInternship.duration}</p>
@@ -414,6 +425,8 @@ function CompanyDashboard() {
                     <p>{selectedInternship.description}</p>
                   </div>
                 </div>
+
+                {/* Box 3: Social Media */}
                 <div className="details-card">
                   <h3 style={{ color: '#0a3d62' }}>Connect</h3>
                   <div style={{ display: 'flex', gap: '20px', fontSize: '22px', marginTop: '10px' }}>
@@ -435,9 +448,7 @@ function CompanyDashboard() {
                   </div>
                 </div>
               </div>
-           
-
-) : (
+            ) : (
               <>
                 <div className="tab-buttons slide-in-left">
                   <button
@@ -453,6 +464,7 @@ function CompanyDashboard() {
                     All Internship Postings
                   </button>
                 </div>
+
                 <div className="filter-bar fade-in-delayed">
                   <div className="icon-field">
                     <FaSearch className="input-icon" style={{ color: '#0a3d62' }} />
@@ -463,6 +475,7 @@ function CompanyDashboard() {
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                   </div>
+
                   <div className="icon-field">
                     <FaFilter className="input-icon" style={{ color: '#0a3d62' }} />
                     <select onChange={(e) => {
@@ -486,6 +499,7 @@ function CompanyDashboard() {
                       ))}
                     </select>
                   </div>
+
                   <div className="icon-field">
                     <FaSortAmountDown className="input-icon" style={{ color: '#0a3d62' }} />
                     <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
@@ -494,6 +508,7 @@ function CompanyDashboard() {
                     </select>
                   </div>
                 </div>
+
                 <div className="internship-table-container animated fadeInUp">
                   <table className="internship-table">
                     <thead>
@@ -520,6 +535,7 @@ function CompanyDashboard() {
                         )}
                       </tr>
                     </thead>
+
                     <tbody>
                       {(activeTab === 'all' ? filterAndSort(allInternships) : filterAndSort(myInternships)).map((item, idx) => (
                         <tr key={idx} className="pop-in delay-0" onClick={() => setSelectedInternship(item)} style={{ cursor: 'pointer' }}>
@@ -601,7 +617,6 @@ function CompanyDashboard() {
             )}
           </div>
         );
-
       case 'applications':
         return (
           <div className="internship-section animated fadeInUp">
@@ -618,6 +633,7 @@ function CompanyDashboard() {
                     />
                   </div>
                 </div>
+
                 <div className="internship-table-container fade-in-delayed">
                   <table className="internship-table">
                     <thead>
@@ -633,12 +649,14 @@ function CompanyDashboard() {
                         .filter(app => app.internshipTitle.toLowerCase().includes(applicationFilter.toLowerCase()))
                         .map((app, idx) => (
                           <tr key={idx} className="pop-in delay-0" style={{ cursor: 'pointer' }} onClick={() => setSelectedApplication(app)}>
+
                             <td>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 <img src={app.photo} alt="profile" style={{ width: '30px', height: '30px', borderRadius: '50%' }} />
                                 {app.name}
                               </div>
                             </td>
+
                             <td>{app.internshipTitle}</td>
                             <td>{app.email}</td>
                             <td>
@@ -693,6 +711,7 @@ function CompanyDashboard() {
                     </a>
                   </div>
                 </div>
+
                 <div className="details-card">
                   <h3>Update Application Status</h3>
                   <div className="status-btn-group">
@@ -728,6 +747,22 @@ function CompanyDashboard() {
           </div>
         );
 
+        function getStatusColor(status) {
+          switch (status) {
+            case "Finalized":
+              return "#38ada9"; // Green
+            case "Accepted":
+              return "#60a3d9"; // Blue
+            case "Rejected":
+              return "#e55039"; // Red
+            case "Current Intern":
+              return "#f6b93b"; // Yellow
+            case "Internship Complete":
+              return "#1e3799"; // Dark Blue
+            default:
+              return "#ccc"; // Default Gray
+          }
+        }
       case 'interns':
         return (
           <div className="internship-section animated fadeInUp">
@@ -751,6 +786,7 @@ function CompanyDashboard() {
                 </select>
               </div>
             </div>
+
             {statusMessage && (
               <div className="fade-out-message" style={{
                 background: '#38ada9',
@@ -765,6 +801,7 @@ function CompanyDashboard() {
                 {statusMessage}
               </div>
             )}
+
             <div className="internship-table-container fade-in-delayed">
               <table className="internship-table">
                 <thead>
@@ -791,7 +828,7 @@ function CompanyDashboard() {
                         </td>
                         <td>{i.title}</td>
                         <td>
-                          <div className="status-controls">
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: '240px' }}>
                             <select
                               value={i.status}
                               onChange={(e) => {
@@ -807,21 +844,43 @@ function CompanyDashboard() {
                               <option value="Current Intern">Current Intern</option>
                               <option value="Internship Complete">Internship Complete</option>
                             </select>
-                            {i.status === "Internship Complete" && (
-                              <button
-                                className="evaluate-btn"
-                                onClick={() => handleEvaluationOpen(i)}
-                              >
-                                <FaPen size={14} /> <span>Evaluate</span>
-                              </button>
-                            )}
+
+                            <div style={{ width: '100px' }}>
+                              {i.status === "Internship Complete" && (
+                                <button
+                                  className="evaluate-btn"
+                                  style={{
+                                    backgroundColor: '#f4f7f9',
+                                    borderRadius: '8px',
+                                    border: '1px solid #0a3d62',
+                                    transition: 'transform 0.2s, color 0.2s',
+                                    cursor: 'pointer',
+                                    fontSize: '16px'
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.target.style.transform = 'scale(1.1)';
+                                    e.target.style.color = '#0077B5';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.target.style.transform = 'scale(1)';
+                                    e.target.style.color = '#0a3d62';
+                                  }}
+                                  onClick={() => handleEvaluationOpen(i)}
+                                >
+                                  <FaPen /> <span>Evaluate</span>
+                                </button>
+                              )}
+                            </div>
                           </div>
                         </td>
+
+
                       </tr>
                     ))}
                 </tbody>
               </table>
             </div>
+
             {selectedInternForEval && (
               <div className="details-card animated fadeInUp" style={{ marginTop: '30px' }}>
                 <div className="details-header" style={{
@@ -845,6 +904,7 @@ function CompanyDashboard() {
                     ✖
                   </button>
                 </div>
+
                 {evaluationForm.editable ? (
                   <form onSubmit={submitEvaluation}>
                     <p><strong>Rating:</strong></p>
@@ -859,6 +919,7 @@ function CompanyDashboard() {
                         </span>
                       ))}
                     </div>
+
                     <p><strong>Strengths:</strong></p>
                     <div className="tag-input" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '8px' }}>
                       {evaluationForm.strengths.map((tag, i) => (
@@ -875,6 +936,7 @@ function CompanyDashboard() {
                       ))}
                     </div>
                     <input type="text" placeholder="Add a strength..." className="evaluation-input" onKeyDown={(e) => handleTagInput(e, 'strengths')} />
+
                     <p><strong>Weaknesses:</strong></p>
                     <div className="tag-input" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '8px' }}>
                       {evaluationForm.weaknesses.map((tag, i) => (
@@ -891,7 +953,7 @@ function CompanyDashboard() {
                       ))}
                     </div>
                     <input type="text" placeholder="Add a weakness..." className="evaluation-input" onKeyDown={(e) => handleTagInput(e, 'weaknesses')} />
-                    <p><strong>Comments:</strong></p>
+                    <p><strong>Comments:</strong> {evaluationForm.comments}</p>
                     <textarea
                       rows="3"
                       className="evaluation-textarea"
@@ -901,8 +963,9 @@ function CompanyDashboard() {
                       }
                     />
                     <div className="status-btn-group">
-                      <button type="submit" className="status-btn"><FaSave size={14} /> Save Evaluation</button>
+                      <button type="submit" className="status-btn"><FaSave /> Save Evaluation</button>
                     </div>
+
                   </form>
                 ) : (
                   <div>
@@ -910,6 +973,7 @@ function CompanyDashboard() {
                     <div style={{ fontSize: '24px', color: '#f6b93b' }}>
                       {'★'.repeat(evaluationForm.rating)}{'☆'.repeat(5 - evaluationForm.rating)}
                     </div>
+
                     <p><strong>Strengths:</strong></p>
                     <textarea
                       rows="2"
@@ -922,6 +986,7 @@ function CompanyDashboard() {
                         minHeight: '60px'
                       }}
                     />
+
                     <p><strong>Weaknesses:</strong></p>
                     <textarea
                       rows="2"
@@ -934,6 +999,7 @@ function CompanyDashboard() {
                         minHeight: '60px'
                       }}
                     />
+
                     <p><strong>Comments:</strong></p>
                     <textarea
                       rows="3"
@@ -946,8 +1012,9 @@ function CompanyDashboard() {
                         minHeight: '80px'
                       }}
                     />
+
                     <div className="status-btn-group">
-                      <button className="status-btn" onClick={() => setEvaluationForm({ ...evaluationForm, editable: true })}><FaEdit size={14} /> Edit</button>
+                      <button className="status-btn" onClick={() => setEvaluationForm({ ...evaluationForm, editable: true })}><FaEdit /> Edit</button>
                       <button
                         className="status-btn"
                         onClick={() => {
@@ -964,7 +1031,7 @@ function CompanyDashboard() {
                           setTimeout(() => setStatusMessage(""), 3000);
                         }}
                       >
-                        <FaTrash size={14} /> Delete
+                        <FaTrash /> Delete
                       </button>
                     </div>
                   </div>
@@ -973,6 +1040,8 @@ function CompanyDashboard() {
             )}
           </div>
         );
+
+
 
       default:
         return <h2 className="animated fadeIn">Loading...</h2>;
@@ -988,9 +1057,10 @@ function CompanyDashboard() {
             <span className="tagline"></span>
           </div>
         </div>
+
         <ul>
           <li className={activeSection === 'dashboard' ? 'active' : ''} onClick={() => setActiveSection('dashboard')}><FaTh /> Dashboard</li>
-          <li className={activeSection === 'search' ? 'active' : ''} onClick={() => setActiveSection('search')}><FaBriefcase /> Internship Postings</li>
+          <li className={activeSection === 'search' ? 'active' : ''} onClick={() => setActiveSection('search')}><FaBriefcase /> Internship  Postings</li>
           <li className={activeSection === 'applications' ? 'active' : ''} onClick={() => setActiveSection('applications')}><FaFileAlt /> Applications</li>
           <li className={activeSection === 'interns' ? 'active' : ''} onClick={() => setActiveSection('interns')}><FaUsers /> Current Interns</li>
           <li className={activeSection === 'statistics' ? 'active' : ''} onClick={() => setActiveSection('statistics')}><FaChartBar /> Statistics</li>
@@ -1007,7 +1077,9 @@ function CompanyDashboard() {
             </div>
           </div>
         </div>
+
       </aside>
+
       <main className="main-content">
         <div className="header-bar">
           <div className="header-left">
@@ -1028,8 +1100,9 @@ function CompanyDashboard() {
             <button className="nav-btn" onClick={() => navigate(1)}>
               <FaArrowRight />
             </button>
-            </div>
+          </div>
         </div>
+
         <div className="floating-notif">
           <FaBell className="wiggle-bell" />
         </div>
@@ -1042,6 +1115,7 @@ function CompanyDashboard() {
             })}
           </p>
         </section>
+
         <section className="content-area">{renderContent()}</section>
       </main>
     </div>
