@@ -63,6 +63,17 @@ const ProStudentInternshipReport = () => {
 
   const handleDelete = () => {
     console.log('Delete report clicked');
+
+    showFeedback('Report deleted successfully!'); // Display feedback message
+    setTimeout(() => {
+      navigate(`/pro-student/internships/${id}`, {
+        state: {
+          internship,
+          isCompleted: true
+        }
+      });
+    }, 1000); // Delay navigation by 1 second
+
     // Redirect to the same location as the Back button
     navigate(`/pro-student/internships/${id}`, {
       state: {
@@ -70,12 +81,13 @@ const ProStudentInternshipReport = () => {
         isCompleted: true
       }
     });
+
   };
 
   const handleDownload = () => {
     const pdfContent = `
       Internship Report
-      ===============
+   
 
       Company: ${internship.company}
       Position: ${internship.title}
@@ -115,6 +127,45 @@ const ProStudentInternshipReport = () => {
     showFeedback('Report downloaded successfully!');
   };
 
+  // Updated button style with centered text
+  const buttonStyle = {
+    width: '100%', // Full width
+    display: 'flex',
+    justifyContent: 'center', // Center text and icons horizontally
+    alignItems: 'center', // Vertically center content
+    gap: '5px',
+    padding: '10px 20px',
+    backgroundColor: '#f4f7f9', // Default background
+    color: '#0a3d62', // Default text color
+    border: '1px solid #0a3d62', // Default border color
+    borderRadius: '5px',
+    fontSize: '14px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s, color 0.2s',
+    textAlign: 'center' // Ensure text is centered
+  };
+
+  // Hover effect for all buttons
+  const handleMouseOver = (e) => {
+    e.currentTarget.style.backgroundColor = '#0a3d62';
+    e.currentTarget.style.color = '#fff'; // Text to white on hover
+    // Update the icon color by targeting child elements
+    const icon = e.currentTarget.querySelector('svg');
+    if (icon) {
+      icon.style.color = '#fff'; // Icon to white on hover
+    }
+  };
+
+  const handleMouseOut = (e, isDeleteButton = false) => {
+    e.currentTarget.style.backgroundColor = '#f4f7f9';
+    e.currentTarget.style.color = isDeleteButton ? '#dc3545' : '#0a3d62'; // Reset text color
+    const icon = e.currentTarget.querySelector('svg');
+    if (icon) {
+      icon.style.color = isDeleteButton ? '#dc3545' : '#0a3d62'; // Reset icon color
+    }
+  };
+
   if (!internship) {
     return (
       <div className="pro-student-layout">
@@ -138,6 +189,9 @@ const ProStudentInternshipReport = () => {
           <p>Submit your detailed internship report below</p>
         </div>
 
+
+        {/* ✅ Back Button (Styled like screenshot) */}
+
         <div
           className="back-btn"
           onClick={() =>
@@ -153,17 +207,22 @@ const ProStudentInternshipReport = () => {
         </div>
 
         {feedbackMessage && (
-          <div className="feedback-message">
+          <div
+           className="feedback-message"style={{ marginTop: '15px', width: '100%', textAlign: 'center' }}
+          >
             {feedbackMessage}
           </div>
         )}
 
-        <div className="report-form-container">
-          <div className="report-form-card">
-            <div className="internship-info">
-              <h3>{internship.title}</h3>
-              <p className="company-name">{internship.company}</p>
-              <p>Duration: {internship.startDate} to {internship.endDate}</p>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <div style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+            {/* Internship Info */}
+            <div style={{ marginBottom: '20px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#000', margin: '0 0 5px' }}>{internship.title}</h3>
+              <p style={{ fontSize: '14px', color: '#777', margin: '0 0 5px' }}>{internship.company}</p>
+              <p style={{ fontSize: '14px', color: '#777', margin: '0' }}>
+                Duration: {internship.startDate} to {internship.endDate}
+              </p>
             </div>
 
             <form onSubmit={handleSubmit}>
@@ -175,8 +234,10 @@ const ProStudentInternshipReport = () => {
                 'Conclusions',
                 'Recommendations'
               ].map((field, index) => (
-                <div key={field} className="form-group" style={{ '--item-index': index }}>
-                  <label style={{ color: '#000000', fontWeight: '700' }}>{field}</label>
+                <div key={field} style={{ marginBottom: '20px' }}>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '700', color: '#000', marginBottom: '5px' }}>
+                    {field}
+                  </label>
                   <textarea
                     value={reportData[field.replace(/ /g, '').toLowerCase()]}
                     onChange={(e) =>
@@ -184,9 +245,27 @@ const ProStudentInternshipReport = () => {
                     }
                     placeholder={`Enter ${field.toLowerCase()}...`}
                     required
+                    style={{
+                      width: '100%',
+                      minHeight: '100px',
+                      padding: '10px',
+                      fontSize: '14px',
+                      border: '1px solid #ddd',
+                      borderRadius: '5px',
+                      resize: 'vertical'
+                    }}
                   />
                 </div>
               ))}
+
+              {/* Buttons */}
+              <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <button
+                  type="submit"
+                  style={buttonStyle}
+                  onMouseOver={handleMouseOver}
+                  onMouseOut={(e) => handleMouseOut(e, false)}
+                >
 
               {/* Relevant Courses Section */}
               <div style={{ marginBottom: '20px' }}>
@@ -227,10 +306,34 @@ const ProStudentInternshipReport = () => {
 
               <div className="form-actions">
                 <button type="submit" className="action-button submit">
+
                   <FaCheck /> Submit Report
+                </button>
+                <button
+                  type="button"
+                  style={buttonStyle}
+                  onMouseOver={handleMouseOver}
+                  onMouseOut={(e) => handleMouseOut(e, false)}
+                  onClick={handleDownload}
+                >
+                  <FaDownload /> Download Report
+                </button>
+                <button
+                  type="button"
+                  style={{
+                    ...buttonStyle,
+                    color: '#dc3545' // Red text for Delete by default
+                  }}
+                  onMouseOver={handleMouseOver}
+                  onMouseOut={(e) => handleMouseOut(e, true)}
+                  onClick={handleDelete}
+                >
+                  <FaTrash style={{ color: '#dc3545' }} /> {/* Red icon by default */}
+                  Delete Report
                 </button>
               </div>
             </form>
+
             <div className="form-actions" style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <button
                 type="button"
@@ -251,6 +354,7 @@ const ProStudentInternshipReport = () => {
                 Delete Report
               </button>
             </div>
+
           </div>
         </div>
       </div>
