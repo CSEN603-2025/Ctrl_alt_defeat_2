@@ -35,7 +35,11 @@ function SignIn() {
     }
     else if (email === 'facultymember@gmail.com' && password === '123') {
       navigate('/faculty-dashboard');;
+  
     }
+    else if (email ==='scad@gmail.com' && password ==='123'){
+      navigate('/scad-dashboard');;
+}
     else {
       setError('Invalid email or password.');
     }

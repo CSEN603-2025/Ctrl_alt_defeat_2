@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaFileAlt, FaUpload, FaCheck, FaTimes } from 'react-icons/fa';
 import ProStudentSidebar from '../components/ProStudentSidebar';
-import BackButton from '../components/BackButton';
 import './ProStudentInternships.css';
 
 const ProStudentInternshipApplication = () => {
@@ -18,6 +17,7 @@ const ProStudentInternshipApplication = () => {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
 
   useEffect(() => {
     // In a real application, this would be an API call
@@ -41,6 +41,67 @@ const ProStudentInternshipApplication = () => {
           linkedin: 'https://linkedin.com/company/instabug',
           twitter: 'https://twitter.com/instabug',
           website: 'https://instabug.com'
+        }
+      },
+      {
+        id: 2,
+        title: 'Junior Developer Intern',
+        company: 'Breadfast',
+        logo: '/images/breadfast.png',
+        duration: '3 months',
+        type: 'Part-time',
+        salary: '$20/hour',
+        compensation: 'Paid',
+        industry: 'E-commerce',
+        requirements: ['Java', 'HTML', 'CSS'],
+        description: 'Learn the basics of software development in a supportive environment.',
+        major: 'Computer Science',
+        semester: 'Semester 2',
+        date: '2024-03-10',
+        social: {
+          linkedin: 'https://linkedin.com/company/breadfast',
+          website: 'https://breadfast.com',
+          twitter: 'https://twitter.com/breadfast'
+        }
+      },
+      {
+        id: 3,
+        title: 'Web Development Intern',
+        company: 'Bosta',
+        logo: '/images/bosta.png',
+        duration: '4 months',
+        type: 'Full-time',
+        salary: '$22/hour',
+        compensation: 'Paid',
+        industry: 'Logistics',
+        requirements: ['JavaScript', 'Node.js', 'MongoDB'],
+        description: 'Work on full-stack web development projects.',
+        major: 'Computer Science',
+        semester: 'Semester 3',
+        date: '2024-03-05',
+        social: {
+          linkedin: 'https://linkedin.com/company/bosta',
+          website: 'https://bosta.co'
+        }
+      },
+      {
+        id: 4,
+        title: 'Mobile App Development Intern',
+        company: 'Valeo',
+        logo: '/images/valeo.png',
+        duration: '3 months',
+        type: 'Full-time',
+        salary: '$24/hour',
+        compensation: 'Paid',
+        industry: 'Automotive',
+        requirements: ['React Native', 'JavaScript', 'Mobile Development'],
+        description: 'Develop cross-platform mobile applications.',
+        major: 'Computer Science',
+        semester: 'Semester 4',
+        date: '2024-03-01',
+        social: {
+          linkedin: 'https://linkedin.com/company/valeo',
+          website: 'https://valeo.com'
         }
       }
     ];
@@ -120,7 +181,7 @@ const ProStudentInternshipApplication = () => {
 
   const handleSubmitApplication = async (e) => {
     e.preventDefault();
-    
+
     if (!validateFiles()) {
       return;
     }
@@ -130,7 +191,10 @@ const ProStudentInternshipApplication = () => {
       // In a real application, this would be an API call to submit the application
       // and update the user's applications list
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-      navigate('/pro-student/applications');
+      setShowFeedback(true);
+      setTimeout(() => {
+        navigate('/pro-student/internships');
+      }, 3000);
     } catch (error) {
       console.error('Error submitting application:', error);
       // Handle error appropriately
@@ -144,7 +208,6 @@ const ProStudentInternshipApplication = () => {
       <div className="pro-student-layout">
         <ProStudentSidebar />
         <div className="pro-student-content">
-          <BackButton />
           <div className="loading-container">
             <div className="loading-spinner"></div>
             <p>Loading internship details...</p>
@@ -158,33 +221,48 @@ const ProStudentInternshipApplication = () => {
     <div className="pro-student-layout">
       <ProStudentSidebar />
       <div className="pro-student-content">
-        <BackButton />
-        <div className="application-container">
-          <div className="application-header">
-            <h2>Apply for {internship.title}</h2>
-            <p className="company-name">{internship.company}</p>
+        {showFeedback && (
+          <div className="feedback-message">
+            Application submitted successfully! Redirecting to internships...
           </div>
+        )}
+        <div className="hero-banner">
+          <h1>Application Form</h1>
+          <p>Submit your application for the internship position</p>
+        </div>
+
+        <button onClick={() => navigate('/pro-student/internships')} className="back-btn">← Back to Internships</button>
+
+        <div className="application-container">
+          <div className="application-header" style={{ textAlign: 'left' }}>
+            <h2 style={{ color: '#0a3d62', margin: '0 0 5px 0' }}>
+              Application for {internship.title}
+            </h2>
+            <p style={{ color: '#0a3d62', fontWeight: 'bold', fontSize: '16px', margin: 0 }}>
+              {internship.company}
+            </p>
+          </div>
+
 
           <form className="application-form" onSubmit={handleSubmitApplication}>
             <div className="form-section">
-              <h3>Required Documents</h3>
               <div className="form-group">
-                <label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <FaFileAlt /> Resume/CV
                   <span className="required">*</span>
                 </label>
                 <div className="file-upload-container">
-                  <input 
-                    type="file" 
-                    accept=".pdf,.doc,.docx" 
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
                     onChange={(e) => handleFileUpload(e, 'cv')}
                     className={errors.cv ? 'error' : ''}
                   />
                   {applicationFiles.cv && (
                     <div className="file-preview">
                       <span>{applicationFiles.cv.name}</span>
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         className="remove-file"
                         onClick={() => removeFile('cv')}
                       >
@@ -198,22 +276,22 @@ const ProStudentInternshipApplication = () => {
               </div>
 
               <div className="form-group">
-                <label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <FaFileAlt /> Cover Letter
                   <span className="required">*</span>
                 </label>
                 <div className="file-upload-container">
-                  <input 
-                    type="file" 
-                    accept=".pdf,.doc,.docx" 
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
                     onChange={(e) => handleFileUpload(e, 'coverLetter')}
                     className={errors.coverLetter ? 'error' : ''}
                   />
                   {applicationFiles.coverLetter && (
                     <div className="file-preview">
                       <span>{applicationFiles.coverLetter.name}</span>
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         className="remove-file"
                         onClick={() => removeFile('coverLetter')}
                       >
@@ -227,22 +305,22 @@ const ProStudentInternshipApplication = () => {
               </div>
 
               <div className="form-group">
-                <label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <FaFileAlt /> Academic Transcript
                   <span className="required">*</span>
                 </label>
                 <div className="file-upload-container">
-                  <input 
-                    type="file" 
-                    accept=".pdf,.doc,.docx" 
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
                     onChange={(e) => handleFileUpload(e, 'academicTranscript')}
                     className={errors.academicTranscript ? 'error' : ''}
                   />
                   {applicationFiles.academicTranscript && (
                     <div className="file-preview">
                       <span>{applicationFiles.academicTranscript.name}</span>
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         className="remove-file"
                         onClick={() => removeFile('academicTranscript')}
                       >
@@ -256,22 +334,22 @@ const ProStudentInternshipApplication = () => {
               </div>
 
               <div className="form-group">
-                <label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <FaFileAlt /> ID/Passport Copy
                   <span className="required">*</span>
                 </label>
                 <div className="file-upload-container">
-                  <input 
-                    type="file" 
-                    accept=".pdf,.jpg,.jpeg,.png" 
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png"
                     onChange={(e) => handleFileUpload(e, 'idPassport')}
                     className={errors.idPassport ? 'error' : ''}
                   />
                   {applicationFiles.idPassport && (
                     <div className="file-preview">
                       <span>{applicationFiles.idPassport.name}</span>
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         className="remove-file"
                         onClick={() => removeFile('idPassport')}
                       >
@@ -285,7 +363,7 @@ const ProStudentInternshipApplication = () => {
               </div>
 
               <div className="form-group">
-                <label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <FaFileAlt /> Additional Certificates (Optional)
                 </label>
                 <div className="file-upload-container">
@@ -300,8 +378,8 @@ const ProStudentInternshipApplication = () => {
                       {applicationFiles.certificates.map((cert, index) => (
                         <div key={index} className="file-preview">
                           <span>{cert.name}</span>
-                          <button 
-                            type="button" 
+                          <button
+                            type="button"
                             className="remove-file"
                             onClick={() => removeFile('certificates', index)}
                           >
@@ -317,18 +395,18 @@ const ProStudentInternshipApplication = () => {
             </div>
 
             <div className="form-actions">
-              <button 
-                type="button" 
-                className="cancel-button" 
-                onClick={() => navigate(`/pro-student/internships/${id}`)}
+              <button
+                type="submit"
+                className="action-button"
                 disabled={isSubmitting}
-              >
-                Cancel
-              </button>
-              <button 
-                type="submit" 
-                className="submit-button"
-                disabled={isSubmitting}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  width: '100%',
+                  margin: '0 auto'
+                }}
               >
                 {isSubmitting ? 'Submitting...' : 'Submit Application'}
               </button>
@@ -336,6 +414,58 @@ const ProStudentInternshipApplication = () => {
           </form>
         </div>
       </div>
+
+      <style>
+        {`
+          .feedback-message {
+            background: linear-gradient(to right, #0a3d62, #3c6382);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            margin: 0 0 20px 0;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            font-size: 15px;
+            animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s;
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(10, 61, 98, 0.3),
+              0 8px 30px rgba(10, 61, 98, 0.2);
+            min-width: 320px;
+            text-align: center;
+            letter-spacing: 0.3px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+          }
+
+          @keyframes slideIn {
+            from {
+              transform: translate(-50%, -100%);
+              opacity: 0;
+            }
+
+            to {
+              transform: translate(-50%, 0);
+              opacity: 1;
+            }
+          }
+
+          @keyframes fadeOut {
+            from {
+              opacity: 1;
+              transform: translate(-50%, 0);
+            }
+
+            to {
+              opacity: 0;
+              transform: translate(-50%, -20px);
+            }
+          }
+        `}
+      </style>
     </div>
   );
 };

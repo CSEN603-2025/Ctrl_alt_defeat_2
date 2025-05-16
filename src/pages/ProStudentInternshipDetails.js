@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { FaBuilding, FaClock, FaMoneyBillWave, FaGraduationCap, FaCalendarAlt, FaIndustry, FaLinkedin, FaTwitter, FaGlobe, FaFileAlt, FaDownload, FaFileDownload } from 'react-icons/fa';
+import { FaBuilding, FaBell,FaClock, FaMoneyBillWave, FaGraduationCap, FaCalendarAlt, FaIndustry, FaLinkedin, FaTwitter, FaGlobe, FaFileAlt, FaDownload, FaFileDownload } from 'react-icons/fa';
 import ProStudentSidebar from '../components/ProStudentSidebar';
-import BackButton from '../components/BackButton';
 import './ProStudentInternships.css';
 
 // Import html2pdf
@@ -236,7 +235,6 @@ const ProStudentInternshipDetails = () => {
       <div className="pro-student-layout">
         <ProStudentSidebar />
         <div className="pro-student-content">
-          <BackButton />
           <div className="loading-container">
             <div className="loading-spinner"></div>
             <p>Loading internship details...</p>
@@ -250,172 +248,348 @@ const ProStudentInternshipDetails = () => {
     <div className="pro-student-layout">
       <ProStudentSidebar />
       <div className="pro-student-content">
-        <BackButton />
-        <div className="internship-details-container">
-          <div className="details-card">
-            <div className="details-header">
-              <div className="logo-container">
-                <img 
-                  src={internship.logo} 
-                  alt={internship.company} 
-                  className="company-logo-large"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = '/images/default-company.png';
+        <div className="hero-banner">
+          <h1>Internship Details</h1>
+          <p>View and manage your internship information</p>
+        </div>
+
+        <div className="internship-details-container fadeIn">
+<button
+  onClick={() =>
+    navigate('/pro-student/internships', {
+      state: { from: 'completed' }
+    })
+  }
+  className="back-btn"
+>
+  ← Back to My Internships
+</button>
+          {/* Box 1: Summary */}
+          <div className="details-card" style={{ marginBottom: '20px' }}>
+            <div className="details-header" style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+              <div style={{ flex: '0 0 120px' }}>
+                <img
+                  src={internship.logo}
+                  alt="logo"
+                  style={{
+                    width: '120px',
+                    height: '120px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                   }}
                 />
               </div>
-              <div className="company-info">
-                <h2>{internship.company}</h2>
-                <p className="internship-title">{internship.title}</p>
-                <div className="tags-container">
-                  <span className="badge">{internship.industry}</span>
-                  <span className="status-tag">{internship.type}</span>
-                  {isCompleted ? (
-                    <>
-                      <span className="status-tag completed">Completed</span>
-                      <span className="grade-tag">Grade: {internship.finalGrade}</span>
-                    </>
-                  ) : isCurrent ? (
-                    <span className="status-tag current">In Progress</span>
-                  ) : (
-                    <span className="date-tag">📅 {internship.date}</span>
-                  )}
-                </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ marginBottom: '15px' }}>
+                  <h2 style={{
+                    margin: '0 0 5px 0',
+                    color: '#2c3e50',
+                    fontSize: '24px'
+                  }}>
+                    {internship.company}
+                  </h2>
+                  <p style={{
+                    fontWeight: 'bold',
+                    color: '#0a3d62',
+                    margin: '0 0 10px 0',
+                    fontSize: '18px'
+                  }}>
+                    {internship.title}
+                  </p>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '15px' }}>
+  <div style={{ 
+  display: 'flex', 
+  gap: '10px',
+  marginBottom: '15px'
+}}>
+  {/* Industry Badge */}
+  <span style={{
+    backgroundColor: '#3c6382',
+    padding: '6px 12px',
+    borderRadius: '20px',
+    fontSize: '14px',
+    color: 'white'
+  }}>
+    {internship.industry}
+  </span>
+  
+  {/* Job Type Badge */}
+  <span style={{
+    padding: '6px 12px',
+    borderRadius: '20px',
+    fontSize: '14px',
+    backgroundColor: '#0a3d62',
+    color: 'white'
+  }}>
+    {internship.type}
+  </span>
+</div>
+  <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#666', fontSize: '14px' }}>
+    <FaClock style={{ color: '#0a3d62' }} />
+    <span>Posted on {internship.date}</span>
+  </div>
+</div>
+</div>
               </div>
-            </div>
-
-            <div className="details-content">
-              <div className="info-grid">
-                <div className="info-item">
-                  <FaClock />
-                  <div>
-                    <label>Duration</label>
-                    <p>{internship.duration}</p>
-                  </div>
-                </div>
-                <div className="info-item">
-                  <FaMoneyBillWave />
-                  <div>
-                    <label>Compensation</label>
-                    <p>{internship.compensation} {internship.salary}</p>
-                  </div>
-                </div>
-                <div className="info-item">
-                  <FaGraduationCap />
-                  <div>
-                    <label>Major</label>
-                    <p>{internship.major}</p>
-                  </div>
-                </div>
-                <div className="info-item">
-                  <FaCalendarAlt />
-                  <div>
-                    <label>Semester</label>
-                    <p>{internship.semester}</p>
-                  </div>
-                </div>
-              </div>
-
               {isCompleted && (
-                <div className="completed-info">
-                  <div className="info-item">
-                    <label>Start Date</label>
-                    <p>{internship.startDate}</p>
-                  </div>
-                  <div className="info-item">
-                    <label>End Date</label>
-                    <p>{internship.endDate}</p>
-                  </div>
-                  <div className="info-item">
-                    <label>Mentor</label>
-                    <p>{internship.mentor}</p>
-                  </div>
-                  <div className="info-item">
-                    <label>Certificate</label>
-                    <button className="download-button" onClick={handleDownloadCertificate}>
-                      <FaDownload /> Download Certificate
-                    </button>
-                  </div>
+                <div style={{
+                  flex: '0 0 60px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}>
+                  <span style={{
+                    fontSize: '12px',
+                    color: '#666',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px',
+                    width: '50px',
+                    textAlign: 'center'
+                  }}>
+                    Grade
+                  </span>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
+
+  <div className="grade-circle" style={{
+    width: '35px',
+    height: '35px',
+    borderRadius: '50%',
+    background: 'white',
+    color: '#0a3d62',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '20px',
+    fontWeight: '500',
+
+    border: '2px solid #1f995a',
+    position: 'relative'
+  }}>
+    {internship.finalGrade}
+    <div style={{
+      position: 'absolute',
+      top: '-2px',
+      left: '-2px',
+      right: '-2px',
+      bottom: '-2px',
+      borderRadius: '50%',
+      background: 'linear-gradient(135deg, rgba(46, 213, 115, 0.2) 0%, rgba(46, 213, 115, 0.1) 100%)',
+      filter: 'blur(4px)',
+      zIndex: -1
+    }} />
+  </div>
+  <style>
+    {`
+      .action-button {
+        border: 2px solid #1f995a !important;
+      }
+    `}
+  </style>
+  {isCompleted && (
+    <button
+      className="action-button"
+      onClick={handleDownloadCertificate}
+      style={{
+        marginTop: '10px',
+        fontSize: '13px',
+        padding: '6px 12px',
+        backgroundColor: '#1f995a',
+        color: '#ffffff',
+        // border: '2px solidrgb(32, 144, 79)',
+        borderRadius: '20px',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '6px'
+      }}
+    >
+      <FaDownload /> Certificate
+    </button>
+  )}
+</div>
+
                 </div>
               )}
+            </div>
+          </div>
 
-              <div className="description-documents-container">
-                <div className="description">
-                  <h4>Description</h4>
-                  <p className="description-text">{internship.description}</p>
-                </div>
+          {/* Box 2: Internship Details and Skills */}
+          <div className="details-card" style={{ marginBottom: '20px' }}>
+            <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Internship Details</h3>
+            <div>
+              <p><strong>Duration:</strong> {internship.duration}</p>
+              <p><strong>Compensation:</strong> {internship.compensation}</p>
+              {internship.compensation === 'Paid' && (
+                <p><strong>Salary:</strong> {internship.salary}</p>
+              )}
+              <p><strong>Major:</strong> {internship.major}</p>
+              <p><strong>Semester:</strong> {internship.semester}</p>
+              <p style={{ marginTop: '15px' }}><strong>Skills Required:</strong></p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
+                {internship.requirements.map((skill, index) => (
+                  <span key={index} style={{
+                    backgroundColor: '#e8f4f8',
+                    color: '#0a3d62',
+                    padding: '5px 12px',
+                    borderRadius: '15px',
+                    fontSize: '0.9rem'
+                  }}>
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="description" style={{ marginTop: '20px' }}>
+              <h4 style={{ color: '#2c3e50', marginBottom: '10px' }}>Description</h4>
+              <p style={{ color: '#666', lineHeight: '1.6' }}>{internship.description}</p>
+            </div>
+          </div>
 
-                <div className="documents-section">
-                  <h4>Required Documents</h4>
-                  <ul className="documents-list">
-                    <li>
-                      <FaFileAlt />
+          {/* Box 3: Required Documents - Only show for non-completed internships */}
+          {!isCompleted && (
+            <div className="details-card" style={{ marginBottom: '20px' }}>
+              <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Required Documents</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+                <div>
+                  <ul style={{ listStyle: 'none', padding: 0 }}>
+                    <li style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                      <FaFileAlt style={{ color: '#0a3d62' }} />
                       <span>CV/Resume</span>
                     </li>
-                    <li>
-                      <FaFileAlt />
+                    <li style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                      <FaFileAlt style={{ color: '#0a3d62' }} />
                       <span>Cover Letter</span>
                     </li>
-                    <li>
-                      <FaFileAlt />
+                    <li style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                      <FaFileAlt style={{ color: '#0a3d62' }} />
                       <span>Academic Transcript</span>
                     </li>
-                    <li>
-                      <FaFileAlt />
-                      <span>ID/Passport Copy</span>
+                  </ul>
+                </div>
+                <div>
+                  <ul style={{ listStyle: 'none', padding: 0 }}>
+                    <li style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                      <FaFileAlt style={{ color: '#0a3d62' }} />
+                      <span>Portfolio (if applicable)</span>
+                    </li>
+                    <li style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                      <FaFileAlt style={{ color: '#0a3d62' }} />
+                      <span>Certifications</span>
                     </li>
                   </ul>
                 </div>
               </div>
+            </div>
+          )}
 
-              <div className="requirements-section">
-                <h4>Required Skills</h4>
-                <div className="skills-list">
-                  {internship.requirements.map((skill, index) => (
-                    <span key={index} className="skill-tag">{skill}</span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="social-links">
-                {internship.social.linkedin && (
-                  <a href={internship.social.linkedin} target="_blank" rel="noopener noreferrer">
-                    <FaLinkedin />
-                  </a>
-                )}
-                {internship.social.twitter && (
-                  <a href={internship.social.twitter} target="_blank" rel="noopener noreferrer">
-                    <FaTwitter />
-                  </a>
-                )}
-                {internship.social.website && (
-                  <a href={internship.social.website} target="_blank" rel="noopener noreferrer">
-                    <FaGlobe />
-                  </a>
-                )}
-              </div>
-
-              <div className="action-buttons-container">
-                {isCompleted ? (
-                  <>
-                    <button className="action-button evaluate" onClick={handleEvaluation}>
-                      <FaFileAlt /> Evaluation Form
-                    </button>
-                    <button className="action-button report" onClick={handleReport}>
-                      <FaFileAlt /> Report Form
-                    </button>
-                  </>
-                ) : !isCurrent && (
-                  <button className="action-button apply" onClick={handleApply}>
-                    Apply Now
-                  </button>
-                )}
-              </div>
+          {/* Box 4: Connect */}
+          <div className="details-card">
+            <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Connect</h3>
+            <div style={{ display: 'flex', gap: '20px', fontSize: '22px', marginTop: '10px' }}>
+              {internship.social?.linkedin && (
+                <a href={internship.social.linkedin} target="_blank" rel="noreferrer" style={{ color: '#0077B5' }}>
+                  <FaLinkedin />
+                </a>
+              )}
+              {internship.social?.twitter && (
+                <a href={internship.social.twitter} target="_blank" rel="noreferrer" style={{ color: '#1DA1F2' }}>
+                  <FaTwitter />
+                </a>
+              )}
+              {internship.social?.website && (
+                <a href={internship.social.website} target="_blank" rel="noreferrer" style={{ color: '#0a3d62' }}>
+                  <FaGlobe />
+                </a>
+              )}
             </div>
           </div>
+
+          {/* Action Buttons for Completed Internships */}
+          {isCompleted && (
+            <div style={{
+              marginTop: '20px',
+              display: 'flex',
+              gap: '15px',
+              justifyContent: 'center'
+            }}>
+              <button
+                onClick={handleEvaluation}
+                className="quick-start-button"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+              >
+                <FaFileAlt /> Evaluation Form
+              </button>
+              <button
+                onClick={handleReport}
+                className="quick-start-button"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+              >
+                <FaFileDownload /> Report Form
+              </button>
+            </div>
+          )}
+
+          {/* Apply Button */}
+          {!isCurrent && !isCompleted && (
+            <div style={{ marginTop: '20px', textAlign: 'center' }}>
+              <button
+                className="action-button"
+                onClick={handleApply}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  width: '100%',
+                  margin: '0 auto',
+                  animation: 'pulse 2s infinite',
+                  position: 'relative'
+                }}
+              >
+                Apply Now
+              </button>
+            </div>
+          )}
         </div>
       </div>
+
+      <style>
+        {`
+          @keyframes pulse {
+            0% {
+              transform: scale(1);
+              box-shadow: 0 0 0 0 rgba(10, 61, 98, 0.4);
+            }
+            70% {
+              transform: scale(1.02);
+              box-shadow: 0 0 0 10px rgba(10, 61, 98, 0);
+            }
+            100% {
+              transform: scale(1);
+              box-shadow: 0 0 0 0 rgba(10, 61, 98, 0);
+            }
+          }
+        `}
+      </style>
+      <div
+  className="floating-notif"
+  onClick={() => navigate('/pro-student/notifications')}
+  title="View Notifications"
+>
+  <FaBell className="wiggle-bell" />
+  <div className="notification-badge">3</div>
+</div>
     </div>
   );
 };
