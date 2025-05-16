@@ -1,143 +1,165 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FaPlay, FaPause, FaStop, FaArrowLeft } from 'react-icons/fa';
+import { FaPlay, FaPause, FaDownload } from 'react-icons/fa';
 import ProStudentSidebar from '../components/ProStudentSidebar';
+import { WorkshopContext } from './WorkshopContext';
 import './ProStudentWorkshopDetails.css';
 
 const ProStudentWorkshopDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { workshops } = useContext(WorkshopContext) || { workshops: [] };
   const [workshop, setWorkshop] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [notes, setNotes] = useState('');
-  const [chatMessages, setChatMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
   const [showFeedback, setShowFeedback] = useState(false);
+  const [showFeedbackMessage, setShowFeedbackMessage] = useState(false);
+  const [showDownloadFeedback, setShowDownloadFeedback] = useState(false);
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState('');
-  const [hasJoined, setHasJoined] = useState(false);
+  const [notes, setNotes] = useState('');
+  const [chatMessages, setChatMessages] = useState([
+    {
+      sender: 'Alice Smith',
+      message: 'Really enjoyed the session! Very insightful.',
+      timestamp: '10:05 AM',
+    },
+    {
+      sender: 'Bob Johnson',
+      message: 'Can we get more examples on this topic?',
+      timestamp: '10:08 AM',
+    },
+    {
+      sender: 'Clara Lee',
+      message: 'Thanks for the practical tips!',
+      timestamp: '10:12 AM',
+    },
+  ]);
+  const [newMessage, setNewMessage] = useState('');
   const videoRef = useRef(null);
 
-  // Mock workshop data
   useEffect(() => {
-    // In a real application, this would be an API call
-    const mockWorkshop = {
-      id: id,
-      title: "Advanced Web Development Workshop",
-      date: "2024-03-20",
-      time: "14:00",
-      duration: "2 hours",
-      type: "live",
-      speaker: {
-        name: "Dr. Sarah Johnson",
-        title: "Senior Web Developer",
-        company: "Tech Solutions Inc."
-      },
-      description: "Learn advanced web development techniques including React, Node.js, and modern deployment strategies.",
-      topics: [
-        "React Hooks and Context API",
-        "Server-side rendering with Next.js",
-        "API development with Node.js",
-        "Deployment and CI/CD"
-      ],
-      videoUrl: "https://example.com/workshop-video.mp4",
-      isRegistered: true,
-      isCompleted: true,
-      completionDate: "2024-03-20",
-      studentName: "John Doe",
-      certificateId: "CERT-2024-001"
-    };
-    console.log('Setting workshop data:', mockWorkshop);
-    setWorkshop(mockWorkshop);
-  }, [id]);
+    if (!workshops || !Array.isArray(workshops)) {
+      console.error('Workshops data is invalid or undefined');
+      return;
+    }
+    const foundWorkshop = workshops.find((w) => w.id === parseInt(id));
+    if (foundWorkshop) {
+      setWorkshop(foundWorkshop);
+    } else {
+      console.error(`Workshop with ID ${id} not found`);
+    }
+  }, [id, workshops]);
 
-  // Add console log to check workshop state
-  useEffect(() => {
-    console.log('Current workshop state:', workshop);
-  }, [workshop]);
-
-  const handlePlay = () => {
+  const handlePlayPause = () => {
     if (videoRef.current) {
-      videoRef.current.play();
-      setIsPlaying(true);
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
     }
   };
 
-  const handlePause = () => {
-    if (videoRef.current) {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    }
+  const handleRateWorkshop = () => {
+    setShowFeedback(true);
+    setRating(0);
+    setFeedback('');
   };
 
-  const handleStop = () => {
-    if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
-      setIsPlaying(false);
-    }
-  };
-
-  const handleTimeUpdate = (e) => {
-    setCurrentTime(e.target.currentTime);
-  };
-
-  const handleDurationChange = (e) => {
-    setDuration(e.target.duration);
-  };
-
-  const formatTime = (time) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
-
-  const handleJoinWorkshop = () => {
-    setHasJoined(true);
-  };
-
-  const handleSendMessage = (e) => {
+  const handleSubmitFeedback = (e) => {
     e.preventDefault();
+    if (rating === 0) {
+      alert('Please select a rating');
+      return;
+    }
+    console.log(`Feedback submitted for ${workshop?.title || 'unknown'}: ${rating} stars, Comment: ${feedback}`);
+    setShowFeedback(false);
+    setShowFeedbackMessage(true);
+    setTimeout(() => {
+      setShowFeedbackMessage(false);
+      setRating(0);
+      setFeedback('');
+    }, 3000);
+  };
+
+  const handleDownloadCertificate = async () => {
+    try {
+      const imageUrl = '/images/certificate.webp';
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${workshop?.title || 'certificate'}-certificate.webp`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      console.log(`Certificate for ${workshop?.title || 'unknown'} downloaded`);
+      setShowDownloadFeedback(true);
+      setTimeout(() => {
+        setShowDownloadFeedback(false);
+      }, 3000);
+    } catch (error) {
+      console.error('Error downloading certificate:', error);
+      alert('Failed to download certificate. Please try again.');
+    }
+  };
+
+  const handleSendMessage = () => {
     if (newMessage.trim()) {
-      setChatMessages([
-        ...chatMessages,
+      setChatMessages((prev) => [
+        ...prev,
         {
-          id: Date.now(),
           sender: 'You',
           message: newMessage,
-          timestamp: new Date().toLocaleTimeString()
-        }
+          timestamp: new Date().toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
+        },
       ]);
       setNewMessage('');
     }
   };
 
-  const handleSubmitFeedback = (e) => {
-    e.preventDefault();
-    // In a real application, this would be an API call
-    console.log('Feedback submitted:', { rating, feedback });
-    setShowFeedback(false);
-    setRating(0);
-    setFeedback('');
-  };
-
-  const handleDownloadCertificate = () => {
-    // In a real application, this would generate and download a certificate
-    console.log('Downloading certificate...');
-  };
+  if (!workshops || !Array.isArray(workshops)) {
+    return <div>Error: Workshop data is unavailable</div>;
+  }
 
   if (!workshop) {
-    return <div>Loading...</div>;
+    return <div>Workshop not found</div>;
   }
 
   return (
     <div className="pro-student-layout">
       <ProStudentSidebar />
       <div className="workshop-details-content">
-        <button className="back-button" onClick={() => navigate('/pro-student/workshops')}>
-          <FaArrowLeft /> Back to Workshops
+        {showFeedbackMessage && (
+          <div
+            className="feedback-message"
+            role="alert"
+            aria-live="polite"
+          >
+            Feedback submitted successfully!
+          </div>
+        )}
+        {showDownloadFeedback && (
+          <div
+            className="feedback-message"
+            role="alert"
+            aria-live="polite"
+          >
+            Certificate download started!
+          </div>
+        )}
+        <button
+          className="back-btn"
+          onClick={() => navigate('/pro-student/workshops')}
+          aria-label="Back to workshops"
+        >
+          ← Back to Workshops
         </button>
 
         <div className={`workshop-header ${workshop.isCompleted ? 'completed' : ''}`}>
@@ -146,160 +168,132 @@ const ProStudentWorkshopDetails = () => {
             <span>Date: {workshop.date}</span>
             <span>Time: {workshop.time}</span>
             <span>Duration: {workshop.duration}</span>
-            {workshop.isCompleted && <span>Completed on: {workshop.completionDate}</span>}
           </div>
         </div>
 
         <div className="workshop-main">
-          <div className="workshop-info">
-            <div className="speaker-info">
-              <h3>Speaker</h3>
-              <p className="speaker-name">{workshop.speaker.name}</p>
-              <p className="speaker-title">{workshop.speaker.title}</p>
-              <p className="speaker-company">{workshop.speaker.company}</p>
+          <div className="video-section">
+            <div className="video-container">
+              <video
+                ref={videoRef}
+                src="https://cdn.pixabay.com/video/2024/07/22/221093_tiny.mp4"
+                controls
+                aria-label="Workshop video"
+              />
+              <div className="video-controls">
+                <button onClick={handlePlayPause} aria-label={isPlaying ? 'Pause video' : 'Play video'}>
+                  {isPlaying ? <FaPause /> : <FaPlay />}
+                </button>
+                <div className="progress-bar">
+                  <div className="progress" style={{ width: '0%' }}></div>
+                </div>
+                <span className="time-display">0:00 / 0:00</span>
+              </div>
             </div>
+          </div>
 
+          <div className="workshop-info">
             <div className="workshop-description">
               <h3>Description</h3>
               <p>{workshop.description}</p>
             </div>
-
+            {workshop.isCompleted && (
+              <div className="certificate-section">
+                <h3>Certificate of Completion</h3>
+                <p>You have successfully completed this workshop! Download your certificate below.</p>
+                <div className="certificate-preview">
+                  <h4>Certificate of Completion</h4>
+                  <div className="certificate-details">
+                    <p>This certifies that</p>
+                    <p><strong>{'User Name'}</strong></p>
+                    <p>has successfully completed the workshop</p>
+                    <p><strong>{workshop.title}</strong></p>
+                    <p>on {workshop.date}</p>
+                  </div>
+                </div>
+                <div className="certificate-actions">
+                  <button
+                    onClick={handleDownloadCertificate}
+                    aria-label="Download certificate"
+                  >
+                    <FaDownload /> Download Certificate
+                  </button>
+                </div>
+              </div>
+            )}
             <div className="workshop-topics">
               <h3>Topics Covered</h3>
               <ul>
-                {workshop.topics.map((topic, index) => (
+                {workshop.topics?.map((topic, index) => (
                   <li key={index}>{topic}</li>
                 ))}
               </ul>
             </div>
+          </div>
 
-            {!hasJoined && (
-              <div className="join-workshop-section">
-                <button className="join-button" onClick={handleJoinWorkshop}>
-                  Join Workshop
+          <div className="workshop-features">
+            <div className="notes-section">
+              <h3>Notes</h3>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Write your notes here..."
+                aria-label="Workshop notes"
+              />
+            </div>
+
+            <div className="chat-section">
+              <h3>Live Chat</h3>
+              <div className="chat-messages">
+                {chatMessages.map((msg, index) => (
+                  <div className="chat-message" key={index}>
+                    <div className="message-header">
+                      <span className="sender">{msg.sender}</span>
+                      <span className="timestamp">{msg.timestamp}</span>
+                    </div>
+                    <p>{msg.message}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="chat-input">
+                <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Type your message..."
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  aria-label="Chat message input"
+                />
+                <button onClick={handleSendMessage} aria-label="Send chat message">
+                  Send
                 </button>
               </div>
-            )}
+            </div>
           </div>
         </div>
 
-        {hasJoined && (
-          <>
-            <div className="workshop-main">
-              <div className="video-section">
-                <div className="video-container">
-                  <video
-                    ref={videoRef}
-                    src={workshop.videoUrl}
-                    onTimeUpdate={handleTimeUpdate}
-                    onDurationChange={handleDurationChange}
-                  />
-                  <div className="video-controls">
-                    <button onClick={isPlaying ? handlePause : handlePlay}>
-                      {isPlaying ? <FaPause /> : <FaPlay />}
-                    </button>
-                    <button onClick={handleStop}>
-                      <FaStop />
-                    </button>
-                    <div className="progress-bar">
-                      <div
-                        className="progress"
-                        style={{ width: `${(currentTime / duration) * 100}%` }}
-                      />
-                    </div>
-                    <div className="time-display">
-                      {formatTime(currentTime)} / {formatTime(duration)}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="workshop-features">
-              <div className="notes-section">
-                <h3>Notes</h3>
-                <textarea
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Take notes during the workshop..."
-                />
-              </div>
-
-              {workshop.type === 'live' && (
-                <div className="chat-section">
-                  <h3>Live Chat</h3>
-                  <div className="chat-messages">
-                    {chatMessages.map((msg) => (
-                      <div key={msg.id} className="chat-message">
-                        <div className="message-header">
-                          <span className="sender">{msg.sender}</span>
-                          <span className="timestamp">{msg.timestamp}</span>
-                        </div>
-                        <p>{msg.message}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <form onSubmit={handleSendMessage} className="chat-input">
-                    <input
-                      type="text"
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      placeholder="Type your message..."
-                    />
-                    <button type="submit">Send</button>
-                  </form>
-                </div>
-              )}
-            </div>
-          </>
-        )}
-
-        {workshop.isCompleted && (
-          <div className="certificate-section">
-            <h3>Certificate of Completion</h3>
-            <p>Congratulations! You have successfully completed this workshop.</p>
-            <div className="certificate-preview">
-              <h4>Certificate of Completion</h4>
-              <div className="certificate-details">
-                <p>This is to certify that</p>
-                <p><strong>{workshop.studentName}</strong></p>
-                <p>has successfully completed the workshop</p>
-                <p><strong>{workshop.title}</strong></p>
-                <p>on {workshop.completionDate}</p>
-                <p>Certificate ID: {workshop.certificateId}</p>
-              </div>
-            </div>
-            <div className="certificate-actions">
-              <button className="download-button" onClick={handleDownloadCertificate}>
-                Download Certificate
-              </button>
-            </div>
-          </div>
-        )}
-
         <div className="workshop-actions">
-          {workshop.isCompleted && (
-            <>
-              <button
-                className="feedback-button"
-                onClick={() => setShowFeedback(true)}
-              >
-                Rate Workshop
-              </button>
-            </>
-          )}
+          <button
+            className="feedback-button"
+            onClick={handleRateWorkshop}
+            aria-label="Rate this workshop"
+          >
+            Rate Workshop
+          </button>
         </div>
 
         {showFeedback && (
-          <div className="feedback-modal">
+          <div className="feedback-modal" role="dialog" aria-labelledby="feedback-title">
             <div className="feedback-content">
-              <h3>Rate Workshop</h3>
+              <h3 id="feedback-title">Rate Workshop</h3>
               <div className="rating">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <span
                     key={star}
                     className={`star ${star <= rating ? 'active' : ''}`}
                     onClick={() => setRating(star)}
+                    role="button"
+                    aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
                   >
                     ★
                   </span>
@@ -309,10 +303,21 @@ const ProStudentWorkshopDetails = () => {
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
                 placeholder="Share your feedback..."
+                aria-label="Feedback text"
               />
               <div className="feedback-actions">
-                <button onClick={() => setShowFeedback(false)}>Cancel</button>
-                <button onClick={handleSubmitFeedback}>Submit</button>
+                <button
+                  onClick={() => setShowFeedback(false)}
+                  aria-label="Cancel feedback"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSubmitFeedback}
+                  aria-label="Submit feedback"
+                >
+                  Submit
+                </button>
               </div>
             </div>
           </div>
@@ -322,4 +327,4 @@ const ProStudentWorkshopDetails = () => {
   );
 };
 
-export default ProStudentWorkshopDetails; 
+export default ProStudentWorkshopDetails;

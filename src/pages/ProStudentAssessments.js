@@ -1,19 +1,35 @@
 import React, { useState, useContext } from 'react';
-import { FaChartBar, FaLock, FaUnlock } from 'react-icons/fa';
+import { FaChartBar, FaLock, FaUnlock ,FaBell } from 'react-icons/fa';
 import ProStudentSidebar from '../components/ProStudentSidebar';
+import { useNavigate } from 'react-router-dom';
 import AssessmentQuestions from './AssessmentQuestions';
 import { AssessmentsContext } from './AssessmentsContext'; // Updated import path
 import './ProStudentProfile.css';
+
+
 
 const ProStudentAssessments = () => {
   const { assessments, setAssessments, postedScores, setPostedScores, updateAssessment } = useContext(AssessmentsContext);
   const [currentAssessment, setCurrentAssessment] = useState(null);
   const [assessmentFilter, setAssessmentFilter] = useState('all');
   const [showScore, setShowScore] = useState(false);
+  const navigate = useNavigate();
+  const [unreadNotifications, setUnreadNotifications] = useState(3); // Mock unread notifications count
+  const [isBellAnimating, setIsBellAnimating] = useState(false);
+     
+    const handleBellClick = () => {
+    setIsBellAnimating(true);
+    setTimeout(() => {
+      setIsBellAnimating(false);
+      navigate('/pro-student/notifications');
+    }, 500);
+  };
+  
 
   const handleStartAssessment = (assessmentId) => {
     setCurrentAssessment(assessmentId);
   };
+
 
   const handleAssessmentComplete = (score) => {
     const updatedAssessment = assessments.find(assessment => assessment.id === currentAssessment);
@@ -78,11 +94,19 @@ const ProStudentAssessments = () => {
               hour: '2-digit', minute: '2-digit'
             })}
           </p>
+          
         </div>
+        <div className="floating-notif" onClick={handleBellClick}>
+                    <FaBell className="wiggle-bell" />
+                    {unreadNotifications > 0 && (
+                      <span className="notification-badge">{unreadNotifications}</span>
+                    )}
+                  </div>
         <div className="assessments-section">
           <div className="assessments-header">
             <h2>Available Assessments</h2>
             <div className="assessment-filters">
+              
               <button
                 className={`filter-button ${assessmentFilter === 'all' ? 'active' : ''}`}
                 onClick={() => setAssessmentFilter('all')}

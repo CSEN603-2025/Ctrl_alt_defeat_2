@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaTh, FaUser, FaFileAlt, FaBriefcase, FaNewspaper, FaBell,FaChartBar } from 'react-icons/fa';
+import { FaTh, FaUser, FaFileAlt, FaBriefcase, FaNewspaper, FaBell, FaCalendarAlt ,FaChartBar } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
 import './ProStudentSidebar.css';
 
@@ -9,8 +9,13 @@ const ProStudentSidebar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Add any logout logic here (e.g., clearing session/tokens)
+    console.log('Logging out...');
     navigate('/'); // Redirect to sign-in page
+  };
+
+  const handleAppointmentsClick = () => {
+    console.log('Navigating to /pro-student/appointments');
+    navigate('/pro-student/appointments');
   };
 
   return (
@@ -33,16 +38,24 @@ const ProStudentSidebar = () => {
         </Link>
         <Link to="/pro-student/applications" className={`nav-item ${location.pathname === '/pro-student/applications' ? 'active' : ''}`}>
           <FaFileAlt className="nav-icon" />
-          <span className="nav-label">My Applications</span>
+          <span className="nav-label">Applications</span>
         </Link>
-        <Link to="/pro-student/internships" className={`nav-item ${location.pathname.startsWith('/pro-student/internships') ? 'active' : ''}`}>
+        <Link to="/pro-student/internships" className={`nav-item ${location.pathname === '/pro-student/internships' ? 'active' : ''}`}>
           <FaBriefcase className="nav-icon" />
-          <span className="nav-label">Internships</span>
+          <span className="nav-label">My Internships</span>
         </Link>
         <Link to="/pro-student/workshops" className={`nav-item ${location.pathname === '/pro-student/workshops' ? 'active' : ''}`}>
           <FaNewspaper className="nav-icon" />
           <span className="nav-label">Career Workshops</span>
         </Link>
+      
+        <div
+          onClick={handleAppointmentsClick}
+          className={`nav-item ${location.pathname === '/pro-student/appointments' ? 'active' : ''}`}
+        >
+          <FaCalendarAlt className="nav-icon" />
+          <span className="nav-label">Career/Report Appointments</span>
+        </div>
         <Link to="/pro-student/assessments" className={`nav-item ${location.pathname === '/pro-student/assessments' ? 'active' : ''}`}>
           <FaChartBar className="nav-icon" />
           <span className="nav-label">Online Assessments</span>
@@ -68,4 +81,4 @@ const ProStudentSidebar = () => {
   );
 };
 
-export default ProStudentSidebar; 
+export default ProStudentSidebar;

@@ -77,11 +77,14 @@ const ProStudentApplicationDetails = () => {
       <ProStudentSidebar />
       <div className="pro-student-content">
         <BackButton />
-        
+        <div className="hero-banner">
+          <h1>Application Details</h1>
+          <p>Review your application information and status</p>
+        </div>
+
         {!showInterviewForm ? (
           <div className="application-details">
             <div className="application-header">
-              <h1>Application Details</h1>
               <div className="application-status">
                 <span className={`status-badge ${application.status.toLowerCase().replace(' ', '-')}`}>
                   {application.status}
@@ -173,7 +176,7 @@ const ProStudentApplicationDetails = () => {
               </div>
 
               <div className="action-buttons">
-                <button 
+                <button
                   className="schedule-interview-btn"
                   onClick={() => setShowInterviewForm(true)}
                 >
@@ -264,8 +267,8 @@ const ProStudentApplicationDetails = () => {
               </div>
 
               <div className="form-actions">
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="cancel-button"
                   onClick={() => setShowInterviewForm(false)}
                 >

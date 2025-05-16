@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
-import { FaBuilding, FaEye, FaEdit, FaPlus, FaTrash, FaTimes } from 'react-icons/fa';
+import { FaBuilding, FaEye, FaEdit, FaPlus, FaTrash, FaTimes,FaBell } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import ProStudentSidebar from '../components/ProStudentSidebar';
 import { AssessmentsContext } from './AssessmentsContext'; // Updated import path
 import './ProStudentProfile.css';
@@ -9,6 +10,16 @@ const ProStudentProfile = () => {
   const { assessments, postedScores, setPostedScores } = useContext(AssessmentsContext);
   const [selectedTab, setSelectedTab] = useState('main-profile');
   const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
+  const [unreadNotifications, setUnreadNotifications] = useState(3); // Mock unread notifications count
+   const [isBellAnimating, setIsBellAnimating] = useState(false);
+  const handleBellClick = () => {
+    setIsBellAnimating(true);
+    setTimeout(() => {
+      setIsBellAnimating(false);
+      navigate('/pro-student/notifications');
+    }, 500);
+  };
   const [profileData, setProfileData] = useState({
     personalInfo: {
       name: 'John Doe',
@@ -247,6 +258,12 @@ const ProStudentProfile = () => {
   const renderMainProfile = () => (
     <div className="main-profile-section">
       <div className="profile-header">
+        <div className="floating-notif" onClick={handleBellClick}>
+                    <FaBell className="wiggle-bell" />
+                    {unreadNotifications > 0 && (
+                      <span className="notification-badge">{unreadNotifications}</span>
+                    )}
+                  </div>
         <h2>Main Profile</h2>
         {!isEditing ? (
           <button className="save-button" onClick={handleEdit}>
@@ -699,7 +716,14 @@ const ProStudentProfile = () => {
   );
 
   const renderProfileViews = () => (
+    
     <div className="profile-views-section">
+      <div className="floating-notif" onClick={handleBellClick}>
+                    <FaBell className="wiggle-bell" />
+                    {unreadNotifications > 0 && (
+                      <span className="notification-badge">{unreadNotifications}</span>
+                    )}
+                  </div>
       <h2>Companies That Viewed Your Profile</h2>
       <div className="views-list">
         {profileViews.map(view => (

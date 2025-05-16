@@ -43,7 +43,8 @@
   color: #7f8c8d;
 }
 
-input, select {
+input,
+select {
   width: 100%;
   padding: 0.75rem 1rem 0.75rem 2.5rem;
   border: 1px solid #e0e0e0;
@@ -54,7 +55,8 @@ input, select {
   transition: all 0.3s ease;
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
   outline: none;
   border-color: #0a3d62;
   box-shadow: 0 0 0 2px rgba(10, 61, 98, 0.1);
@@ -138,7 +140,8 @@ input:focus, select:focus {
   align-items: center;
 }
 
-.view-details-button, .schedule-interview-button {
+.view-details-button,
+.schedule-interview-button {
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 4px;
@@ -206,7 +209,7 @@ input:focus, select:focus {
   background: white;
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .details-header {
@@ -261,6 +264,7 @@ input:focus, select:focus {
     opacity: 0;
     transform: translate3d(0, 20px, 0);
   }
+
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);
@@ -276,18 +280,36 @@ input:focus, select:focus {
     opacity: 0;
     transform: scale(0.95);
   }
+
   100% {
     opacity: 1;
     transform: scale(1);
   }
 }
 
-.delay-0 { animation-delay: 0s; }
-.delay-1 { animation-delay: 0.1s; }
-.delay-2 { animation-delay: 0.2s; }
-.delay-3 { animation-delay: 0.3s; }
-.delay-4 { animation-delay: 0.4s; }
-.delay-5 { animation-delay: 0.5s; }
+.delay-0 {
+  animation-delay: 0s;
+}
+
+.delay-1 {
+  animation-delay: 0.1s;
+}
+
+.delay-2 {
+  animation-delay: 0.2s;
+}
+
+.delay-3 {
+  animation-delay: 0.3s;
+}
+
+.delay-4 {
+  animation-delay: 0.4s;
+}
+
+.delay-5 {
+  animation-delay: 0.5s;
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -319,4 +341,27 @@ input:focus, select:focus {
   .schedule-interview-button {
     width: 100%;
   }
-} 
+}
+
+.hero-banner {
+  background: linear-gradient(to right, #0a3d62, #3c6382);
+  color: white;
+  padding: 20px 30px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.pro-student-content .hero-banner h1 {
+  color: white !important;
+  margin: 0;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.hero-banner p {
+  color: white;
+  margin: 0.5rem 0 0;
+  opacity: 0.9;
+  font-size: 13px;
+}

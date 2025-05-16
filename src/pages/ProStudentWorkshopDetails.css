@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .pro-student-layout {
   display: flex;
   min-height: 100vh;
@@ -7,31 +14,85 @@
 .workshop-details-content {
   flex: 1;
   padding: 2rem;
-  margin-left: 250px;
-  width: calc(100% - 250px);
+  margin-left: 270px;
   max-width: 1200px;
-  margin-right: auto;
+  margin: 0 auto;
   position: relative;
-  z-index: 1;
+  z-index: 20;
 }
 
-.back-button {
-  display: flex;
+.back-btn {
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background-color: #0a3d62;
+  gap: 8px;
+  background: none;
   border: none;
-  color: white;
-  border-radius: 6px;
+  color: #0a3d62;
   cursor: pointer;
-  transition: all 0.3s;
-  margin-bottom: 2rem;
+  padding: 12px 16px;
+  font-size: 16px;
   font-weight: 500;
+  transition: color 0.3s ease, transform 0.2s ease;
 }
 
-.back-button:hover {
-  background-color: #082c47;
+.back-btn:hover {
+  color: #e55039;
+  transform: translateX(-4px);
+}
+
+.feedback-message {
+  background: rgba(10, 61, 98, 0.9); /* Fallback for unsupported browsers */
+  background: linear-gradient(to right, #0a3d62, #3c6382);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s;
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  box-shadow: 0 4px 20px rgba(10, 61, 98, 0.3),
+    0 8px 30px rgba(10, 61, 98, 0.2);
+  min-width: 320px;
+  text-align: center;
+  letter-spacing: 0.3px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 360px) {
+  .feedback-message {
+    min-width: auto;
+    max-width: 90vw;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
 }
 
 .workshop-header {
@@ -65,13 +126,14 @@
 .workshop-meta {
   display: flex;
   gap: 2rem;
-  color: #666;
+  color: #000000;
 }
 
 .workshop-meta span {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-size: 1rem;
 }
 
 .workshop-main {
@@ -79,46 +141,6 @@
   grid-template-columns: 1fr;
   gap: 2rem;
   margin-bottom: 2rem;
-}
-
-.join-workshop-section {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-}
-
-.join-workshop-section h2 {
-  color: #0a3d62;
-  margin-bottom: 1rem;
-}
-
-.join-workshop-section p {
-  color: #666;
-  margin-bottom: 2rem;
-}
-
-.join-workshop-section .join-button {
-  padding: 0.75rem 1.5rem;
-  background-color: #0a3d62;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  min-width: 120px;
-  text-align: center;
-}
-
-.join-workshop-section .join-button:hover {
-  background-color: #082c47;
 }
 
 .video-section {
@@ -132,7 +154,7 @@
 .video-container {
   position: relative;
   width: 100%;
-  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  padding-top: 56.25%;
 }
 
 .video-container video {
@@ -203,32 +225,25 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.speaker-info {
-  margin-bottom: 2rem;
-}
-
-.speaker-name {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #0a3d62;
-  margin-bottom: 0.5rem;
-}
-
-.speaker-title,
-.speaker-company {
-  color: #666;
-  margin-bottom: 0.25rem;
-}
-
 .workshop-description,
-.workshop-topics {
+.workshop-topics,
+.certificate-section {
   margin-bottom: 2rem;
 }
 
 .workshop-description h3,
-.workshop-topics h3 {
+.workshop-topics h3,
+.certificate-section h3 {
   color: #0a3d62;
   margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.workshop-description p {
+  color: #000000;
+  line-height: 1.4;
+  font-size: 1rem;
 }
 
 .workshop-topics ul {
@@ -239,6 +254,7 @@
 .workshop-topics li {
   padding: 0.5rem 0;
   border-bottom: 1px solid #eee;
+  font-size: 1rem;
 }
 
 .workshop-topics li:last-child {
@@ -264,25 +280,31 @@
 .chat-section h3 {
   color: #0a3d62;
   margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .notes-section textarea {
   width: 100%;
-  height: 200px;
+  height: 300px;
   padding: 1rem;
   border: 1px solid #ddd;
   border-radius: 5px;
   resize: vertical;
   font-family: inherit;
+  font-size: 1rem;
+  box-sizing: border-box;
 }
 
 .chat-messages {
+  width: 100%;
   height: 300px;
-  overflow-y: auto;
-  margin-bottom: 1rem;
   padding: 1rem;
   border: 1px solid #ddd;
   border-radius: 5px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
 }
 
 .chat-message {
@@ -318,20 +340,23 @@
   padding: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 5px;
+  font-size: 1rem;
 }
 
 .chat-input button {
-  padding: 0.5rem 1rem;
-  background-color: #0a3d62;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 1px solid #0a3d62;
+  color: #0a3d62;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  font-weight: 500;
+  transition: all 0.3s;
 }
 
 .chat-input button:hover {
-  background-color: #082c47;
+  background-color: #0a3d62;
+  color: white;
 }
 
 .workshop-actions {
@@ -341,34 +366,22 @@
   margin-top: 2rem;
 }
 
-.feedback-button,
-.certificate-button {
+.feedback-button {
   padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 5px;
+  background: transparent;
+  border: 1px solid #0a3d62;
+  color: #0a3d62;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.2s;
+  font-weight: 500;
+  transition: all 0.3s;
   min-width: 120px;
   text-align: center;
 }
 
-.feedback-button {
+.feedback-button:hover {
   background-color: #0a3d62;
   color: white;
-}
-
-.certificate-button {
-  background-color: #27ae60;
-  color: white;
-}
-
-.feedback-button:hover {
-  background-color: #082c47;
-}
-
-.certificate-button:hover {
-  background-color: #219a52;
 }
 
 .feedback-modal {
@@ -426,6 +439,7 @@
   margin-bottom: 1.5rem;
   resize: vertical;
   font-family: inherit;
+  font-size: 1rem;
 }
 
 .feedback-actions {
@@ -436,65 +450,52 @@
 
 .feedback-actions button {
   padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 5px;
+  background: transparent;
+  border: 1px solid #0a3d62;
+  color: #0a3d62;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.2s;
-  min-width: 100px;
+  font-weight: 500;
+  transition: all 0.3s;
 }
 
 .feedback-actions button:first-child {
+  border: 1px solid #e74c3c;
+  color: #e74c3c;
+}
+
+.feedback-actions button:first-child:hover {
   background-color: #e74c3c;
   color: white;
 }
 
-.feedback-actions button:last-child {
+.feedback-actions button:last-child:hover {
   background-color: #0a3d62;
   color: white;
 }
 
-.feedback-actions button:hover {
-  opacity: 0.9;
-}
-
 .certificate-section {
-  background-color: white;
   padding: 2rem;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin: 2rem 0;
+  margin: 1.5rem 0;
   text-align: center;
-  display: block;
-  width: 100%;
-  position: relative;
-  z-index: 2;
   border: 2px solid #27ae60;
-  clear: both;
-}
-
-.certificate-section h3 {
-  color: #0a3d62;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
 }
 
 .certificate-section p {
-  color: #666;
-  margin-bottom: 1.5rem;
+  color: #000000;
+  margin-bottom: 1rem;
   font-size: 1rem;
 }
 
 .certificate-preview {
   max-width: 800px;
-  margin: 0 auto 1.5rem;
+  margin: 0 auto 1rem;
   border: 1px solid #ddd;
   border-radius: 5px;
-  padding: 2rem;
+  padding: 1.5rem;
   background-color: #f8f9fa;
-  display: block;
-  position: relative;
-  z-index: 3;
 }
 
 .certificate-preview h4 {
@@ -506,10 +507,9 @@
 }
 
 .certificate-preview .certificate-details {
-  margin-bottom: 1rem;
-  color: #666;
+  color: #000000;
   text-align: center;
-  line-height: 1.8;
+  line-height: 1.6;
 }
 
 .certificate-preview .certificate-details p {
@@ -526,35 +526,29 @@
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-top: 1.5rem;
-  position: relative;
-  z-index: 2;
 }
 
-.certificate-actions button {
+.certificate-actions button,
+.download-button {
   padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 5px;
+  background: transparent;
+  border: 1px solid #27ae60;
+  color: #27ae60;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s ease;
+  font-weight: 500;
+  transition: all 0.3s;
   min-width: 120px;
-  font-size: 1rem;
-}
-
-.certificate-actions .download-button {
-  background-color: #27ae60;
-  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
 }
 
-.certificate-actions .download-button:hover {
-  background-color: #219a52;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.certificate-actions button:hover,
+.download-button:hover {
+  background-color: #27ae60;
+  color: white;
 }
 
 @media (max-width: 1024px) {
@@ -562,17 +556,15 @@
   .workshop-features {
     grid-template-columns: 1fr;
   }
-  
+
   .workshop-details-content {
-    margin-left: 200px;
-    width: calc(100% - 200px);
+    margin-left: 220px;
   }
 }
 
 @media (max-width: 768px) {
   .workshop-details-content {
     margin-left: 0;
-    width: 100%;
     padding: 1rem;
   }
 
@@ -585,8 +577,7 @@
     flex-direction: column;
   }
 
-  .feedback-button,
-  .certificate-button {
+  .feedback-button {
     width: 100%;
   }
 
@@ -603,14 +594,15 @@
   }
 
   .certificate-preview {
-    padding: 1.5rem;
+    padding: 1rem;
   }
 
   .certificate-actions {
     flex-direction: column;
   }
 
-  .certificate-actions button {
-    width: 100%;
+  .certificate-actions button,
+  .download-button {
+    max-width: 200px;
   }
-} 
+}

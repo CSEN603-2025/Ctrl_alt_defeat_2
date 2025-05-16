@@ -897,8 +897,26 @@ body {
 }
 
 .fade-out-message {
-  opacity: 1;
-  animation: fadeOutSmooth 3s forwards;
+  background: linear-gradient(to right, #0a3d62, #3c6382);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  margin: 0 0 20px 0;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s;
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(10, 61, 98, 0.3), 0 8px 30px rgba(10, 61, 98, 0.2);
+  min-width: 320px;
+  text-align: center;
+  letter-spacing: 0.3px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 @keyframes fadeOutSmooth {
@@ -1230,4 +1248,48 @@ body {
     transform: translateY(0);
   }
   
+}
+@keyframes slideIn {
+  from {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+}
+.clarification-message {
+  background: linear-gradient(to right, #0a3d62, #3c6382);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  margin: 0 0 20px 0;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s;
+  position: relative;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(10, 61, 98, 0.3), 0 8px 30px rgba(10, 61, 98, 0.2);
+  min-width: 320px;
+  text-align: center;
+  letter-spacing: 0.3px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.clarification-message.success,
+.clarification-message.error {
+  background: linear-gradient(to right, #0a3d62, #3c6382);
 }

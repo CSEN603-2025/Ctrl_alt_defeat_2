@@ -1,4 +1,5 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useContext , useState } from 'react';
+
 
 export const AssessmentsContext = createContext();
 
@@ -89,3 +90,5 @@ export const AssessmentsProvider = ({ children }) => {
     </AssessmentsContext.Provider>
   );
 };
+export default AssessmentsProvider;
+export const useAssessmentsContext = () => useContext(AssessmentsContext);

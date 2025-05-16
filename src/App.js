@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AssessmentsProvider } from './pages/AssessmentsContext'; // Updated import path
 import SignIn from './pages/signin';
 import CompanyRegistration from './pages/CompanyRegistration';
 import CompanyDashboard from './pages/CompanyDashboard';
@@ -21,11 +20,20 @@ import ProStudentWorkshopRegistration from './pages/ProStudentWorkshopRegistrati
 import ProStudentWorkshopDetails from './pages/ProStudentWorkshopDetails';
 import ProStudentInternshipEvaluation from './pages/ProStudentInternshipEvaluation';
 import ProStudentInternshipReport from './pages/ProStudentInternshipReport';
+import ProStudentAppointments from './pages/ProStudentAppointments';
+import AcceptedAppointments from './pages/AcceptedAppointments';
+import VideoCall from './pages/VideoCall';
+import { WorkshopProvider } from './pages/WorkshopContext';
+import ProStudentWorkshopDescription from './pages/ProStudentWorkshopDescription';
+import ProStudentWorkshopJoin from './pages/ProStudentWorkshopJoin';
+import { AssessmentsProvider } from './pages/AssessmentsContext';
 import ProStudentAssessments from './pages/ProStudentAssessments';
 
 function App() {
   return (
-    <AssessmentsProvider>
+    <div className="App">
+       <AssessmentsProvider>
+    <WorkshopProvider>
       <Router>
         <Routes>
           <Route path="/" element={<SignIn />} />
@@ -48,10 +56,17 @@ function App() {
           <Route path="/pro-student/workshops/:id/register" element={<ProStudentWorkshopRegistration />} />
           <Route path="/pro-student/internships/:id/evaluation" element={<ProStudentInternshipEvaluation />} />
           <Route path="/pro-student/internships/:id/report" element={<ProStudentInternshipReport />} />
+          <Route path="/pro-student/appointments" element={<ProStudentAppointments />} />
+          <Route path="/pro-student/accepted-appointments" element={<AcceptedAppointments />} />
+          <Route path="/pro-student/video-call" element={<VideoCall />} />
+          <Route path="/pro-student/workshops/:id/description" element={<ProStudentWorkshopDescription />} />
+          <Route path="/pro-student/workshops/:id/join" element={<ProStudentWorkshopJoin />} />
           <Route path="/pro-student/assessments" element={<ProStudentAssessments />} />
         </Routes>
       </Router>
+    </WorkshopProvider>
     </AssessmentsProvider>
+     </div>
   );
 }
 

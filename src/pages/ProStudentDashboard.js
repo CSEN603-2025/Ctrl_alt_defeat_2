@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaBell } from 'react-icons/fa';
 import ProStudentSidebar from '../components/ProStudentSidebar';
+import notifications from './notificationsData';
 import './ProStudentDashboard.css';
 
 const ProStudentDashboard = () => {
@@ -16,6 +17,29 @@ const ProStudentDashboard = () => {
       navigate('/pro-student/notifications');
     }, 500);
   };
+
+  // Function to sort notifications by timestamp (most recent first)
+  const sortNotifications = (notifications) => {
+    const timeUnits = {
+      'minutes ago': 1,
+      'hour ago': 60,
+      'hours ago': 60,
+      'day ago': 1440,
+      'days ago': 1440,
+      'week ago': 10080,
+      'weeks ago': 10080
+    };
+
+    return [...notifications].sort((a, b) => {
+      const [aValue, aUnit] = a.timestamp.split(' ');
+      const [bValue, bUnit] = b.timestamp.split(' ');
+      const aMinutes = parseInt(aValue) * (timeUnits[aUnit] || 1);
+      const bMinutes = parseInt(bValue) * (timeUnits[bUnit] || 1);
+      return aMinutes - bMinutes; // Sort ascending (most recent first)
+    });
+  };
+
+  const sortedNotifications = sortNotifications(notifications).slice(0, 6);
 
   return (
     <div className="pro-student-layout">
@@ -61,48 +85,39 @@ const ProStudentDashboard = () => {
           <div className="section-card">
             <h2>Recent Activity</h2>
             <div className="activity-list">
-              <div className="activity-item">
-                <span className="activity-icon">📝</span>
-                <div className="activity-details">
-                  <p>Application submitted for Software Developer Intern at Tech Corp</p>
-                  <span className="activity-time">2 hours ago</span>
+              {sortedNotifications.map(notification => (
+                <div className="activity-item" key={notification.id}>
+                  <span className="activity-icon">
+                    {notification.type === 'application' ? '📝' :
+                      notification.type === 'interview' ? '📅' :
+                      notification.type === 'offer' ? '🎉' :
+                      notification.type === 'appointment-accepted' ? '📅' :
+                      notification.type === 'appointment-confirmed' ? '✅' :
+                      notification.type === 'chat-message' ? '💬' :
+                      notification.type === 'workshop-reminder' ? '🔔' :
+                      notification.type === 'internship-start' ? '📢' :
+                      notification.type === 'internship-reminder' ? '⏰' : ''}
+                  </span>
+                  <div className="activity-details">
+                    <p>{notification.message}</p>
+                    <span className="activity-time">{notification.timestamp}</span>
+                  </div>
                 </div>
-              </div>
-              <div className="activity-item">
-                <span className="activity-icon">📅</span>
-                <div className="activity-details">
-                  <p>Interview scheduled with Data Analytics Co.</p>
-                  <span className="activity-time">1 day ago</span>
-                </div>
-              </div>
-              <div className="activity-item">
-                <span className="activity-icon">✅</span>
-                <div className="activity-details">
-                  <p>Completed internship at Web Solutions Inc.</p>
-                  <span className="activity-time">1 week ago</span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
-          <div className="section-card">
-            <h2>Quick Actions</h2>
-            <div className="quick-actions">
-              <button className="action-button" onClick={() => navigate('/pro-student/applications')}>
-                View Applications
-              </button>
-              <button className="action-button" onClick={() => navigate('/pro-student/profile')}>
-                Update Profile
-              </button>
-              <button className="action-button" onClick={() => navigate('/pro-student/internships')}>
-                View Internships
-              </button>
-              <button className="action-button" onClick={() => navigate('/pro-student/assessments')}>
-                Online Assessments
-              </button>
-              <button className="action-button" onClick={() => navigate('/pro-student/internship-management')}>
-                Internship Management
-              </button>
+          <div className="section-card video-card">
+            <h2>Featured Video</h2>
+            <div className="video-container">
+              <iframe
+                src="https://www.youtube.com/embed/pg0iNuiIzfA"
+                title="Featured Video"
+                frameBorder="0"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                className="video-iframe"
+              ></iframe>
             </div>
           </div>
         </div>
@@ -111,4 +126,4 @@ const ProStudentDashboard = () => {
   );
 };
 
-export default ProStudentDashboard; 
+export default ProStudentDashboard;
