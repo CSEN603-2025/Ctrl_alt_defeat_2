@@ -1,0 +1,318 @@
+/* Existing styles */
+.pro-student-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f6fa;
+}
+
+.scad-sidebar {
+  width: 250px;
+  background-color: #0a3d62;
+  color: white;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.scad-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.scad-logo-img {
+  width: 40px;
+  height: 40px;
+}
+
+.scad-logo-text {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.scad-sidebar ul {
+  list-style: none;
+  padding: 0;
+  flex-grow: 1;
+}
+
+.scad-sidebar li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 25px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background-color 0.3s;
+}
+
+.scad-sidebar li:hover,
+.scad-sidebar li.active {
+  background-color: #3c6382;
+}
+
+.scad-sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.scad-sidebar-footer-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.scad-sidebar-footer-info {
+  font-size: 14px;
+}
+
+.scad-sidebar-footer-name {
+  font-weight: bold;
+}
+
+.scad-sidebar-footer-role {
+  color: #b0d7f7;
+}
+
+.scad-sidebar-logout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.scad-logout-icon {
+  font-size: 16px;
+}
+
+.pro-student-content {
+  flex: 1;
+  padding: 2rem;
+  margin-left: 250px;
+  max-width: calc(100% - 250px);
+  position: relative;
+  z-index: 10;
+}
+
+.hero-banner {
+  width: 100%;
+  margin: 0;
+  background: linear-gradient(to right, #0a3d62, #3c6382);
+  color: white;
+  font-size: 32px;
+  font-weight: bold;
+  padding: 30px 40px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  animation: fadeSlideUp 0.7s ease-out both;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.banner-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-banner h2 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.subtext {
+  font-size: 13px;
+  opacity: 0.9;
+  margin-top: 4px;
+}
+
+.floating-notif {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #ffffff;
+  color: #0a3d62;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #0a3d62;
+  padding: 10px 20px;
+  color: #0a3d62;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.back-btn:hover {
+  background: #0a3d62;
+  color: white;
+  transform: scale(1.05);
+}
+
+.appointments-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.category-header {
+  color: #0a3d62;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.appointments-table-container {
+  overflow-x: auto;
+}
+
+.appointments-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 14px;
+}
+
+.appointments-table tr {
+  height: 60px;
+}
+
+.appointments-table th,
+.appointments-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.appointments-table th {
+  background-color: #f4f7f9;
+  color: #0a3d62;
+  font-weight: bold;
+}
+
+.appointments-table tr:hover {
+  background-color: #e2ecf6;
+}
+
+.action-button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-button.accept {
+  background: #38ada9;
+  color: white;
+  border: none;
+}
+
+.action-button.accept:hover {
+  background: #2e8b86;
+}
+
+.action-button.reject {
+  background: #e55039;
+  color: white;
+  border: none;
+}
+
+.action-button.reject:hover {
+  background: #c63924;
+}
+
+/* Updated styles for Request Appointment button */
+.status-btn-outline {
+  padding: 6px 12px; /* Match Accept button */
+  border-radius: 6px; /* Match Accept button */
+  background-color: #38ada9; /* Match Accept button */
+  color: white; /* Match Accept button */
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease; /* Match Accept button */
+  width: auto; /* Content-driven, like Accept */
+  text-align: center;
+  border: none; /* Match Accept button */
+}
+
+.status-btn-outline:hover {
+  background-color: #2e8b86; /* Match Accept button hover */
+}
+
+.status-btn-outline.accepted.active {
+  background-color: #2e8b86; /* Darker green for active state */
+  color: white;
+}
+
+.status-btn-outline.accepted.active:hover {
+  background-color: #267773; /* Slightly darker for active hover */
+}
+
+/* Responsive styles */
+@media (max-width: 1024px) {
+  .pro-student-content {
+    margin-left: 0;
+    max-width: 100%;
+    padding: 1rem;
+  }
+
+  .hero-banner {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .button-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .action-button {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 768px) {
+  .pro-student-content {
+    padding: 1rem;
+  }
+
+  .appointments-table th,
+  .appointments-table td {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .action-button.accept,
+  .action-button.reject {
+    padding: 4px 8px;
+    font-size: 12px;
+    height: 28px;
+  }
+}

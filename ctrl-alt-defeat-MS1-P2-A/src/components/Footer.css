@@ -1,0 +1,27 @@
+.app-footer {
+    width: 100%;
+    background-color: #e6eef5;
+    padding: 12px 0;
+    font-size: 13px;
+    text-align: center;
+    color: #3c6382;
+    border-top: 1px solid #d0dce8;
+    margin-top: 40px;
+  }
+  
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .footer-links a {
+    text-decoration: none;
+    color: #3c6382;
+    margin: 0 5px;
+    transition: color 0.3s ease;
+  }
+  
+  .footer-links a:hover {
+    color: #0a3d62;
+  }
+  
