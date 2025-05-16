@@ -25,7 +25,7 @@ function SignIn() {
       navigate('/company-dashboard');
     }
     else if (email === 'student@gmail.com' && password === '123') {
-      alert('Redirect to student dashboard coming soon!');
+        navigate('/student/dashboard');
     }
     else if (email === 'prostudent@gmail.com' && password === '123') {
       navigate('/pro-student/dashboard');

@@ -79,7 +79,7 @@ const ProStudentWorkshops = () => {
         <div className="hero-banner">
           <div className="banner-content">
             <h2>Career Workshops</h2>
-            <p className="subtext">Explore and join our upcoming workshops to enhance your skills!</p>
+            
           </div>
           </div>
         <div className="workshop-tabs">

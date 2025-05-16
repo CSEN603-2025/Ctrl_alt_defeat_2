@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaBell } from 'react-icons/fa';
-import ProStudentSidebar from '../components/ProStudentSidebar';
+import StudentSidebar from '../components/StudentSidebar';
 import notifications from './notificationsData';
-import './ProStudentDashboard.css';
+import './StudentDashboard.css';
 
-const ProStudentDashboard = () => {
+const StudentDashboard = () => {
   const navigate = useNavigate();
   const [unreadNotifications, setUnreadNotifications] = useState(3); // Mock unread notifications count
   const [isBellAnimating, setIsBellAnimating] = useState(false);
@@ -14,7 +14,7 @@ const ProStudentDashboard = () => {
     setIsBellAnimating(true);
     setTimeout(() => {
       setIsBellAnimating(false);
-      navigate('/pro-student/notifications');
+      navigate('/student/notifications');
     }, 500);
   };
 
@@ -43,11 +43,16 @@ const ProStudentDashboard = () => {
 
   return (
     <div className="pro-student-layout">
-      <ProStudentSidebar />
+      <StudentSidebar />
       <div className="pro-student-content">
         <div className="hero-banner">
-          <h2>Welcome back, Sara 👋</h2>
-        
+          <h2>Welcome back, Malak 👋</h2>
+          <p className="subtext">
+            Today is {new Date().toLocaleString('en-US', {
+              weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+              hour: '2-digit', minute: '2-digit'
+            })}
+          </p>
         </div>
 
         <div className="floating-notif" onClick={handleBellClick}>
@@ -121,4 +126,4 @@ const ProStudentDashboard = () => {
   );
 };
 
-export default ProStudentDashboard;
+export default StudentDashboard;

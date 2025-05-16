@@ -340,12 +340,7 @@ const submitClarification = (reportId) => {
           <div className="dashboard-overview">
             <section className="hero-banner animated fadeSlideUp">
               <h2>Welcome back, Dr. Salem 👋</h2>
-              <p className="subtext">
-                Today is {new Date().toLocaleString('en-US', {
-                  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-                  hour: '2-digit', minute: '2-digit'
-                })}
-              </p>
+            
             </section>
            
             <div className="stats-grid">
@@ -400,12 +395,7 @@ const submitClarification = (reportId) => {
           <div className="internship-section animated fadeInUp">
             <section className="hero-banner animated fadeSlideUp">
               <h2>Reports</h2>
-              <p className="subtext">
-                Today is {new Date().toLocaleString('en-US', {
-                  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-                  hour: '2-digit', minute: '2-digit'
-                })}
-              </p>
+           
             </section>
             {selectedReport ? (
               <div className="internship-details-container fadeIn">
@@ -633,12 +623,7 @@ const submitClarification = (reportId) => {
     <div className="internship-section animated fadeInUp">
       <section className="hero-banner animated fadeSlideUp">
         <h2>Evaluations</h2>
-        <p className="subtext">
-          Today is {new Date().toLocaleString('en-US', {
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-            hour: '2-digit', minute: '2-digit'
-          })}
-        </p>
+        
       </section>
       {selectedEvaluation ? (
         <div className="internship-details-container fadeIn">
@@ -768,12 +753,7 @@ const submitClarification = (reportId) => {
           <div className="internship-section animated fadeInUp">
             <section className="hero-banner animated fadeSlideUp">
               <h2>Statistics</h2>
-              <p className="subtext">
-                Today is {new Date().toLocaleString('en-US', {
-                  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-                  hour: '2-digit', minute: '2-digit'
-                })}
-              </p>
+              
             </section>
             <button className="status-btn" onClick={downloadStatisticsPDF}>📄 Generate Statistics Report</button>
             <div className="statistics-grid">

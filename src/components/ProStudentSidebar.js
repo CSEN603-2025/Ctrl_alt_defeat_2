@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaTh, FaUser, FaFileAlt, FaBriefcase, FaNewspaper, FaBell, FaCalendarAlt ,FaChartBar } from 'react-icons/fa';
+import { FaTh, FaUser, FaFileAlt, FaBriefcase, FaNewspaper, FaBell, FaCalendarAlt ,FaChartBar,FaAward } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
 import './ProStudentSidebar.css';
 
@@ -69,7 +69,10 @@ const ProStudentSidebar = () => {
       <div className="sidebar-footer">
         <img src="/images/woman.png" alt="User" className="sidebar-footer-img" />
         <div className="sidebar-footer-info">
-          <p className="sidebar-footer-name">Sara Emad</p>
+         <p className="sidebar-footer-name">
+  <i className="fas fa-award" style={{ marginRight: '6px', color: '#f6b93b' }}></i>
+  Sara Emad
+</p>
           <p className="sidebar-footer-role">Pro Student Admin</p>
           <div className="sidebar-logout" onClick={handleLogout}>
             <FiLogOut className="logout-icon" />

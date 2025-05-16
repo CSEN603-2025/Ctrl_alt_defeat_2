@@ -132,7 +132,7 @@
 
 .action-button {
   flex: 1;
-  background: #ffffff;
+  background: white;
   border: 1px solid #0a3d62;
   padding: 10px 20px;
   color: #0a3d62;
@@ -155,8 +155,8 @@
 }
 
 .action-button.accept {
-  border-color: #60a3d9;
-  color: #60a3d9;
+  border-color: #0a3d62;
+  color: white;
   padding: 6px 12px; /* Smaller padding */
   font-size: 13px; /* Smaller font size */
   height: 32px; /* Smaller height */
@@ -165,14 +165,14 @@
 }
 
 .action-button.accept:hover {
-  background-color: #60a3d9;
+  background-color: #0a3d62;
   color: white;
   transform: scale(1.05);
 }
 
 .action-button.accept.selected {
-  background-color: #60a3d9;
-  border-color: #60a3d9;
+  background-color: #0a3d62;
+  border-color: #0a3d62;
   color: white;
 }
 

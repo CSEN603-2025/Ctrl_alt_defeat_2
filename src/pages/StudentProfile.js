@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { FaBuilding, FaEye, FaEdit, FaPlus, FaTrash, FaTimes,FaBell } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import ProStudentSidebar from '../components/ProStudentSidebar';
+import StudentSidebar from '../components/StudentSidebar';
 import { AssessmentsContext } from './AssessmentsContext'; // Updated import path
-import './ProStudentProfile.css';
+import './StudentProfile.css';
 
 // Rest of the file remains unchanged
-const ProStudentProfile = () => {
+const StudentProfile = () => {
   const { assessments, postedScores, setPostedScores } = useContext(AssessmentsContext);
   const [selectedTab, setSelectedTab] = useState('main-profile');
   const [isEditing, setIsEditing] = useState(false);
@@ -17,13 +17,13 @@ const ProStudentProfile = () => {
     setIsBellAnimating(true);
     setTimeout(() => {
       setIsBellAnimating(false);
-      navigate('/pro-student/notifications');
+      navigate('/student/notifications');
     }, 500);
   };
   const [profileData, setProfileData] = useState({
     personalInfo: {
-      name: 'John Doe',
-      email: 'john.doe@guc.edu.eg',
+      name: 'Malak Ahmed',
+      email: 'malak.ahmed@guc.edu.eg',
       major: 'Computer Science',
       semester: 'Semester 5',
       gpa: '3.8'
@@ -683,34 +683,7 @@ const ProStudentProfile = () => {
         </div>
 
         {/* Posted Assessment Scores */}
-        <div className="profile-section">
-          <div className="section-header">
-            <h3>Posted Assessment Scores</h3>
-          </div>
-          <div className="posted-scores-grid">
-            {assessments
-              .filter(assessment => postedScores.includes(assessment.id))
-              .map(assessment => (
-                <div key={assessment.id} className="posted-score-card">
-                  <div className="score-header">
-                    <h4>{assessment.title}</h4>
-                    <button
-                      className="remove-score-button"
-                      onClick={() => handlePostScore(assessment)}
-                    >
-                      <FaTimes />
-                    </button>
-                  </div>
-                  <div className="score-value">{assessment.score}%</div>
-                  <div className="score-topics">
-                    {assessment.topics.map(topic => (
-                      <span key={topic} className="topic-tag">{topic}</span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-          </div>
-        </div>
+        
       </div>
     </div>
   );
@@ -748,11 +721,16 @@ const ProStudentProfile = () => {
 
   return (
     <div className="pro-student-layout">
-      <ProStudentSidebar />
+      <StudentSidebar />
       <div className="pro-student-content">
         <div className="hero-banner">
           <h2>My Profile</h2>
-         
+          <p className="subtext">
+            Today is {new Date().toLocaleString('en-US', {
+              weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+              hour: '2-digit', minute: '2-digit'
+            })}
+          </p>
         </div>
 
         <div className="profile-tabs">
@@ -776,4 +754,4 @@ const ProStudentProfile = () => {
   );
 };
 
-export default ProStudentProfile;
+export default StudentProfile;
