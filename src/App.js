@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignIn from './pages/signin';
+
 import CompanyRegistration from './pages/CompanyRegistration';
 import CompanyDashboard from './pages/CompanyDashboard';
 import FacultyMemberDashboard from './pages/facultymemberDashboard';
@@ -23,18 +24,32 @@ import ProStudentInternshipReport from './pages/ProStudentInternshipReport';
 import ProStudentAppointments from './pages/ProStudentAppointments';
 import AcceptedAppointments from './pages/AcceptedAppointments';
 import VideoCall from './pages/VideoCall';
-import { WorkshopProvider } from './pages/WorkshopContext';
 import ProStudentWorkshopDescription from './pages/ProStudentWorkshopDescription';
 import ProStudentWorkshopJoin from './pages/ProStudentWorkshopJoin';
 import ScadDashboard from './pages/ScadDashboard';
 import ScadInternshipDetails from './pages/ScadInternshipDetails';
-import { AssessmentsProvider } from './pages/AssessmentsContext';
 import ProStudentAssessments from './pages/ProStudentAssessments';
 import ScadAcceptedAppointments from './pages/ScadAcceptedAppointments';
 import ScadVideoCall from './pages/ScadVideoCall';
 import ScadNotifications from './pages/ScadNotifications';
 import ScadVoiceCall from './pages/ScadVoiceCall';
 import ScadAppointments from './pages/ScadAppointments';
+import StudentSuggestedCompanies from './pages/StudentSuggestedCompanies';
+import ProStudentSuggestedCompanies from './pages/ProStudentSuggestedCompanies';
+import StudentDashboard from './pages/StudentDashboard';
+import StudentProfile from './pages/StudentProfile';
+
+
+import StudentApp2 from './pages/studentapp2';
+import StudentNotifications from './pages/StudentNotifications';
+import StudentInternshipApplication2 from './pages/StudentInternshipApplication2';
+import StudentInternshipDetails2 from './pages/StudentInternshipDetails2';
+import StudentInternshipEvaluation2 from './pages/StudentInternshipEvaluation2';
+import StudentInternshipManagement2 from './pages/StudentInternshipManagement2';
+import StudentInternshipReport2 from './pages/StudentInternshipReport2';
+import StudentInternships2 from './pages/StudentInternships2';
+import { WorkshopProvider } from './pages/WorkshopContext';
+import { AssessmentsProvider } from './pages/AssessmentsContext';
 
 function App() {
   return (
@@ -43,6 +58,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<SignIn />} />
+            
             <Route path="/company-registration" element={<CompanyRegistration />} />
             <Route path="/company-dashboard" element={<CompanyDashboard />} />
             <Route path="/faculty-dashboard" element={<FacultyMemberDashboard />} />
@@ -75,6 +91,19 @@ function App() {
             <Route path="/scad/voice-call" element={<ScadVoiceCall />} />
             <Route path="/scad/notifications" element={<ScadNotifications />} />
             <Route path="/scad/appointments" element={<ScadAppointments />} />
+            <Route path="/student/suggested-companies" element={<StudentSuggestedCompanies />} />
+            <Route path="/pro-student/suggested-companies" element={<ProStudentSuggestedCompanies />} />
+            <Route path="/student/dashboard" element={<StudentDashboard />} />
+            <Route path="/student/profile" element={<StudentProfile />} />
+            <Route path="/student/internships" element={<StudentInternships2 />} />
+            <Route path="/student/internships/:id" element={<StudentInternshipDetails2 />} />
+            <Route path="/student/internships/:id/apply" element={<StudentInternshipApplication2 />} />
+            <Route path="/student/internship-management" element={<StudentInternshipManagement2 />} />
+            <Route path="/student/internships/:id/evaluation" element={<StudentInternshipEvaluation2 />} />
+            <Route path="/student/internships/:id/report" element={<StudentInternshipReport2 />} />
+            <Route path="/student/applications" element={<StudentApp2 />} />
+            <Route path="/student/notifications" element={<StudentNotifications />} />
+        
           </Routes>
         </Router>
       </AssessmentsProvider>

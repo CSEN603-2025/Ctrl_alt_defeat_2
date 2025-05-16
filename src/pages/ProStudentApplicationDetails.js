@@ -79,7 +79,7 @@ const ProStudentApplicationDetails = () => {
         <BackButton />
         <div className="hero-banner">
           <h1>Application Details</h1>
-          <p>Review your application information and status</p>
+         
         </div>
 
         {!showInterviewForm ? (

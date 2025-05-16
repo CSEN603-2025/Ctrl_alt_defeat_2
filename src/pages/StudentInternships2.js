@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { FaSearch, FaBuilding, FaClock, FaMoneyBillWave, FaGraduationCap, FaCalendarAlt, FaStar, FaUsers, FaIndustry,FaBell, FaFilter, FaSortAmountDown, FaLinkedin, FaTwitter, FaGlobe, FaFileAlt } from 'react-icons/fa';
-import ProStudentSidebar from '../components/ProStudentSidebar';
-import './ProStudentInternships.css';
+import StudentSidebar from '../components/StudentSidebar';
+import './StudentInternships2.css';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 
-const ProStudentInternships = () => {
+const StudentInternships2 = () => {
   const [selectedMajor, setSelectedMajor] = useState(null);
   const [selectedSemester, setSelectedSemester] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -16,10 +16,6 @@ const location = useLocation();
 const [activeTab, setActiveTab] = useState(() =>
   location.state?.from === 'completed' ? 'my' : 'all'
 );
- const [myInternshipsSearchQuery, setMyInternshipsSearchQuery] = useState('');
-  const [myFilterIndustry, setMyFilterIndustry] = useState('');
-  const [myFilterDuration, setMyFilterDuration] = useState('');
-  const [myFilterCompensation, setMyFilterCompensation] = useState('');
   const [filterIndustry, setFilterIndustry] = useState('');
   const [filterDuration, setFilterDuration] = useState('');
   const [filterCompensation, setFilterCompensation] = useState('');
@@ -67,28 +63,6 @@ const [activeTab, setActiveTab] = useState(() =>
     'Semester 6',
     'Semester 7',
     'Semester 8'
-  ];
-   // New constants for filter dropdowns
-  const industries = [
-    'Technology',
-    'E-commerce',
-    'Logistics',
-    'Automotive',
-    'Quantum Computing',
-    'Robotics',
-    'Biotechnology',
-    'Clean Energy'
-  ];
-
-  const durations = [
-    '3 months',
-    '4 months',
-    '6 months'
-  ];
-
-  const compensations = [
-    'Paid',
-    'Unpaid'
   ];
 
   const internships = [
@@ -484,7 +458,7 @@ const [activeTab, setActiveTab] = useState(() =>
     if (activeTab === 'my') {
       if (internship.status === 'Completed') {
         setSelectedCompletedInternship(internship);
-        navigate(`/pro-student/internships/${internship.id}`, {
+        navigate(`/student/internships/${internship.id}`, {
           state: {
             internship,
             isCompleted: true,
@@ -493,7 +467,7 @@ const [activeTab, setActiveTab] = useState(() =>
           }
         });
       } else {
-        navigate(`/pro-student/internships/${internship.id}`, {
+        navigate(`/student/internships/${internship.id}`, {
           state: {
             internship,
             isCurrent: true
@@ -501,7 +475,7 @@ const [activeTab, setActiveTab] = useState(() =>
         });
       }
     } else {
-      navigate(`/pro-student/internships/${internship.id}`, {
+      navigate(`/student/internships/${internship.id}`, {
         state: { internship }
       });
     }
@@ -523,7 +497,7 @@ const [activeTab, setActiveTab] = useState(() =>
   };
 
   const handleApply = () => {
-    navigate(`/pro-student/internships/${selectedInternship.id}/apply`);
+    navigate(`/student/internships/${selectedInternship.id}/apply`);
   };
 
   const handleSubmitApplication = (e) => {
@@ -533,21 +507,22 @@ const [activeTab, setActiveTab] = useState(() =>
 
   const handleViewCompanyInternships = (company) => {
     if (company.internships && company.internships.length > 0) {
-      navigate(`/pro-student/internships/${company.internships[0].id}`);
+      navigate(`/student/internships/${company.internships[0].id}`);
     }
   };
 
-  // Updated filterAndSort function
- const filterAndSort = (data) => {
+  const filterAndSort = (data) => {
     let filtered = [...data];
 
-    // Apply common filters for all tabs
-    if (searchQuery) {
-      filtered = filtered.filter(item =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.company.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+    // Apply filters
+    if (activeTab === 'my') {
+      return [...myInternships.current, ...myInternships.completed];
     }
+
+    if (activeTab === 'suggested') {
+      return suggestedInternships;
+    }
+
     if (filterIndustry) {
       filtered = filtered.filter(item => item.industry === filterIndustry);
     }
@@ -557,27 +532,30 @@ const [activeTab, setActiveTab] = useState(() =>
     if (filterCompensation) {
       filtered = filtered.filter(item => item.compensation === filterCompensation);
     }
-
-    // Apply major and semester filters only for 'all' and 'suggested' tabs
-    if (activeTab !== 'my') {
-      if (selectedMajor) {
-        filtered = filtered.filter(item => item.major === selectedMajor);
-      }
-      if (selectedSemester) {
-        filtered = filtered.filter(item => item.semester === selectedSemester);
-      }
-      // Apply sorting for 'all' and 'suggested' tabs
-      filtered.sort((a, b) => {
-        if (sortOrder === 'newest') {
-          return new Date(b.date) - new Date(a.date);
-        } else {
-          return new Date(a.date) - new Date(b.date);
-        }
-      });
+    if (searchQuery) {
+      filtered = filtered.filter(item =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.company.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    if (selectedMajor) {
+      filtered = filtered.filter(item => item.major === selectedMajor);
+    }
+    if (selectedSemester) {
+      filtered = filtered.filter(item => item.semester === selectedSemester);
     }
 
-    return filtered;};
+    // Apply sorting
+    filtered.sort((a, b) => {
+      if (sortOrder === 'newest') {
+        return new Date(b.date) - new Date(a.date);
+      } else {
+        return new Date(a.date) - new Date(b.date);
+      }
+    });
 
+    return filtered;
+  };
 
   const handleEvaluationSubmit = (data) => {
     console.log('Evaluation submitted:', data);
@@ -749,15 +727,17 @@ const [activeTab, setActiveTab] = useState(() =>
     );
   };
 
- return (
+  return (
     <div className="pro-student-layout">
-      <ProStudentSidebar />
+      <StudentSidebar />
       <div className="pro-student-content">
+      
         <div className="hero-banner">
           <h1>Internships</h1>
-  
+          <p>Find and apply for internships that match your interests</p>
         </div>
 
+        {/* Tab Navigation */}
         <div className="internship-tabs">
           <button
             className={`tab-button ${activeTab === 'all' ? 'active' : ''}`}
@@ -765,12 +745,7 @@ const [activeTab, setActiveTab] = useState(() =>
           >
             All Internships
           </button>
-          <button
-            className={`tab-button ${activeTab === 'suggested' ? 'active' : ''}`}
-            onClick={() => setActiveTab('suggested')}
-          >
-            Suggested Internships
-          </button>
+          
           <button
             className={`tab-button ${activeTab === 'my' ? 'active' : ''}`}
             onClick={() => setActiveTab('my')}
@@ -781,57 +756,6 @@ const [activeTab, setActiveTab] = useState(() =>
 
         {activeTab === 'my' ? (
           <div className="my-internships-section">
-            <div className="search-filters">
-              <div className="icon-field">
-                <FaSearch className="input-icon" />
-                <input
-                  type="text"
-                  placeholder="Search my internships..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-
-              <div className="icon-field">
-                <FaIndustry className="input-icon" />
-                <select
-                  value={filterIndustry || ''}
-                  onChange={(e) => setFilterIndustry(e.target.value || null)}
-                >
-                  <option value="">All Industries</option>
-                  {industries.map(industry => (
-                    <option key={industry} value={industry}>{industry}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="icon-field">
-                <FaClock className="input-icon" />
-                <select
-                  value={filterDuration || ''}
-                  onChange={(e) => setFilterDuration(e.target.value || null)}
-                >
-                  <option value="">All Durations</option>
-                  {durations.map(duration => (
-                    <option key={duration} value={duration}>{duration}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="icon-field">
-                <FaMoneyBillWave className="input-icon" />
-                <select
-                  value={filterCompensation || ''}
-                  onChange={(e) => setFilterCompensation(e.target.value || null)}
-                >
-                  <option value="">All Compensations</option>
-                  {compensations.map(compensation => (
-                    <option key={compensation} value={compensation}>{compensation}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
             <h2>Current Internships</h2>
             <div className="internship-table-container">
               <table className="internship-table">
@@ -846,7 +770,7 @@ const [activeTab, setActiveTab] = useState(() =>
                   </tr>
                 </thead>
                 <tbody>
-                  {filterAndSort(myInternships.current).map((internship) => (
+                  {myInternships.current.map((internship) => (
                     <tr
                       key={internship.id}
                       onClick={() => handleInternshipSelect(internship)}
@@ -894,7 +818,7 @@ const [activeTab, setActiveTab] = useState(() =>
                   </tr>
                 </thead>
                 <tbody>
-                  {filterAndSort(myInternships.completed).map((internship) => (
+                  {myInternships.completed.map((internship) => (
                     <tr
                       key={internship.id}
                       onClick={() => handleInternshipSelect(internship)}
@@ -934,50 +858,8 @@ const [activeTab, setActiveTab] = useState(() =>
               </div>
 
               <div className="icon-field">
-                <FaIndustry className="input-icon" />
-                <select
-                  value={filterIndustry || ''}
-                  onChange={(e) => setFilterIndustry(e.target.value || null)}
-                >
-                  <option value="">All Industries</option>
-                  {industries.map(industry => (
-                    <option key={industry} value={industry}>{industry}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="icon-field">
-                <FaClock className="input-icon" />
-                <select
-                  value={filterDuration || ''}
-                  onChange={(e) => setFilterDuration(e.target.value || null)}
-                >
-                  <option value="">All Durations</option>
-                  {durations.map(duration => (
-                    <option key={duration} value={duration}>{duration}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="icon-field">
-                <FaMoneyBillWave className="input-icon" />
-                <select
-                  value={filterCompensation || ''}
-                  onChange={(e) => setFilterCompensation(e.target.value || null)}
-                >
-                  <option value="">All Compensations</option>
-                  {compensations.map(compensation => (
-                    <option key={compensation} value={compensation}>{compensation}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="icon-field">
                 <FaGraduationCap className="input-icon" />
-                <select
-                  value={selectedMajor || ''}
-                  onChange={(e) => setSelectedMajor(e.target.value || null)}
-                >
+                <select value={selectedMajor || ''} onChange={(e) => setSelectedMajor(e.target.value || null)}>
                   <option value="">All Majors</option>
                   {majors.map(major => (
                     <option key={major} value={major}>{major}</option>
@@ -987,10 +869,7 @@ const [activeTab, setActiveTab] = useState(() =>
 
               <div className="icon-field">
                 <FaCalendarAlt className="input-icon" />
-                <select
-                  value={selectedSemester || ''}
-                  onChange={(e) => setSelectedSemester(e.target.value || null)}
-                >
+                <select value={selectedSemester || ''} onChange={(e) => setSelectedSemester(e.target.value || null)}>
                   <option value="">All Semesters</option>
                   {semesters.map(semester => (
                     <option key={semester} value={semester}>{semester}</option>
@@ -999,11 +878,20 @@ const [activeTab, setActiveTab] = useState(() =>
               </div>
 
               <div className="icon-field">
-                <FaSortAmountDown className="input-icon" />
+                <FaFilter className="input-icon" />
                 <select
-                  value={sortOrder}
-                  onChange={(e) => setSortOrder(e.target.value)}
+                  value={activeTab}
+                  onChange={(e) => setActiveTab(e.target.value)}
                 >
+                  <option value="all">All Internships</option>
+                  <option value="my">My Internships</option>
+                  <option value="suggested">Suggested Internships</option>
+                </select>
+              </div>
+
+              <div className="icon-field">
+                <FaSortAmountDown className="input-icon" />
+                <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
                   <option value="newest">Newest First</option>
                   <option value="oldest">Oldest First</option>
                 </select>
@@ -1070,14 +958,14 @@ const [activeTab, setActiveTab] = useState(() =>
           internship={selectedCompletedInternship}
           onSubmit={handleReportSubmit}
         />
-        <div className="floating-notif"  onClick={() => navigate('/pro-student/notifications')}
+        <div className="floating-notif"  onClick={() => navigate('/student/notifications')}
 >  
   <FaBell className="wiggle-bell" />
   <div className="notification-badge">3</div>
 </div>
 
   <div className="pro-student-layout">
-    <ProStudentSidebar />
+    <StudentSidebar />
     <div className="pro-student-content">
       {/* ... your page content here ... */}
     </div>
@@ -1089,4 +977,4 @@ const [activeTab, setActiveTab] = useState(() =>
   );
 };
 
-export default ProStudentInternships; 
+export default  StudentInternships2; 

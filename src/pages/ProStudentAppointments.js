@@ -443,7 +443,7 @@ const ProStudentAppointments = () => {
         <div className="hero-banner">
           <div className="banner-content">
             <h2>Career/Report Appointments</h2>
-            <p className="subtext">Schedule and manage your appointments!</p>
+           
           </div>
           <div className="floating-notif" onClick={handleBellClick}>
             <FaBell className={`wiggle-bell ${isBellAnimating ? 'animating' : ''}`} />

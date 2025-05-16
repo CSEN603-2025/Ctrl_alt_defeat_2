@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaFileAlt, FaUpload, FaCheck, FaTimes } from 'react-icons/fa';
-import ProStudentSidebar from '../components/ProStudentSidebar';
-import './ProStudentInternships.css';
+import StudentSidebar from '../components/StudentSidebar';
+import './StudentInternships2.css';
 
-const ProStudentInternshipApplication = () => {
+const StudentInternshipApplication2 = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [internship, setInternship] = useState(null);
@@ -110,7 +110,7 @@ const ProStudentInternshipApplication = () => {
     if (foundInternship) {
       setInternship(foundInternship);
     } else {
-      navigate('/pro-student/internships');
+      navigate('/student/internships');
     }
   }, [id, navigate]);
 
@@ -193,7 +193,7 @@ const ProStudentInternshipApplication = () => {
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
       setShowFeedback(true);
       setTimeout(() => {
-        navigate('/pro-student/internships');
+        navigate('/student/internships');
       }, 3000);
     } catch (error) {
       console.error('Error submitting application:', error);
@@ -206,7 +206,7 @@ const ProStudentInternshipApplication = () => {
   if (!internship) {
     return (
       <div className="pro-student-layout">
-        <ProStudentSidebar />
+        <StudentSidebar />
         <div className="pro-student-content">
           <div className="loading-container">
             <div className="loading-spinner"></div>
@@ -219,7 +219,7 @@ const ProStudentInternshipApplication = () => {
 
   return (
     <div className="pro-student-layout">
-      <ProStudentSidebar />
+      <StudentSidebar />
       <div className="pro-student-content">
         {showFeedback && (
           <div className="feedback-message">
@@ -228,10 +228,10 @@ const ProStudentInternshipApplication = () => {
         )}
         <div className="hero-banner">
           <h1>Application Form</h1>
-          
+          <p>Submit your application for the internship position</p>
         </div>
 
-        <button onClick={() => navigate('/pro-student/internships')} className="back-btn">← Back to Internships</button>
+        <button onClick={() => navigate('/student/internships')} className="back-btn">← Back to Internships</button>
 
         <div className="application-container">
           <div className="application-header" style={{ textAlign: 'left' }}>
@@ -470,4 +470,4 @@ const ProStudentInternshipApplication = () => {
   );
 };
 
-export default ProStudentInternshipApplication; 
+export default StudentInternshipApplication2; 

@@ -1,24 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaSearch, FaBuilding, FaClock, FaMoneyBillWave, FaGraduationCap, FaCalendarAlt, FaCheck, FaTimes, FaFilter, FaSortAmountDown, FaLinkedin, FaTwitter, FaGlobe ,FaBell} from 'react-icons/fa';
-import ProStudentSidebar from '../components/ProStudentSidebar';
-import './ProStudentApplications.css';
+import { FaSearch, FaBuilding, FaClock, FaMoneyBillWave, FaGraduationCap, FaCalendarAlt, FaCheck, FaTimes, FaFilter, FaSortAmountDown } from 'react-icons/fa';
+import StudentSidebar from '../components/StudentSidebar';
+import BackButton from '../components/BackButton';
+import './studentapp2.css';
 
-const ProStudentApplications = () => {
+const StudentApp2 = () => {
   const navigate = useNavigate();
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState('newest');
   const [selectedApplication, setSelectedApplication] = useState(null);
-    const [unreadNotifications, setUnreadNotifications] = useState(3); // Mock unread notifications count
-     const [isBellAnimating, setIsBellAnimating] = useState(false);
-    const handleBellClick = () => {
-      setIsBellAnimating(true);
-      setTimeout(() => {
-        setIsBellAnimating(false);
-        navigate('/pro-student/notifications');
-      }, 500);
-    };
 
   const applications = [
     {
@@ -147,10 +139,10 @@ const ProStudentApplications = () => {
 
   const filteredApplications = applications
     .filter(application => {
-      const matchesStatus = selectedStatus === 'all' || application.status === selectedStatus;
-      const matchesSearch = application.position.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        application.company.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesStatus && matchesSearch;
+    const matchesStatus = selectedStatus === 'all' || application.status === selectedStatus;
+    const matchesSearch = application.position.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         application.company.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesStatus && matchesSearch;
     })
     .sort((a, b) => {
       if (sortOrder === 'newest') {
@@ -158,55 +150,48 @@ const ProStudentApplications = () => {
       } else {
         return new Date(a.appliedDate) - new Date(b.appliedDate);
       }
-    });
+  });
 
   return (
     <div className="pro-student-layout">
-      <ProStudentSidebar />
+      <StudentSidebar />
       <div className="pro-student-content">
-        <div className="hero-banner">
-          <h1>My Applications</h1>
-         
-        </div>
-        <div className="floating-notif" onClick={handleBellClick}>
-                  <FaBell className="wiggle-bell" />
-                  {unreadNotifications > 0 && (
-                    <span className="notification-badge">{unreadNotifications}</span>
-                  )}
-                </div>
+        <BackButton />
+        <h1>My Applications</h1>
 
         {!selectedApplication && (
-          <div className="search-bar" style={{ background: 'none', boxShadow: 'none', padding: '0' }}>
+        <div className="search-section">
+          <div className="search-bar">
             <div className="icon-field">
               <FaSearch className="input-icon" />
               <input
                 type="text"
                 placeholder="Search by company or position..."
                 value={searchQuery}
-                onChange={handleSearch}
-              />
-            </div>
-            <div className="icon-field">
-              <FaFilter className="input-icon" />
-              <select
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                className="status-filter"
-                style={{ color: selectedStatus === 'all' ? '#7f8c8d' : '#2c3e50' }}
-              >
-                <option value="all" style={{ color: '#7f8c8d' }}>Filter by Status</option>
-                <option value="pending" style={{ color: '#2c3e50' }}>Pending Review</option>
-                <option value="finalized" style={{ color: '#2c3e50' }}>Finalized</option>
-                <option value="accepted" style={{ color: '#2c3e50' }}>Accepted</option>
-                <option value="rejected" style={{ color: '#2c3e50' }}>Rejected</option>
-              </select>
-            </div>
-            <div className="icon-field">
-              <FaSortAmountDown className="input-icon" />
-              <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-                <option value="newest">Newest First</option>
-                <option value="oldest">Oldest First</option>
-              </select>
+                  onChange={handleSearch}
+                />
+              </div>
+              <div className="icon-field">
+                <FaFilter className="input-icon" />
+                <select 
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  className="status-filter"
+                >
+                  <option value="all">All Applications</option>
+                  <option value="pending">Pending Review</option>
+                  <option value="finalized">Finalized</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+              </div>
+              <div className="icon-field">
+                <FaSortAmountDown className="input-icon" />
+                <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+                  <option value="newest">Newest First</option>
+                  <option value="oldest">Oldest First</option>
+                </select>
+              </div>
             </div>
           </div>
         )}
@@ -219,44 +204,44 @@ const ProStudentApplications = () => {
             <div className="details-card" style={{ marginBottom: '20px' }}>
               <div className="details-header" style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
                 <div style={{ flex: '0 0 120px' }}>
-                  <img
-                    src={selectedApplication.logo}
-                    alt="logo"
-                    style={{
-                      width: '120px',
-                      height: '120px',
+                  <img 
+                    src={selectedApplication.logo} 
+                    alt="logo" 
+                    style={{ 
+                      width: '120px', 
+                      height: '120px', 
                       borderRadius: '50%',
                       objectFit: 'cover',
                       boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-                    }}
+                    }} 
                   />
-                </div>
+        </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ marginBottom: '15px' }}>
-                    <h2 style={{
-                      margin: '0 0 5px 0',
+                    <h2 style={{ 
+                      margin: '0 0 5px 0', 
                       color: '#2c3e50',
                       fontSize: '24px'
                     }}>
                       {selectedApplication.company}
                     </h2>
-                    <p style={{
-                      fontWeight: 'bold',
-                      color: '#0a3d62',
+                    <p style={{ 
+                      fontWeight: 'bold', 
+                      color: '#0a3d62', 
                       margin: '0 0 10px 0',
                       fontSize: '18px'
                     }}>
                       {selectedApplication.position}
                     </p>
                   </div>
-                  <div style={{
-                    display: 'flex',
+                  <div style={{ 
+                    display: 'flex', 
                     flexWrap: 'wrap',
-                    gap: '10px',
+                    gap: '10px', 
                     alignItems: 'center',
                     marginBottom: '15px'
                   }}>
-                    <span className="badge" style={{
+                    <span className="badge" style={{ 
                       backgroundColor: '#3c6382',
                       padding: '6px 12px',
                       borderRadius: '20px',
@@ -271,10 +256,10 @@ const ProStudentApplications = () => {
                       fontSize: '14px'
                     }}>
                       {getStatusText(selectedApplication.status)}
-                    </span>
-                  </div>
-                  <div style={{
-                    display: 'flex',
+                </span>
+              </div>
+                  <div style={{ 
+                    display: 'flex', 
                     gap: '20px',
                     color: '#666',
                     fontSize: '14px'
@@ -283,24 +268,46 @@ const ProStudentApplications = () => {
                       <FaClock style={{ color: '#0a3d62' }} />
                       <span>Applied on {selectedApplication.appliedDate}</span>
                     </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <FaMoneyBillWave style={{ color: '#0a3d62' }} />
+                      <span>{selectedApplication.compensation}</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <FaCalendarAlt style={{ color: '#0a3d62' }} />
+                      <span>{selectedApplication.duration}</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Box 2: Application Details and Skills */}
+            {/* Box 2: Application Details */}
             <div className="details-card" style={{ marginBottom: '20px' }}>
               <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Application Details</h3>
-              <div>
-                <p><strong>Duration:</strong> {selectedApplication.duration}</p>
-                <p><strong>Compensation:</strong> {selectedApplication.compensation}</p>
-                {selectedApplication.compensation === 'Paid' && (
-                  <p><strong>Salary:</strong> {selectedApplication.salary}</p>
-                )}
-                <p><strong>Major:</strong> {selectedApplication.major}</p>
-                <p><strong>Semester:</strong> {selectedApplication.semester}</p>
-                <p style={{ marginTop: '15px' }}><strong>Skills Required:</strong></p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+                <div>
+                  <p><strong>Duration:</strong> {selectedApplication.duration}</p>
+                  <p><strong>Compensation:</strong> {selectedApplication.compensation}</p>
+                  {selectedApplication.compensation === 'Paid' && (
+                    <p><strong>Salary:</strong> {selectedApplication.salary}</p>
+                  )}
+                  <p><strong>Major:</strong> {selectedApplication.major}</p>
+                  <p><strong>Semester:</strong> {selectedApplication.semester}</p>
+                </div>
+                <div>
+                  <p><strong>Application Status:</strong> {getStatusText(selectedApplication.status)}</p>
+                  <p><strong>Applied Date:</strong> {selectedApplication.appliedDate}</p>
+                  <p><strong>Last Updated:</strong> {selectedApplication.appliedDate}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Box 3: Skills and Description */}
+            <div className="details-card" style={{ marginBottom: '20px' }}>
+              <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Skills and Description</h3>
+              <div className="skills-section" style={{ marginBottom: '20px' }}>
+                <h4 style={{ color: '#2c3e50', marginBottom: '10px' }}>Required Skills</h4>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                   {selectedApplication.requirements.map((skill, index) => (
                     <span key={index} style={{
                       backgroundColor: '#e8f4f8',
@@ -311,20 +318,21 @@ const ProStudentApplications = () => {
                     }}>
                       {skill}
                     </span>
-                  ))}
-                </div>
+          ))}
+        </div>
               </div>
-              <div className="description" style={{ marginTop: '20px' }}>
+              <div className="description">
                 <h4 style={{ color: '#2c3e50', marginBottom: '10px' }}>Description</h4>
                 <p style={{ color: '#666', lineHeight: '1.6' }}>{selectedApplication.description}</p>
               </div>
             </div>
 
-            {/* Box 3: Submitted Documents */}
+            {/* Box 4: Supported Documents */}
             <div className="details-card" style={{ marginBottom: '20px' }}>
-              <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Submitted Documents</h3>
+              <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Supported Documents</h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
                 <div>
+                  <h4 style={{ color: '#2c3e50', marginBottom: '10px' }}>Required Documents</h4>
                   <ul style={{ listStyle: 'none', padding: 0 }}>
                     <li style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                       <FaCheck style={{ color: '#27ae60' }} />
@@ -341,6 +349,7 @@ const ProStudentApplications = () => {
                   </ul>
                 </div>
                 <div>
+                  <h4 style={{ color: '#2c3e50', marginBottom: '10px' }}>Additional Documents</h4>
                   <ul style={{ listStyle: 'none', padding: 0 }}>
                     <li style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                       <FaCheck style={{ color: '#27ae60' }} />
@@ -355,23 +364,23 @@ const ProStudentApplications = () => {
               </div>
             </div>
 
-            {/* Box 4: Connect */}
+            {/* Box 5: Connect */}
             <div className="details-card">
               <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Connect</h3>
               <div style={{ display: 'flex', gap: '20px', fontSize: '22px', marginTop: '10px' }}>
                 {selectedApplication.social?.linkedin && (
                   <a href={selectedApplication.social.linkedin} target="_blank" rel="noreferrer" style={{ color: '#0077B5' }}>
-                    <FaLinkedin />
+                    <i className="fab fa-linkedin"></i>
                   </a>
                 )}
                 {selectedApplication.social?.twitter && (
                   <a href={selectedApplication.social.twitter} target="_blank" rel="noreferrer" style={{ color: '#1DA1F2' }}>
-                    <FaTwitter />
+                    <i className="fab fa-twitter"></i>
                   </a>
                 )}
                 {selectedApplication.social?.website && (
                   <a href={selectedApplication.social.website} target="_blank" rel="noreferrer" style={{ color: '#0a3d62' }}>
-                    <FaGlobe />
+                    <i className="fas fa-globe"></i>
                   </a>
                 )}
               </div>
@@ -389,12 +398,13 @@ const ProStudentApplications = () => {
                   <th>Duration</th>
                   <th>Applied Date</th>
                   <th>Status</th>
+                  
                 </tr>
               </thead>
               <tbody>
                 {filteredApplications.map(application => (
-                  <tr
-                    key={application.id}
+                  <tr 
+                    key={application.id} 
                     className="pop-in delay-0"
                     onClick={() => setSelectedApplication(application)}
                     style={{ cursor: 'pointer' }}
@@ -415,6 +425,17 @@ const ProStudentApplications = () => {
                         {getStatusText(application.status)}
                       </span>
                     </td>
+                    <td>
+                      <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'center', 
+                        alignItems: 'center',
+                        width: '100%',
+                        padding: '0.5rem'
+                      }}>
+                        
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -426,4 +447,4 @@ const ProStudentApplications = () => {
   );
 };
 
-export default ProStudentApplications; 
+export default StudentApp2; 

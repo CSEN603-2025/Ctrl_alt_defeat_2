@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FaBuilding, FaBell,FaClock, FaMoneyBillWave, FaGraduationCap, FaCalendarAlt, FaIndustry, FaLinkedin, FaTwitter, FaGlobe, FaFileAlt, FaDownload, FaFileDownload } from 'react-icons/fa';
-import ProStudentSidebar from '../components/ProStudentSidebar';
-import './ProStudentInternships.css';
+import StudentSidebar from '../components/StudentSidebar';
+import './StudentInternships2.css';
 
 // Import html2pdf
 import html2pdf from 'html2pdf.js';
 
-const ProStudentInternshipDetails = () => {
+const StudentInternshipDetails2 = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,12 +23,12 @@ const ProStudentInternshipDetails = () => {
       setIsCurrent(location.state.isCurrent || false);
     } else {
       // If no state is passed, redirect back to internships page
-      navigate('/pro-student/internships');
+      navigate('/student/internships');
     }
   }, [location.state, navigate]);
 
   const handleApply = () => {
-    navigate(`/pro-student/internships/${id}/apply`);
+    navigate(`/student/internships/${id}/apply`);
   };
 
   const handleDownloadCertificate = () => {
@@ -219,13 +219,13 @@ const ProStudentInternshipDetails = () => {
   };
 
   const handleEvaluation = () => {
-    navigate(`/pro-student/internships/${id}/evaluation`, {
+    navigate(`/student/internships/${id}/evaluation`, {
       state: { internship }
     });
   };
 
   const handleReport = () => {
-    navigate(`/pro-student/internships/${id}/report`, {
+    navigate(`/student/internships/${id}/report`, {
       state: { internship }
     });
   };
@@ -233,7 +233,7 @@ const ProStudentInternshipDetails = () => {
   if (!internship) {
     return (
       <div className="pro-student-layout">
-        <ProStudentSidebar />
+        <StudentSidebar />
         <div className="pro-student-content">
           <div className="loading-container">
             <div className="loading-spinner"></div>
@@ -246,17 +246,17 @@ const ProStudentInternshipDetails = () => {
 
   return (
     <div className="pro-student-layout">
-      <ProStudentSidebar />
+      <StudentSidebar />
       <div className="pro-student-content">
         <div className="hero-banner">
           <h1>Internship Details</h1>
-          
+          <p>View and manage your internship information</p>
         </div>
 
         <div className="internship-details-container fadeIn">
 <button
   onClick={() =>
-    navigate('/pro-student/internships', {
+    navigate('/student/internships', {
       state: { from: 'completed' }
     })
   }
@@ -584,7 +584,7 @@ const ProStudentInternshipDetails = () => {
       </style>
       <div
   className="floating-notif"
-  onClick={() => navigate('/pro-student/notifications')}
+  onClick={() => navigate('/student/notifications')}
   title="View Notifications"
 >
   <FaBell className="wiggle-bell" />
@@ -594,4 +594,4 @@ const ProStudentInternshipDetails = () => {
   );
 };
 
-export default ProStudentInternshipDetails; 
+export default StudentInternshipDetails2; 

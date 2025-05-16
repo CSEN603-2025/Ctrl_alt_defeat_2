@@ -88,12 +88,7 @@ const ProStudentAssessments = () => {
       <div className="pro-student-content">
         <div className="hero-banner">
           <h2>Online Assessments</h2>
-          <p className="subtext">
-            Today is {new Date().toLocaleString('en-US', {
-              weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-              hour: '2-digit', minute: '2-digit'
-            })}
-          </p>
+          
           
         </div>
         <div className="floating-notif" onClick={handleBellClick}>

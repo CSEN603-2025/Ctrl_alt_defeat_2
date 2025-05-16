@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FaStar, FaDownload, FaTimes, FaCheck } from 'react-icons/fa';
-import ProStudentSidebar from '../components/ProStudentSidebar';
-import './ProStudentInternships.css';
+import StudentSidebar from '../components/StudentSidebar';
+import './StudentInternships2.css';
 
-const ProStudentInternshipEvaluation = () => {
+const StudentInternshipEvaluation2 = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,21 +43,6 @@ const ProStudentInternshipEvaluation = () => {
   const handleRatingLeave = () => {
     setHoverRating(0);
   };
-  const handleDelete = () => {
-    localStorage.removeItem(`evaluation_${id}`);
-    setEvaluationData({
-      rating: 0,
-      feedback: '',
-      skillsGained: [],
-      challenges: '',
-      recommendations: ''
-    });
-    setIsEditing(false);
-    showFeedback('Evaluation deleted successfully!');
-    setTimeout(() => {
-      navigate(`/pro-student/internships/${id}`);
-    }, 1000);
-  };
 
   // Function to show feedback message
   const showFeedback = (message) => {
@@ -72,7 +57,7 @@ const ProStudentInternshipEvaluation = () => {
     localStorage.setItem(`evaluation_${id}`, JSON.stringify(evaluationData));
     showFeedback('Evaluation submitted successfully!');
     setTimeout(() => {
-      navigate(`/pro-student/internships/${id}`);
+      navigate(`/student/internships/${id}`);
     }, 1000);
   };
 
@@ -113,13 +98,13 @@ const ProStudentInternshipEvaluation = () => {
   };
 
   const handleCancel = () => {
-    navigate(`/pro-student/internships/${id}`);
+    navigate(`/student/internships/${id}`);
   };
 
   if (!internship) {
     return (
       <div className="pro-student-layout">
-        <ProStudentSidebar />
+        <StudentSidebar />
         <div className="pro-student-content">
           <div className="loading-container">
             <div className="loading-spinner"></div>
@@ -132,16 +117,16 @@ const ProStudentInternshipEvaluation = () => {
 
   return (
     <div className="pro-student-layout">
-      <ProStudentSidebar />
+      <StudentSidebar />
       <div className="pro-student-content">
         <div className="hero-banner">
           <h1>Internship Evaluation</h1>
-          
+          <p>Share your feedback and experience for this internship</p>
         </div>
 <div
   className="back-btn"
   onClick={() =>
-    navigate(`/pro-student/internships/${id}`, {
+    navigate(`/student/internships/${id}`, {
       state: {
         internship,
         isCompleted: true
@@ -244,18 +229,13 @@ const ProStudentInternshipEvaluation = () => {
               <button type="button" className="action-button download" onClick={handleDownload}>
                 <FaDownload /> Download Form
               </button>
-              
-          {isEditing && (
-                <button type="button" className="action-button submit" onClick={handleDelete}>
-                  <FaTimes /> Delete Evaluation
-                </button>
-              )}
             </div>
           </div>
+          
         </div>
       </div>
     </div>
   );
 };
 
-export default ProStudentInternshipEvaluation; 
+export default StudentInternshipEvaluation2; 

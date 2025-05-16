@@ -1990,7 +1990,7 @@ style={{
 </div>
         <section className="hero-banner animated fadeSlideUp">
           <h2>{getHeroTitle()}</h2>
-            <p className="subtext">{getHeroSubtitle()}</p>
+           
         </section>
 
         <section className="content-area">{renderContent()}</section>
