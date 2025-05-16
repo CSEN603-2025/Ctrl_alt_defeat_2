@@ -47,6 +47,10 @@ const ProStudentSidebar = () => {
           <FaBell className="nav-icon" />
           <span className="nav-label">Notifications</span>
         </Link>
+        <Link to="/pro-student/suggested-companies" className={`nav-item ${location.pathname === '/pro-student/suggested-companies' ? 'active' : ''}`}>
+          <FaBriefcase className="nav-icon" />
+          <span className="nav-label">Suggested Companies</span>
+        </Link>
       </nav>
 
       <div className="sidebar-footer">

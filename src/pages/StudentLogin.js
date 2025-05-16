@@ -4,8 +4,7 @@ import './SignIn.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-
-function SignIn() {
+function StudentLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
@@ -16,31 +15,21 @@ function SignIn() {
     e.preventDefault();
     if (!email || !password) {
       setError('Please enter both email and password.');
-    } else {
-      setError('');
-      console.log({ email, password, remember });
+      return;
     }
 
-    //  Hardcoded credentials
-    if (email === 'company@gmail.com' && password === '123') {
-      navigate('/company-dashboard');
+    // Validate email format
+    const emailRegex = /^[^\s@]+@guc\.edu\.eg$/;
+    if (!emailRegex.test(email)) {
+      setError('Please use your GUC email address.');
+      return;
     }
-    else if (email === 'student@gmail.com' && password === '123') {
-      alert('Redirect to student dashboard coming soon!');
-    }
-    else if (email === 'prostudent@gmail.com' && password === '123') {
-      navigate('/pro-student/dashboard');
-    }
-    else if (email === 'admin@gmail.com' && password === '123') {
-      alert('Redirect to admin dashboard coming soon!');
-    }
-    else if (email === 'facultymember@gmail.com' && password === '123') {
-      navigate('/faculty-dashboard');;
-    }
-    else if (email==='student@gmail.com' && password==='123'){
-      navigate('/student/dashboard');
-    }
-    else {
+
+    // In a real application, this would be an API call to authenticate
+    // For now, we'll use a simple check
+    if (email === 'student@guc.edu.eg' && password === 'password123') {
+      navigate('/student-dashboard');
+    } else {
       setError('Invalid email or password.');
     }
   };
@@ -50,9 +39,9 @@ function SignIn() {
       <Header />
       <div className="signin-container">
         <form className="signin-form" onSubmit={handleSubmit}>
-          <h2>Sign in to your account</h2>
+          <h2>Student Login</h2>
 
-          <label>Username</label>
+          <label>GUC Email</label>
           <input
             type="email"
             placeholder="example@guc.edu.eg"
@@ -88,8 +77,8 @@ function SignIn() {
             <span>New to the platform?</span>
           </div>
 
-          <Link to="/company-registration" className="alt-button">
-            <i className="fas fa-building"></i> Register as Company
+          <Link to="/pro-student/registration" className="alt-button">
+            Register as Pro Student
           </Link>
         </form>
       </div>
@@ -98,4 +87,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default StudentLogin; 
