@@ -49,11 +49,10 @@
 
 .details-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
   margin-bottom: 2rem;
 }
-
 .detail-item {
   display: flex;
   align-items: center;
@@ -149,8 +148,8 @@
 }
 
 .apply-button {
-  background-color: #0a3d62;
-  color: white;
+  background-color: #ffffff;
+  color: #0a3d62;
   border: none;
   padding: 1rem 2rem;
   border-radius: 6px;
@@ -246,4 +245,87 @@
 
 .submit-button:hover {
   background-color: #0c4b6e;
-} 
+}
+
+.page-header {
+  background: #0a3d62;
+  margin: -1rem -1.5rem 1.5rem -1.5rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header h1 {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.hero-banner {
+  background: linear-gradient(135deg, #0a3d62 0%, #0c4b6e 100%);
+  color: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.hero-banner h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.hero-banner p {
+  margin: 0;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+.floating-notif {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  background: #ffffff;
+  color: #0a3d62;
+  padding: 12px;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #e55039;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+
+.wiggle-bell {
+  animation: wiggle 1s infinite ease-in-out;
+  font-size: 20px;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(10deg); }
+  50% { transform: rotate(-10deg); }
+  75% { transform: rotate(6deg); }
+}

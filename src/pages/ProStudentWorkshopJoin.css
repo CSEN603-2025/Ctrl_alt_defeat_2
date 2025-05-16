@@ -1,0 +1,298 @@
+.pro-student-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f6fa;
+}
+
+.workshop-join-content {
+  flex: 1;
+  padding: 2rem;
+  background-color: #f5f6fa;
+  margin: 0 auto 0 270px;
+  max-width: 1200px;
+  position: relative;
+  z-index: 10;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #0a3d62;
+  cursor: pointer;
+  padding: 10px 0;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.back-btn:hover {
+  color: #e55039;
+}
+
+.workshop-header {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.workshop-header h1 {
+  color: #0a3d62;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.workshop-meta {
+  display: flex;
+  gap: 2rem;
+  color: #000000;
+}
+
+.workshop-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.workshop-main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.video-section {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 100%;
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  box-sizing: border-box;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.video-controls button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.video-controls button:hover {
+  transform: scale(1.1);
+}
+
+.progress-bar {
+  flex: 1;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  margin: 0 1rem;
+  cursor: pointer;
+}
+
+.progress {
+  height: 100%;
+  background-color: #0a3d62;
+  border-radius: 2px;
+  transition: width 0.1s linear;
+}
+
+.time-display {
+  color: white;
+  font-size: 0.9rem;
+  min-width: 100px;
+  text-align: right;
+}
+
+.workshop-info {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.workshop-description,
+.workshop-topics {
+  margin-bottom: 2rem;
+}
+
+.workshop-description h3,
+.workshop-topics h3 {
+  color: #0a3d62;
+  margin-bottom: 1rem;
+}
+
+.workshop-description p {
+  color: #000000;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+}
+
+.workshop-topics ul {
+  list-style: none;
+  padding: 0;
+}
+
+.workshop-topics li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.workshop-topics li:last-child {
+  border-bottom: none;
+}
+
+.workshop-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.notes-section,
+.chat-section {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.notes-section h3,
+.chat-section h3 {
+  color: #0a3d62;
+  margin-bottom: 1rem;
+}
+
+.notes-section textarea {
+  width: 100%;
+  height: 340px;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  resize: vertical;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.chat-messages {
+  height: 300px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.chat-message {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+}
+
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.sender {
+  font-weight: bold;
+  color: #0a3d62;
+}
+
+.timestamp {
+  color: #666;
+}
+
+.chat-input {
+  display: flex;
+  gap: 1rem;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.chat-input button {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 1px solid #0a3d62;
+  color: #0a3d62;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.chat-input button:hover {
+  background-color: #0a3d62;
+  color: white;
+}
+
+@media (max-width: 1024px) {
+  .workshop-main,
+  .workshop-features {
+    grid-template-columns: 1fr;
+  }
+
+  .workshop-join-content {
+    margin: 0 auto 0 220px;
+  }
+}
+
+@media (max-width: 768px) {
+  .workshop-join-content {
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
+  .workshop-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

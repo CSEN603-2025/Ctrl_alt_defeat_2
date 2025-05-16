@@ -1,85 +1,26 @@
-import React, { useState } from 'react';
-import { FaBuilding, FaEye, FaCheck, FaTimes, FaChartBar, FaLock, FaUnlock, FaFilter, FaEdit, FaPlus, FaTrash } from 'react-icons/fa';
+import React, { useState, useContext } from 'react';
+import { FaBuilding, FaEye, FaEdit, FaPlus, FaTrash, FaTimes, FaBell } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import ProStudentSidebar from '../components/ProStudentSidebar';
-import AssessmentQuestions from './AssessmentQuestions';
+import { AssessmentsContext } from './AssessmentsContext'; // Corrected import path
 import './ProStudentProfile.css';
 
 const ProStudentProfile = () => {
+  const { assessments, postedScores, setPostedScores } = useContext(AssessmentsContext);
   const [selectedTab, setSelectedTab] = useState('main-profile');
-  const [showScore, setShowScore] = useState(false);
-  const [currentAssessment, setCurrentAssessment] = useState(null);
-  const [assessmentFilter, setAssessmentFilter] = useState('all');
   const [isEditing, setIsEditing] = useState(false);
-  const [postedScores, setPostedScores] = useState([]);
-  const [assessments, setAssessments] = useState([
-    {
-      id: 1,
-      title: 'Software Development Assessment',
-      duration: '60 minutes',
-      questions: 30,
-      topics: ['Algorithms', 'Data Structures', 'Problem Solving'],
-      status: 'available'
-    },
-    {
-      id: 2,
-      title: 'Data Science Assessment',
-      duration: '90 minutes',
-      questions: 40,
-      topics: ['Statistics', 'Machine Learning', 'Data Analysis'],
-      status: 'completed',
-      score: 85
-    },
-    {
-      id: 3,
-      title: 'Web Development Assessment',
-      duration: '45 minutes',
-      questions: 25,
-      topics: ['HTML/CSS', 'JavaScript', 'React'],
-      status: 'available'
-    },
-    {
-      id: 4,
-      title: 'Mobile App Development',
-      duration: '75 minutes',
-      questions: 35,
-      topics: ['iOS Development', 'Android Development', 'React Native'],
-      status: 'available'
-    },
-    {
-      id: 5,
-      title: 'Database Management',
-      duration: '50 minutes',
-      questions: 30,
-      topics: ['SQL', 'NoSQL', 'Database Design'],
-      status: 'available'
-    },
-    {
-      id: 6,
-      title: 'Cloud Computing',
-      duration: '65 minutes',
-      questions: 35,
-      topics: ['AWS', 'Azure', 'Cloud Architecture'],
-      status: 'available'
-    },
-    {
-      id: 7,
-      title: 'Cybersecurity Fundamentals',
-      duration: '55 minutes',
-      questions: 30,
-      topics: ['Network Security', 'Cryptography', 'Security Best Practices'],
-      status: 'available'
-    },
-    {
-      id: 8,
-      title: 'DevOps Practices',
-      duration: '70 minutes',
-      questions: 40,
-      topics: ['CI/CD', 'Containerization', 'Infrastructure as Code'],
-      status: 'available'
-    }
-  ]);
+  const navigate = useNavigate();
+  const [unreadNotifications, setUnreadNotifications] = useState(3); // Mock unread notifications count
+  const [isBellAnimating, setIsBellAnimating] = useState(false);
 
-  // Mock data for student profile with state management
+  const handleBellClick = () => {
+    setIsBellAnimating(true);
+    setTimeout(() => {
+      setIsBellAnimating(false);
+      navigate('/pro-student/notifications');
+    }, 500);
+  };
+
   const [profileData, setProfileData] = useState({
     personalInfo: {
       name: 'John Doe',
@@ -137,32 +78,33 @@ const ProStudentProfile = () => {
     ]
   });
 
-  // Mock data for profile views
   const profileViews = [
     {
       id: 1,
       company: 'Tech Solutions Inc.',
       viewedDate: '2024-03-15',
       viewedTime: '14:30',
-      status: 'viewed'
+      status: 'viewed',
+      imagePath: '/images/instabug.png'
     },
     {
       id: 2,
       company: 'Data Analytics Co.',
       viewedDate: '2024-03-14',
       viewedTime: '10:15',
-      status: 'viewed'
+      status: 'viewed',
+      imagePath: '/images/breadfast.png'
     },
     {
       id: 3,
       company: 'Secure Systems Ltd.',
       viewedDate: '2024-03-13',
       viewedTime: '16:45',
-      status: 'viewed'
+      status: 'viewed',
+      imagePath: '/images/valeo.png'
     }
   ];
 
-  // Handle personal info changes
   const handlePersonalInfoChange = (field, value) => {
     setProfileData(prev => ({
       ...prev,
@@ -173,7 +115,6 @@ const ProStudentProfile = () => {
     }));
   };
 
-  // Handle job interests changes
   const handleJobInterestChange = (index, value) => {
     const newInterests = [...profileData.jobInterests];
     newInterests[index] = value;
@@ -183,7 +124,6 @@ const ProStudentProfile = () => {
     }));
   };
 
-  // Add new job interest
   const handleAddJobInterest = () => {
     setProfileData(prev => ({
       ...prev,
@@ -191,7 +131,6 @@ const ProStudentProfile = () => {
     }));
   };
 
-  // Remove job interest
   const handleRemoveJobInterest = (index) => {
     setProfileData(prev => ({
       ...prev,
@@ -199,7 +138,6 @@ const ProStudentProfile = () => {
     }));
   };
 
-  // Handle internship changes
   const handleInternshipChange = (id, field, value) => {
     setProfileData(prev => ({
       ...prev,
@@ -209,7 +147,6 @@ const ProStudentProfile = () => {
     }));
   };
 
-  // Add new internship
   const handleAddInternship = () => {
     const newInternship = {
       id: Date.now(),
@@ -226,7 +163,6 @@ const ProStudentProfile = () => {
     }));
   };
 
-  // Remove internship
   const handleRemoveInternship = (id) => {
     setProfileData(prev => ({
       ...prev,
@@ -234,7 +170,6 @@ const ProStudentProfile = () => {
     }));
   };
 
-  // Handle part-time job changes
   const handlePartTimeJobChange = (id, field, value) => {
     setProfileData(prev => ({
       ...prev,
@@ -244,7 +179,6 @@ const ProStudentProfile = () => {
     }));
   };
 
-  // Add new part-time job
   const handleAddPartTimeJob = () => {
     const newJob = {
       id: Date.now(),
@@ -261,7 +195,6 @@ const ProStudentProfile = () => {
     }));
   };
 
-  // Remove part-time job
   const handleRemovePartTimeJob = (id) => {
     setProfileData(prev => ({
       ...prev,
@@ -269,7 +202,6 @@ const ProStudentProfile = () => {
     }));
   };
 
-  // Handle college activity changes
   const handleCollegeActivityChange = (id, field, value) => {
     setProfileData(prev => ({
       ...prev,
@@ -279,7 +211,6 @@ const ProStudentProfile = () => {
     }));
   };
 
-  // Add new college activity
   const handleAddCollegeActivity = () => {
     const newActivity = {
       id: Date.now(),
@@ -296,47 +227,11 @@ const ProStudentProfile = () => {
     }));
   };
 
-  // Remove college activity
   const handleRemoveCollegeActivity = (id) => {
     setProfileData(prev => ({
       ...prev,
       collegeActivities: prev.collegeActivities.filter(activity => activity.id !== id)
     }));
-  };
-
-  const handleStartAssessment = (assessmentId) => {
-    setCurrentAssessment(assessmentId);
-  };
-
-  const handleAssessmentComplete = (score) => {
-    // Update the assessment status and score
-    const updatedAssessments = assessments.map(assessment => {
-      if (assessment.id === currentAssessment) {
-        return {
-          ...assessment,
-          status: 'completed',
-          score: score
-        };
-      }
-      return assessment;
-    });
-
-    // Sort assessments to put completed ones at the top
-    const sortedAssessments = updatedAssessments.sort((a, b) => {
-      if (a.status === 'completed' && b.status !== 'completed') return -1;
-      if (a.status !== 'completed' && b.status === 'completed') return 1;
-      return 0;
-    });
-
-    // Update the assessments state with sorted array
-    setAssessments(sortedAssessments);
-
-    // Reset current assessment
-    setCurrentAssessment(null);
-  };
-
-  const handleToggleScoreVisibility = () => {
-    setShowScore(!showScore);
   };
 
   const handleEdit = () => {
@@ -345,13 +240,11 @@ const ProStudentProfile = () => {
 
   const handleSave = () => {
     setIsEditing(false);
-    // Here you would typically save the changes to a backend
     console.log('Saving profile data:', profileData);
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    // Reset form data to original values
     setProfileData(profileData);
   };
 
@@ -366,14 +259,20 @@ const ProStudentProfile = () => {
   const renderMainProfile = () => (
     <div className="main-profile-section">
       <div className="profile-header">
+        <div className="floating-notif" onClick={handleBellClick}>
+          <FaBell className="wiggle-bell" />
+          {unreadNotifications > 0 && (
+            <span className="notification-badge">{unreadNotifications}</span>
+          )}
+        </div>
         <h2>Main Profile</h2>
         {!isEditing ? (
-          <button className="edit-button" onClick={handleEdit}>
+          <button className="save-button" onClick={handleEdit}>
             <FaEdit /> Edit Profile
           </button>
         ) : (
           <div className="edit-actions">
-            <button className="cancel-button" onClick={handleCancel}>
+            <button className="save-button" onClick={handleCancel}>
               Cancel
             </button>
             <button className="save-button" onClick={handleSave}>
@@ -384,7 +283,6 @@ const ProStudentProfile = () => {
       </div>
 
       <div className="profile-sections">
-        {/* Personal Information */}
         <div className="profile-section">
           <h3>Personal Information</h3>
           <div className="info-grid">
@@ -451,7 +349,6 @@ const ProStudentProfile = () => {
           </div>
         </div>
 
-        {/* Job Interests */}
         <div className="profile-section">
           <div className="section-header">
             <h3>Job Interests</h3>
@@ -486,7 +383,6 @@ const ProStudentProfile = () => {
           </div>
         </div>
 
-        {/* Previous Internships */}
         <div className="profile-section">
           <div className="section-header">
             <h3>Previous Internships</h3>
@@ -595,7 +491,6 @@ const ProStudentProfile = () => {
           </div>
         </div>
 
-        {/* Part-Time Jobs */}
         <div className="profile-section">
           <div className="section-header">
             <h3>Part-Time Jobs</h3>
@@ -704,7 +599,6 @@ const ProStudentProfile = () => {
           </div>
         </div>
 
-        {/* College Activities */}
         <div className="profile-section">
           <div className="section-header">
             <h3>College Activities</h3>
@@ -824,12 +718,18 @@ const ProStudentProfile = () => {
 
   const renderProfileViews = () => (
     <div className="profile-views-section">
+      <div className="floating-notif" onClick={handleBellClick}>
+        <FaBell className="wiggle-bell" />
+        {unreadNotifications > 0 && (
+          <span className="notification-badge">{unreadNotifications}</span>
+        )}
+      </div>
       <h2>Companies That Viewed Your Profile</h2>
       <div className="views-list">
         {profileViews.map(view => (
           <div key={view.id} className="view-card">
             <div className="view-header">
-              <FaBuilding className="company-icon" />
+              <img src={view.imagePath} alt={`${view.company} logo`} className="company-logo" />
               <h3>{view.company}</h3>
               <span className={`view-status ${view.status}`}>
                 <FaEye />
@@ -845,111 +745,6 @@ const ProStudentProfile = () => {
       </div>
     </div>
   );
-
-  const renderAssessments = () => {
-    if (currentAssessment) {
-      return (
-        <AssessmentQuestions
-          assessmentId={currentAssessment}
-          onComplete={handleAssessmentComplete}
-        />
-      );
-    }
-
-    const filteredAssessments = assessments.filter(assessment => {
-      if (assessmentFilter === 'all') return true;
-      return assessment.status === assessmentFilter;
-    });
-
-    return (
-      <div className="assessments-section">
-        <div className="assessments-header">
-          <h2>Online Assessments</h2>
-          <div className="assessment-filters">
-            <button
-              className={`filter-button ${assessmentFilter === 'all' ? 'active' : ''}`}
-              onClick={() => setAssessmentFilter('all')}
-            >
-              All
-            </button>
-            <button
-              className={`filter-button ${assessmentFilter === 'available' ? 'active' : ''}`}
-              onClick={() => setAssessmentFilter('available')}
-            >
-              Available
-            </button>
-            <button
-              className={`filter-button ${assessmentFilter === 'completed' ? 'active' : ''}`}
-              onClick={() => setAssessmentFilter('completed')}
-            >
-              Completed
-            </button>
-          </div>
-        </div>
-        <div className="assessments-list">
-          {filteredAssessments.map(assessment => (
-            <div key={assessment.id} className="assessment-card">
-              <div className="assessment-header">
-                <h3>{assessment.title}</h3>
-                <span className={`assessment-status ${assessment.status}`}>
-                  {assessment.status === 'completed' ? 'Completed' : 'Available'}
-                </span>
-              </div>
-              <div className="assessment-details">
-                <p><strong>Duration:</strong> {assessment.duration}</p>
-                <p><strong>Questions:</strong> {assessment.questions}</p>
-                <div className="assessment-topics">
-                  <strong>Topics:</strong>
-                  <div className="topic-tags">
-                    {assessment.topics.map(topic => (
-                      <span key={topic} className="topic-tag">{topic}</span>
-                    ))}
-                  </div>
-                </div>
-                {assessment.status === 'completed' && (
-                  <div className="assessment-score">
-                    <div className="score-header">
-                      <FaChartBar />
-                      <h4>Your Score</h4>
-                      <button
-                        className="visibility-toggle"
-                        onClick={handleToggleScoreVisibility}
-                      >
-                        {showScore ? <FaUnlock /> : <FaLock />}
-                      </button>
-                    </div>
-                    {showScore ? (
-                      <div className="score-display">
-                        <span className="score-value">{assessment.score}%</span>
-                        <button
-                          className={`post-score-button ${postedScores.includes(assessment.id) ? 'posted' : ''}`}
-                          onClick={() => handlePostScore(assessment)}
-                        >
-                          {postedScores.includes(assessment.id) ? 'Posted on Profile' : 'Post on Profile'}
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="score-hidden">
-                        <span>Score Hidden</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-              {assessment.status === 'available' && (
-                <button
-                  className="start-assessment-button"
-                  onClick={() => handleStartAssessment(assessment.id)}
-                >
-                  Start Assessment
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
 
   return (
     <div className="pro-student-layout">
@@ -978,20 +773,12 @@ const ProStudentProfile = () => {
           >
             Profile Views
           </button>
-          <button
-            className={selectedTab === 'assessments' ? 'active' : ''}
-            onClick={() => setSelectedTab('assessments')}
-          >
-            Online Assessments
-          </button>
         </div>
 
-        {selectedTab === 'main-profile' ? renderMainProfile() :
-          selectedTab === 'profile-views' ? renderProfileViews() :
-            renderAssessments()}
+        {selectedTab === 'main-profile' ? renderMainProfile() : renderProfileViews()}
       </div>
     </div>
   );
 };
 
-export default ProStudentProfile; 
+export default ProStudentProfile;

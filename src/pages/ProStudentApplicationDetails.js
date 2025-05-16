@@ -80,8 +80,9 @@ const ProStudentApplicationDetails = () => {
         
         {!showInterviewForm ? (
           <div className="application-details">
-            <div className="application-header">
+            <div className="hero-banner">
               <h1>Application Details</h1>
+              <p>View and manage your application details</p>
               <div className="application-status">
                 <span className={`status-badge ${application.status.toLowerCase().replace(' ', '-')}`}>
                   {application.status}
@@ -283,4 +284,4 @@ const ProStudentApplicationDetails = () => {
   );
 };
 
-export default ProStudentApplicationDetails; 
+export default ProStudentApplicationDetails;

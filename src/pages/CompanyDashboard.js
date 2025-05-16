@@ -1,9 +1,10 @@
 // CompanyDashboard.js
 import React, { useState } from 'react';
+import BackButton from '../components/BackButton';
 import { useNavigate } from 'react-router-dom';
 import {
   FaTh, FaSearch, FaFileAlt, FaComments, FaChartBar, FaNewspaper, FaBell,
-  FaFilter, FaSortAmountDown, FaUsers, FaClipboardList, FaBriefcase, FaEdit, FaTrash, FaArrowLeft, FaArrowRight, FaSave, FaPen, FaCheck, FaDownload
+  FaFilter, FaSortAmountDown, FaUsers, FaClipboardList, FaBriefcase, FaEdit, FaTrash, FaArrowLeft, FaArrowRight, FaSave, FaPen, FaCheck,FaPlus, FaDownload, FaTimes
 } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
 
@@ -34,6 +35,7 @@ function CompanyDashboard() {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
+  const [selectedNotification, setSelectedNotification] = useState(null);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -75,7 +77,22 @@ function CompanyDashboard() {
       item.company.toLowerCase().includes(searchTerm.toLowerCase())
     );
   };
-
+const handleTagInput = (e, type) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      const value = e.target.value.trim();
+      if (value && !evaluationForm[type].includes(value)) {
+        setEvaluationForm(prev => ({
+          ...prev,
+          [type]: [...prev[type], value]
+        }));
+      }
+      e.target.value = '';
+    }
+  };
+const removeTag = (type, tag) => {
+    setEvaluationForm({ ...evaluationForm, [type]: evaluationForm[type].filter(t => t !== tag) });
+  };
   const handleFilter = (data) => {
     return data.filter((item) => {
       const industryMatch = filterIndustry ? item.industry === filterIndustry : true;
@@ -139,9 +156,9 @@ function CompanyDashboard() {
   ];
 
 
-  const myInternships = [
+  const [myInternships, setMyInternships]= useState([
     {
-      id: 3,
+      id: 1,
       title: 'Backend Developer Intern',
       company: 'Bosta',
       logo: '/images/bosta.png',
@@ -163,7 +180,7 @@ function CompanyDashboard() {
       newApps: 2,
     },
     {
-      id: 3,
+      id: 2,
       title: 'Data Analyst Intern',
       company: 'Bosta',
       logo: '/images/bosta.png',
@@ -184,7 +201,7 @@ function CompanyDashboard() {
       newApps: 5,
     },
     // Add more entries as needed
-  ];
+  ]);
   const [applications, setApplications] = useState([
     {
       id: 1,
@@ -241,7 +258,7 @@ function CompanyDashboard() {
       status: "Accepted Applicant"
     }
   ]);
-
+const [evaluationErrors, setEvaluationErrors] = useState({});
   const [internSearch, setInternSearch] = useState("");
   const [internFilterStatus, setInternFilterStatus] = useState("");
   const [evaluationForm, setEvaluationForm] = useState({
@@ -249,7 +266,6 @@ function CompanyDashboard() {
     strengths: [],
     weaknesses: [],
     comments: '',
-    recommendation: '',
     editable: true,
   });
   const [selectedInternForEval, setSelectedInternForEval] = useState(null);
@@ -269,57 +285,99 @@ function CompanyDashboard() {
         strengths: [],
         weaknesses: [],
         comments: '',
-        recommendation: '',
         editable: true
       });
     }
   };
 
-  const handleTagInput = (e, type) => {
-    if (e.key === 'Enter' || e.key === ',') {
-      e.preventDefault();
-      const value = e.target.value.trim();
-      if (value && !evaluationForm[type].includes(value)) {
-        setEvaluationForm(prev => ({
-          ...prev,
-          [type]: [...prev[type], value]
-        }));
-      }
-      e.target.value = '';
+
+ const submitEvaluation = (e) => {
+  e.preventDefault();
+  const { rating, strengths, weaknesses, comments, recommendation } = evaluationForm;
+
+  const errors = {};
+  if (rating === 0) errors.rating = "Please provide a rating.";
+  if (strengths.length === 0) errors.strengths = "Add at least one strength.";
+  if (weaknesses.length === 0) errors.weaknesses = "Add at least one weakness.";
+  if (!comments.trim()) errors.comments = "Comments are required.";
+
+  setEvaluationErrors(errors);
+
+  if (Object.keys(errors).length > 0) return;
+
+  const { id } = selectedInternForEval;
+  const formCopy = {
+    rating,
+    strengths: [...strengths],
+    weaknesses: [...weaknesses],
+    comments,
+    editable: false
+  };
+
+  setEvaluations(prev => ({ ...prev, [id]: formCopy }));
+  setSelectedInternForEval(null);
+  setStatusMessage(` Evaluation for ${selectedInternForEval.name} saved`);
+  setTimeout(() => setStatusMessage(''), 3000);
+};
+const getHeroTitle = () => {
+  switch (activeSection) {
+    case 'dashboard':
+      return 'Welcome back, Bosta 👋';
+    case 'search':
+      return 'Internship Postings';
+    case 'applications':
+      return 'Applicants';
+    case 'interns':
+      return 'Current Interns';
+      case 'notifications':
+      return 'Notifications';
+      case 'statistics':
+      return 'Statistics';
+    default:
+      return 'Company Dashboard';
+  }
+};
+const getHeroSubtitle = () => {
+  switch (activeSection) {
+    case 'dashboard': {
+      const now = new Date();
+      const weekday = now.toLocaleDateString(undefined, { weekday: 'long' });
+      const date = now.toLocaleDateString(undefined, {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+      });
+      const time = now.toLocaleTimeString(undefined, {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+      return `Today is ${weekday}, ${date} at ${time}`;
     }
-  };
-
-
-
-  const removeTag = (type, tag) => {
-    setEvaluationForm({ ...evaluationForm, [type]: evaluationForm[type].filter(t => t !== tag) });
-  };
-
-  const submitEvaluation = (e) => {
-    e.preventDefault();
-    const { id } = selectedInternForEval;
-
-    const formCopy = {
-      rating: evaluationForm.rating,
-      strengths: [...evaluationForm.strengths],
-      weaknesses: [...evaluationForm.weaknesses],
-      comments: evaluationForm.comments,
-      recommendation: evaluationForm.recommendation,
-      editable: false
-    };
-
-    setEvaluations(prev => ({ ...prev, [id]: formCopy }));
-    setStatusMessage(`✔️ Evaluation for ${selectedInternForEval.name} saved.`);
-
-    const card = document.querySelector('.details-card');
-    if (card) {
-      card.classList.add('fade-out-message');
-      setTimeout(() => setSelectedInternForEval(null), 600);
-    }
-
-    setTimeout(() => setStatusMessage(''), 3000);
-  };
-
+    case 'search':
+      return 'Manage your company listings';
+    case 'applications':
+      return 'Review applications submitted to your postings';
+    case 'interns':
+      return "Track your current interns' progress";
+      case 'notifications':
+      return "View your recent alerts and messages";
+    case 'statistics':
+      return "Insights and performance metrics";
+    default:
+      return '';
+  }
+};
+const [notifications, setNotifications] = useState([
+  {
+    id: 1,
+    type: 'Application',
+    title: 'New Internship Application',
+    message: 'You received a new application for "Frontend Developer Intern".',
+    timestamp: 'May 16, 2025 at 1:45 AM',
+    unread: true
+  }
+]);
 
 
   // 🎯 Status Color Helper
@@ -331,13 +389,49 @@ function CompanyDashboard() {
       default: return "#ccc";
     }
   };
-
+//added this
   const [statusMessage, setStatusMessage] = useState('');
+const handleDeleteInternship = (id) => {
+  const confirmed = window.confirm('Are you sure you want to delete this internship?');
+  if (confirmed) {
+    setMyInternships(prev => prev.filter(item => item.id !== id));
+    setStatusMessage('Internship deleted successfully!');
+    setTimeout(() => setStatusMessage(''), 3000);
+  }
+};
+
+const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+const [internshipToDelete, setInternshipToDelete] = useState(null);
+const [editMode, setEditMode] = useState(false);
+const [addingInternship, setAddingInternship] = useState(false);
+const [newInternship, setNewInternship] = useState({
+  id: null,
+  title: '',
+  company: 'Bosta', // Or empty if you want it editable
+  logo: '/images/bosta.png',
+  majors: '',
+  date: '',
+  duration: '',
+  status: 'Active',
+  industry: '',
+  compensation: '',
+  salary: '',
+  skills: [],
+  description: '',
+  social: {
+    linkedin: '',
+    twitter: '',
+    website: ''
+  },
+  applications: 0,
+  newApps: 0
+});
 
 
 
-  const renderContent = () => {
-    switch (activeSection) {
+const renderContent = () => {
+ 
+  switch (activeSection) {
       case 'dashboard':
         return (
           <div className="dashboard-overview">
@@ -392,15 +486,54 @@ function CompanyDashboard() {
 
         return (
           <div className="internship-section animated fadeInUp">
+           
+
             {selectedInternship ? (
               <div className="internship-details-container fadeIn">
+                  <button
+    onClick={() => setSelectedInternship(null)}
+    className="back-btn"
+  >
+    ← Back to Internships
+  </button>
+
                 {/* Box 1: Summary */}
                 <div className="details-card" style={{ marginBottom: '20px' }}>
                   <div className="details-header" style={{ display: 'flex', alignItems: 'flex-start', gap: '20px' }}>
                     <img src={selectedInternship.logo} alt="logo" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover' }} />
                     <div style={{ flex: 1 }}>
                       <h2 style={{ margin: '0 0 8px 0', fontSize: '24px' }}>{selectedInternship.company}</h2>
-                      <p style={{ fontWeight: 'bold', color: '#0a3d62', margin: '0 0 12px 0', fontSize: '18px' }}>{selectedInternship.title}</p>
+{editMode ? (
+  <input
+    className="evaluation-input"
+    value={selectedInternship.title}
+    onChange={(e) =>
+      setSelectedInternship({ ...selectedInternship, title: e.target.value })
+    }
+    style={{
+      fontSize: '16px',
+      fontWeight: 'bold',
+      color: '#0a3d62',
+      border: '1px solid #ccc',
+      borderRadius: '6px',
+      padding: '8px',
+      width: '100%',
+      boxSizing: 'border-box',
+      marginBottom: '10px'
+    }}
+  />
+) : (
+  <p
+    style={{
+      fontWeight: 'bold',
+      color: '#0a3d62',
+      margin: '0 0 12px 0',
+      fontSize: '18px'
+    }}
+  >
+    {selectedInternship.title}
+  </p>
+)}
                       <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
                         <span className="badge" style={{ backgroundColor: '#3c6382' }}>{selectedInternship.industry}</span>
                         <span className={`status-tag ${selectedInternship.status.toLowerCase()}`}>{selectedInternship.status}</span>
@@ -412,19 +545,118 @@ function CompanyDashboard() {
 
                 {/* Box 2: Skills and Description */}
                 <div className="details-card" style={{ marginBottom: '20px' }}>
-                  <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Internship Details</h3>
-                  <p><strong>Duration:</strong> {selectedInternship.duration}</p>
-                  <p><strong>Compensation:</strong> {selectedInternship.compensation}</p>
-                  {selectedInternship.compensation === 'Paid' && (
-                    <p><strong>Expected Salary:</strong> {selectedInternship.salary}</p>
-                  )}
-                  <p><strong>Majors:</strong> {selectedInternship.majors}</p>
-                  <p><strong>Skills Required:</strong> {selectedInternship.skills?.join(', ')}</p>
-                  <div className="description" style={{ marginTop: '15px' }}>
-                    <h4>Description</h4>
-                    <p>{selectedInternship.description}</p>
-                  </div>
-                </div>
+  <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Internship Details</h3>
+
+  <p><strong>Title:</strong></p>
+  {editMode ? (
+    <input
+      className="evaluation-input"
+      value={selectedInternship.title}
+      onChange={(e) =>
+        setSelectedInternship({ ...selectedInternship, title: e.target.value })
+      }
+    />
+  ) : (
+    <p>{selectedInternship.title}</p>
+  )}
+
+  <p><strong>Duration:</strong></p>
+  {editMode ? (
+    <input
+      className="evaluation-input"
+      value={selectedInternship.duration}
+      onChange={(e) =>
+        setSelectedInternship({ ...selectedInternship, duration: e.target.value })
+      }
+    />
+  ) : (
+    <p>{selectedInternship.duration}</p>
+  )}
+
+  <p><strong>Compensation:</strong></p>
+  {editMode ? (
+    <select
+      className="evaluation-input"
+      value={selectedInternship.compensation}
+      onChange={(e) =>
+        setSelectedInternship({ ...selectedInternship, compensation: e.target.value })
+      }
+    >
+      <option value="Paid">Paid</option>
+      <option value="Unpaid">Unpaid</option>
+    </select>
+  ) : (
+    <p>{selectedInternship.compensation}</p>
+  )}
+
+  {selectedInternship.compensation === 'Paid' && (
+    <>
+      <p><strong>Expected Salary:</strong></p>
+      {editMode ? (
+        <input
+          className="evaluation-input"
+          value={selectedInternship.salary}
+          onChange={(e) =>
+            setSelectedInternship({ ...selectedInternship, salary: e.target.value })
+          }
+        />
+      ) : (
+        <p>{selectedInternship.salary}</p>
+      )}
+    </>
+  )}
+
+  <p><strong>Majors:</strong></p>
+  {editMode ? (
+    <input
+      className="evaluation-input"
+      value={selectedInternship.majors}
+      onChange={(e) =>
+        setSelectedInternship({ ...selectedInternship, majors: e.target.value })
+      }
+    />
+  ) : (
+    <p>{selectedInternship.majors}</p>
+  )}
+
+  <div className="description" style={{ marginTop: '15px' }}>
+    <p><strong>Description:</strong></p>
+    {editMode ? (
+      <textarea
+        rows="4"
+        className="evaluation-textarea"
+        value={selectedInternship.description}
+        onChange={(e) =>
+          setSelectedInternship({ ...selectedInternship, description: e.target.value })
+        }
+      />
+    ) : (
+      <p>{selectedInternship.description}</p>
+    )}
+  </div>
+
+  <div style={{ marginTop: '15px' }}>
+    <p><strong>Skills:</strong></p>
+    {editMode ? (
+      <input
+        className="evaluation-input"
+        value={selectedInternship.skills.join(', ')}
+        onChange={(e) =>
+          setSelectedInternship({
+            ...selectedInternship,
+            skills: e.target.value.split(',').map(s => s.trim())
+          })
+        }
+      />
+    ) : (
+      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '8px' }}>
+        {selectedInternship.skills?.map((skill, idx) => (
+          <span className="skill-pill" key={idx}>{skill}</span>
+        ))}
+      </div>
+    )}
+  </div>
+</div>
 
                 {/* Box 3: Social Media */}
                 <div className="details-card">
@@ -447,16 +679,67 @@ function CompanyDashboard() {
                     )}
                   </div>
                 </div>
+                {editMode && (
+  <div style={{display:'flex', justifyContent: 'flex-end', marginTop: '20px', gap: '10px' }}>
+    <button
+      className="status-btn"
+            style={{ backgroundColor: '#ffffff', color: '#0a3d62' }}
+      onClick={() => {
+        const updatedList = myInternships.map(i =>
+          i.id === selectedInternship.id ? selectedInternship : i
+        );
+        setMyInternships(updatedList);
+        setEditMode(false);
+        setStatusMessage('Internship updated successfully!');
+        setTimeout(() => setStatusMessage(''), 3000);
+      }}
+      onMouseEnter={(e) => {
+        e.target.style.transform = 'scale(1.05)';
+        e.target.style.backgroundColor = '#0a3d62';
+        e.target.style.color = '#ffffff';
+      }}
+      onMouseLeave={(e) => {
+        e.target.style.transform = 'scale(1)';
+        e.target.style.backgroundColor = '#ffffff';
+        e.target.style.color = '#0a3d62';
+      }}
+    >
+
+      <FaSave /> Save
+    </button>
+    {/* <button
+      className="status-btn"
+      style={{ backgroundColor: '#ffffff', color: '#0a3d62' }}
+      onClick={() => setEditMode(false)}
+       onMouseEnter={(e) => {
+        e.target.style.transform = 'scale(1.05)';
+        e.target.style.backgroundColor = '#e55039';
+        e.target.style.color = '#ffffff';
+      }}
+      onMouseLeave={(e) => {
+        e.target.style.transform = 'scale(1)';
+        e.target.style.backgroundColor = '#ffffff';
+        e.target.style.color = '#0a3d62';
+      }}
+    >
+      Cancel
+    </button> */}
+  </div>
+)}
+
               </div>
             ) : (
               <>
                 <div className="tab-buttons slide-in-left">
-                  <button
-                    className={activeTab === 'my' ? 'active' : ''}
-                    onClick={() => setActiveTab('my')}
-                  >
-                    My Internship Postings
-                  </button>
+ 
+  
+
+  <button
+    className={activeTab === 'my' ? 'active' : ''}
+    onClick={() => setActiveTab('my')}
+  >
+    My Internship Postings
+  </button>
                   <button
                     className={activeTab === 'all' ? 'active' : ''}
                     onClick={() => setActiveTab('all')}
@@ -552,6 +835,7 @@ function CompanyDashboard() {
                               <td>{item.compensation}</td>
                               <td>{item.duration}</td>
                               <td>{item.date}</td>
+                              
                             </>
                           ) : (
                             <>
@@ -581,15 +865,27 @@ function CompanyDashboard() {
                                     e.target.style.transform = 'scale(1)';
                                     e.target.style.color = '#0a3d62';
                                   }}
+                                  onClick={(e) => {
+  e.stopPropagation();
+  setSelectedInternship(item);
+  setEditMode(true); // enable edit mode
+}}
+
                                 >
                                   <FaEdit size={16} />
                                 </button>
                                 <button
+                                onClick={(e) => {
+    e.stopPropagation(); // Prevent row click
+    setInternshipToDelete(item);
+    setShowDeleteConfirm(true);
+    handleDeleteInternship(item.id);
+  }}
                                   style={{
                                     background: 'none',
                                     border: 'none',
                                     padding: '5px',
-                                    color: '#0a3d62',
+                                    color: '#e55039',
                                     transition: 'transform 0.2s, color 0.2s',
                                     cursor: 'pointer',
                                     fontSize: '16px'
@@ -600,7 +896,7 @@ function CompanyDashboard() {
                                   }}
                                   onMouseLeave={(e) => {
                                     e.target.style.transform = 'scale(1)';
-                                    e.target.style.color = '#0a3d62';
+                                    e.target.style.color = '#e55039';
                                   }}
                                 >
                                   <FaTrash size={16} />
@@ -613,11 +909,184 @@ function CompanyDashboard() {
                     </tbody>
                   </table>
                 </div>
+                {activeTab === 'my' && !addingInternship && (
+                  
+  <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginTop: '20px',width: '100%'}}>
+    <button
+      className="status-btn"
+style={{
+                        backgroundColor: '#ffffff',
+                        color: '#0a3d62',
+                        border: '1.5px solid #0a3d62',
+                        borderRadius: '8px',
+                        padding: '10px 22px',
+                        fontWeight: 600,
+                        fontSize: '16px',
+                        cursor: 'pointer',
+                        transition: 'background 0.2s, color 0.2s, border 0.2s, transform 0.2s',
+                        boxShadow: '0 2px 8px rgba(10,61,98,0.04)',
+                        width: 'auto',
+                        minWidth: '200px'
+                      }}
+                      onMouseEnter={e => {
+                        e.target.style.backgroundColor = '#0a3d62';
+                        e.target.style.color = '#fff';
+                        e.target.style.border = '1.5px solid #0a3d62';
+                        e.target.style.transform = 'scale(1.02)';
+                      }}
+                      onMouseLeave={e => {
+                        e.target.style.backgroundColor = '#ffffff';
+                        e.target.style.color = '#0a3d62';
+                        e.target.style.border = '1.5px solid #0a3d62';
+                        e.target.style.transform = 'scale(1)';
+                      }}
+      onClick={() => {
+        setAddingInternship(true);
+        setEditMode(false);
+        setSelectedInternship(null);
+      }}
+    >
+      <FaPlus />
+      Add Internship
+    </button>
+  </div>
+)}
+ {addingInternship && (
+  <div className="internship-details-container fadeIn">
+<button sty
+  className="close-eval-btn"
+  onClick={() => setAddingInternship(false)}
+  title="Close"
+    style={{
+    position: 'absolute',
+    top: '30px',
+    right: '30px',
+    background: 'transparent',
+    border: 'none',
+    color: '#999',
+    cursor: 'pointer',
+    fontSize: '22px'
+  }}
+>
+  <FaTimes />
+</button>
+
+
+    <div className="details-card" style={{ marginBottom: '20px' }}>
+      <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>New Internship Details</h3>
+
+      <p><strong>Title:</strong></p>
+      <input
+        className="evaluation-input"
+        value={newInternship.title}
+        onChange={(e) => setNewInternship({ ...newInternship, title: e.target.value })}
+      />
+
+      <p><strong>Industry:</strong></p>
+      <input
+        className="evaluation-input"
+        value={newInternship.industry}
+        onChange={(e) => setNewInternship({ ...newInternship, industry: e.target.value })}
+      />
+
+      <p><strong>Date:</strong></p>
+      <input
+        type="date"
+        className="evaluation-input"
+        value={newInternship.date}
+        onChange={(e) => setNewInternship({ ...newInternship, date: e.target.value })}
+      />
+
+      <p><strong>Duration:</strong></p>
+      <input
+        className="evaluation-input"
+        value={newInternship.duration}
+        onChange={(e) => setNewInternship({ ...newInternship, duration: e.target.value })}
+      />
+
+      <p><strong>Compensation:</strong></p>
+      <select
+        className="evaluation-input"
+        value={newInternship.compensation}
+        onChange={(e) => setNewInternship({ ...newInternship, compensation: e.target.value })}
+      >
+        <option value="">Select</option>
+        <option value="Paid">Paid</option>
+        <option value="Unpaid">Unpaid</option>
+      </select>
+
+      {newInternship.compensation === 'Paid' && (
+        <>
+          <p><strong>Salary:</strong></p>
+          <input
+            className="evaluation-input"
+            value={newInternship.salary}
+            onChange={(e) => setNewInternship({ ...newInternship, salary: e.target.value })}
+          />
+        </>
+      )}
+
+      <p><strong>Description:</strong></p>
+      <textarea
+        rows="4"
+        className="evaluation-textarea"
+        value={newInternship.description}
+        onChange={(e) => setNewInternship({ ...newInternship, description: e.target.value })}
+      />
+    </div>
+<div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginTop: '20px',width: '100%'}}>
+    <button
+      className="status-btn"
+style={{
+                        backgroundColor: '#ffffff',
+                        color: '#0a3d62',
+                        border: '1.5px solid #0a3d62',
+                        borderRadius: '8px',
+                        padding: '10px 22px',
+                        fontWeight: 600,
+                        fontSize: '16px',
+                        cursor: 'pointer',
+                        transition: 'background 0.2s, color 0.2s, border 0.2s, transform 0.2s',
+                        boxShadow: '0 2px 8px rgba(10,61,98,0.04)',
+                        width: 'auto',
+                        minWidth: '200px'
+                      }}
+        onClick={() => {
+          const internshipWithId = {
+            ...newInternship,
+            id: Date.now(), // unique ID
+            skills: newInternship.skills || [],
+          };
+          setMyInternships(prev => [...prev, internshipWithId]);
+          setAddingInternship(false);
+          setStatusMessage('✔️ New internship added!');
+          setTimeout(() => setStatusMessage(''), 3000);
+        }}
+        onMouseEnter={e => {
+                        e.target.style.backgroundColor = '#0a3d62';
+                        e.target.style.color = '#fff';
+                        e.target.style.border = '1.5px solid #0a3d62';
+                        e.target.style.transform = 'scale(1.02)';
+                      }}
+                      onMouseLeave={e => {
+                        e.target.style.backgroundColor = '#ffffff';
+                        e.target.style.color = '#0a3d62';
+                        e.target.style.border = '1.5px solid #0a3d62';
+                        e.target.style.transform = 'scale(1)';
+                      }}
+      >
+        <FaSave /> Save
+      </button>
+    </div>
+  </div>
+)}
+
               </>
             )}
           </div>
         );
       case 'applications':
+        
         return (
           <div className="internship-section animated fadeInUp">
             {!selectedApplication ? (
@@ -680,6 +1149,23 @@ function CompanyDashboard() {
               </>
             ) : (
               <div className="internship-details-container fadeIn">
+                <button
+  onClick={() => setSelectedApplication(null)}
+  className="back-btn"
+  style={{
+    marginBottom: '20px',
+    backgroundColor: 'none',
+    color: '#0a3d62',
+    border: 'none',
+    padding: '8px 16px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    fontWeight: 'bold'
+  }}
+>
+  ← Back to Applicants
+</button>
+
                 <div className="details-card" style={{ marginBottom: '20px' }}>
                   <div className="details-header" style={{ display: 'flex', alignItems: 'flex-start', gap: '20px' }}>
                     <img src={selectedApplication.photo} alt="profile" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover' }} />
@@ -763,7 +1249,7 @@ function CompanyDashboard() {
               return "#ccc"; // Default Gray
           }
         }
-      case 'interns':
+           case 'interns':
         return (
           <div className="internship-section animated fadeInUp">
             <div className="tab-buttons slide-in-left">
@@ -840,7 +1326,6 @@ function CompanyDashboard() {
                               }}
                               className="status-dropdown"
                             >
-                              <option value="Accepted Applicant">Accepted Applicant</option>
                               <option value="Current Intern">Current Intern</option>
                               <option value="Internship Complete">Internship Complete</option>
                             </select>
@@ -873,8 +1358,6 @@ function CompanyDashboard() {
                             </div>
                           </div>
                         </td>
-
-
                       </tr>
                     ))}
                 </tbody>
@@ -906,7 +1389,17 @@ function CompanyDashboard() {
                 </div>
 
                 {evaluationForm.editable ? (
-                  <form onSubmit={submitEvaluation}>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (!e.target.checkValidity()) {
+                        e.target.reportValidity();
+                        return;
+                      }
+                      submitEvaluation(e);
+                    }}
+                    noValidate
+                  >
                     <p><strong>Rating:</strong></p>
                     <div style={{ fontSize: '24px', color: '#f6b93b' }}>
                       {[1, 2, 3, 4, 5].map(n => (
@@ -919,8 +1412,24 @@ function CompanyDashboard() {
                         </span>
                       ))}
                     </div>
+                    <input
+                      type="number"
+                      name="rating"
+                      value={evaluationForm.rating || ''}
+                      required
+                      onChange={() => {}}
+                      style={{ display: 'none' }}
+                    />
+                    {evaluationErrors.rating && (
+                      <p style={{ color: 'red', fontSize: '12px', margin: '4px 0 8px' }}>
+                        {evaluationErrors.rating}
+                      </p>
+                    )}
 
                     <p><strong>Strengths:</strong></p>
+                    <p style={{ fontSize: '13px', color: '#000', marginTop: '0px', marginBottom: '10px' }}>
+                      Add each strength and press Enter
+                    </p>
                     <div className="tag-input" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '8px' }}>
                       {evaluationForm.strengths.map((tag, i) => (
                         <span key={i} style={{
@@ -935,9 +1444,23 @@ function CompanyDashboard() {
                         </span>
                       ))}
                     </div>
-                    <input type="text" placeholder="Add a strength..." className="evaluation-input" onKeyDown={(e) => handleTagInput(e, 'strengths')} />
+                    <input
+                      type="text"
+                      placeholder="Add a strength..."
+                      className="evaluation-input"
+                      onKeyDown={(e) => handleTagInput(e, 'strengths')}
+                      required={evaluationForm.strengths.length === 0}
+                    />
+                    {evaluationErrors.strengths && (
+                      <p style={{ color: 'red', fontSize: '12px', margin: '4px 0 8px' }}>
+                        {evaluationErrors.strengths}
+                      </p>
+                    )}
 
                     <p><strong>Weaknesses:</strong></p>
+                    <p style={{ fontSize: '13px', color: '#000', marginTop: '0px', marginBottom: '10px' }}>
+                      Add each weakness and press Enter
+                    </p>
                     <div className="tag-input" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '8px' }}>
                       {evaluationForm.weaknesses.map((tag, i) => (
                         <span key={i} style={{
@@ -952,8 +1475,20 @@ function CompanyDashboard() {
                         </span>
                       ))}
                     </div>
-                    <input type="text" placeholder="Add a weakness..." className="evaluation-input" onKeyDown={(e) => handleTagInput(e, 'weaknesses')} />
-                    <p><strong>Comments:</strong> {evaluationForm.comments}</p>
+                    <input
+                      type="text"
+                      placeholder="Add a weakness..."
+                      className="evaluation-input"
+                      onKeyDown={(e) => handleTagInput(e, 'weaknesses')}
+                      required={evaluationForm.weaknesses.length === 0}
+                    />
+                    {evaluationErrors.weaknesses && (
+                      <p style={{ color: 'red', fontSize: '12px', margin: '4px 0 8px' }}>
+                        {evaluationErrors.weaknesses}
+                      </p>
+                    )}
+
+                    <p><strong>Comments:</strong></p>
                     <textarea
                       rows="3"
                       className="evaluation-textarea"
@@ -961,11 +1496,16 @@ function CompanyDashboard() {
                       onChange={(e) =>
                         setEvaluationForm({ ...evaluationForm, comments: e.target.value })
                       }
+                      required
                     />
+                    {evaluationErrors.comments && (
+                      <p style={{ color: 'red', fontSize: '12px', margin: '4px 0 8px' }}>
+                        {evaluationErrors.comments}
+                      </p>
+                    )}
                     <div className="status-btn-group">
                       <button type="submit" className="status-btn"><FaSave /> Save Evaluation</button>
                     </div>
-
                   </form>
                 ) : (
                   <div>
@@ -1041,8 +1581,250 @@ function CompanyDashboard() {
           </div>
         );
 
+      case 'statistics':
+        return (
+          <div className="dashboard-overview">
+            <div className="stats-grid">
+              <div className="stat-card fade-in">
+                <h3>Total Applications</h3>
+                <p className="stat-number">156</p>
+              </div>
+              <div className="stat-card fade-in delay-1">
+                <h3>Active Interns</h3>
+                <p className="stat-number">8</p>
+              </div>
+              <div className="stat-card fade-in delay-2">
+                <h3>Completion Rate</h3>
+                <p className="stat-number">92%</p>
+              </div>
+              <div className="stat-card fade-in delay-3">
+                <h3>Avg. Rating</h3>
+                <p className="stat-number">4.2/5</p>
+              </div>
+            </div>
 
+            <div className="dashboard-charts">
+              <div className="chart-section">
+                <h4>Applications by Department</h4>
+                <Bar
+                  data={{
+                    labels: ['CS', 'MET', 'BI', 'ME', 'ECE'],
+                    datasets: [{
+                      label: 'Applications',
+                      data: [45, 30, 25, 20, 15],
+                      backgroundColor: '#60a3d9'
+                    }]
+                  }}
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      legend: { position: 'bottom' },
+                      title: {
+                        display: true,
+                        text: 'Distribution of Applications'
+                      }
+                    }
+                  }}
+                />
+              </div>
 
+              <div className="chart-section">
+                <h4>Internship Status Distribution</h4>
+                <Pie
+                  data={{
+                    labels: ['Active', 'Completed', 'Upcoming'],
+                    datasets: [{
+                      data: [8, 12, 5],
+                      backgroundColor: ['#38ada9', '#60a3d9', '#f6b93b']
+                    }]
+                  }}
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      legend: { position: 'bottom' }
+                    }
+                  }}
+                />
+              </div>
+
+              <div className="chart-section">
+                <h4>Monthly Application Trends</h4>
+                <Bar
+                  data={{
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                      label: 'Applications',
+                      data: [25, 30, 35, 28, 32, 40],
+                      backgroundColor: '#3c6382'
+                    }]
+                  }}
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      legend: { position: 'bottom' }
+                    }
+                  }}
+                />
+              </div>
+
+              <div className="chart-section">
+                <h4>Skills Distribution</h4>
+                <Pie
+                  data={{
+                    labels: ['Web Dev', 'Mobile Dev', 'Data Science', 'AI/ML', 'UI/UX'],
+                    datasets: [{
+                      data: [35, 25, 20, 15, 5],
+                      backgroundColor: ['#60a3d9', '#38ada9', '#f6b93b', '#e55039', '#1e3799']
+                    }]
+                  }}
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      legend: { position: 'bottom' }
+                    }
+                  }}
+                />
+              </div>
+
+              <div className="chart-section">
+                <h4>Intern Performance Ratings</h4>
+                <Bar
+                  data={{
+                    labels: ['Technical Skills', 'Communication', 'Teamwork', 'Problem Solving', 'Initiative'],
+                    datasets: [{
+                      label: 'Average Rating',
+                      data: [4.5, 4.2, 4.3, 4.1, 4.4],
+                      backgroundColor: '#38ada9'
+                    }]
+                  }}
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      legend: { position: 'bottom' }
+                    },
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        max: 5
+                      }
+                    }
+                  }}
+                />
+              </div>
+
+              <div className="chart-section">
+                <h4>Retention Rate by Department</h4>
+                <Bar
+                  data={{
+                    labels: ['CS', 'MET', 'BI', 'ME', 'ECE'],
+                    datasets: [{
+                      label: 'Retention Rate (%)',
+                      data: [85, 90, 88, 92, 87],
+                      backgroundColor: '#60a3d9'
+                    }]
+                  }}
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      legend: { position: 'bottom' }
+                    },
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        max: 100
+                      }
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'notifications':
+  return (
+    <div className="internship-section animated fadeInUp">
+      <div className="notifications-content">
+        <div className={`notifications-list ${selectedNotification ? 'compressed' : ''}`}>
+          <div className="notification-card unread" onClick={() => setSelectedNotification({
+            type: 'system',
+            time: '1 day ago',
+            title: 'GUC Internship System Access Granted',
+            message: 'Your application to join the GUC Internship System has been accepted',
+            details: {
+              status: 'Accepted',
+              nextSteps: 'Check your email for acceptance verification',
+              accessLevel: 'Company Admin',
+              verificationRequired: 'Yes'
+            }
+          })}>
+            <div className="notification-header">
+              <span className="notification-type application">✅</span>
+              <span className="notification-time">1 day ago</span>
+            </div>
+            <h3>GUC Internship System Access Granted</h3>
+            <p>Your application to join the GUC Internship System has been accepted</p>
+            <div className="unread-indicator" />
+          </div>
+          <div className="notification-card unread" onClick={() => setSelectedNotification({
+            type: 'application',
+            time: '2 hours ago',
+            title: 'New Internship Application',
+            message: 'Jane Smith applied to your "Backend Developer Intern" posting.',
+            details: {
+              applicantName: 'Jane Smith',
+              internshipTitle: 'Backend Developer Intern',
+              applicationDate: 'May 16, 2025',
+              nextSteps: 'Review the application in the Applicants section'
+            }
+          })}>
+            <div className="notification-header">
+              <span className="notification-type application">📄</span>
+              <span className="notification-time">2 hours ago</span>
+            </div>
+            <h3>New Internship Application</h3>
+            <p>Jane Smith applied to your "Backend Developer Intern" posting.</p>
+            <div className="unread-indicator" />
+          </div>
+        </div>
+
+        {selectedNotification && (
+          <div className="notification-details">
+            <div className="details-header">
+              <div className="header-left">
+                <span className={`notification-type ${selectedNotification.type}`}>
+                  {selectedNotification.type === 'system' && '✅'}
+                  {selectedNotification.type === 'application' && '📄'}
+                </span>
+                <span className="notification-time">{selectedNotification.time}</span>
+              </div>
+              <button className="close-button" onClick={() => setSelectedNotification(null)}>×</button>
+            </div>
+            <h2>{selectedNotification.title}</h2>
+            <p className="details-message">{selectedNotification.message}</p>
+            <div className="details-content">
+              <p>Details:</p>
+              <ul>
+                {Object.entries(selectedNotification.details).map(([key, value]) => (
+                  <li key={key}><strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {value}</li>
+                ))}
+              </ul>
+              <div className="details-actions">
+                {selectedNotification.type === 'system' && (
+                  <button className="status-btn">View Email</button>
+                )}
+                {selectedNotification.type === 'application' && (
+                  <button className="status-btn" onClick={() => setActiveSection('applications')}>
+                    View Application
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
       default:
         return <h2 className="animated fadeIn">Loading...</h2>;
     }
@@ -1061,10 +1843,10 @@ function CompanyDashboard() {
         <ul>
           <li className={activeSection === 'dashboard' ? 'active' : ''} onClick={() => setActiveSection('dashboard')}><FaTh /> Dashboard</li>
           <li className={activeSection === 'search' ? 'active' : ''} onClick={() => setActiveSection('search')}><FaBriefcase /> Internship  Postings</li>
-          <li className={activeSection === 'applications' ? 'active' : ''} onClick={() => setActiveSection('applications')}><FaFileAlt /> Applications</li>
+          <li className={activeSection === 'applications' ? 'active' : ''} onClick={() => setActiveSection('applications')}><FaFileAlt /> Applicants</li>
           <li className={activeSection === 'interns' ? 'active' : ''} onClick={() => setActiveSection('interns')}><FaUsers /> Current Interns</li>
           <li className={activeSection === 'statistics' ? 'active' : ''} onClick={() => setActiveSection('statistics')}><FaChartBar /> Statistics</li>
-          <li className={activeSection === 'news' ? 'active' : ''} onClick={() => setActiveSection('news')}><FaNewspaper /> News</li>
+          <li className={activeSection === 'notifications' ? 'active' : ''} onClick={() => setActiveSection('notifications')}><FaBell /> Notifications</li>
         </ul>
         <div className="sidebar-footer">
           <img src="/images/bosta.png" alt="User" className="sidebar-footer-img" />
@@ -1079,41 +1861,25 @@ function CompanyDashboard() {
         </div>
 
       </aside>
-
+           {statusMessage && (
+  <div className="feedback-message">
+    {statusMessage}
+  </div>
+)}
       <main className="main-content">
-        <div className="header-bar">
-          <div className="header-left">
-            <button
-              className="nav-btn"
-              onClick={() => {
-                if (selectedApplication) {
-                  setSelectedApplication(null);
-                } else if (selectedInternship) {
-                  setSelectedInternship(null);
-                } else {
-                  navigate(-1);
-                }
-              }}
-            >
-              <FaArrowLeft />
-            </button>
-            <button className="nav-btn" onClick={() => navigate(1)}>
-              <FaArrowRight />
-            </button>
-          </div>
-        </div>
+        
 
-        <div className="floating-notif">
-          <FaBell className="wiggle-bell" />
-        </div>
+        <div className="floating-notif" onClick={() => setActiveSection('notifications')}>
+  <FaBell className="wiggle-bell" />
+  {notifications.filter(n => n.unread).length > 0 && (
+    <span className="notification-badge">
+      {notifications.filter(n => n.unread).length}
+    </span>
+  )}
+</div>
         <section className="hero-banner animated fadeSlideUp">
-          <h2>Welcome back, Bosta 👋</h2>
-          <p className="subtext">
-            Today is {new Date().toLocaleString('en-US', {
-              weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-              hour: '2-digit', minute: '2-digit'
-            })}
-          </p>
+          <h2>{getHeroTitle()}</h2>
+            <p className="subtext">{getHeroSubtitle()}</p>
         </section>
 
         <section className="content-area">{renderContent()}</section>

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FaStar, FaDownload, FaTimes, FaCheck } from 'react-icons/fa';
 import ProStudentSidebar from '../components/ProStudentSidebar';
-import BackButton from '../components/BackButton';
 import './ProStudentInternships.css';
 
 const ProStudentInternshipEvaluation = () => {
@@ -21,6 +20,7 @@ const ProStudentInternshipEvaluation = () => {
 
   const [hoverRating, setHoverRating] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState('');
 
   // Load previous evaluation data when component mounts
   useEffect(() => {
@@ -44,13 +44,21 @@ const ProStudentInternshipEvaluation = () => {
     setHoverRating(0);
   };
 
+  // Function to show feedback message
+  const showFeedback = (message) => {
+    setFeedbackMessage(message);
+    setTimeout(() => {
+      setFeedbackMessage('');
+    }, 3000);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Save evaluation data to localStorage
     localStorage.setItem(`evaluation_${id}`, JSON.stringify(evaluationData));
-    // Here you would implement the API call to save the evaluation
-    console.log('Evaluation submitted:', evaluationData);
-    navigate(`/pro-student/internships/${id}`);
+    showFeedback('Evaluation submitted successfully!');
+    setTimeout(() => {
+      navigate(`/pro-student/internships/${id}`);
+    }, 1000);
   };
 
   const handleDownload = () => {
@@ -86,6 +94,7 @@ const ProStudentInternshipEvaluation = () => {
     a.click();
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
+    showFeedback('Evaluation form downloaded successfully!');
   };
 
   const handleCancel = () => {
@@ -97,7 +106,6 @@ const ProStudentInternshipEvaluation = () => {
       <div className="pro-student-layout">
         <ProStudentSidebar />
         <div className="pro-student-content">
-          <BackButton />
           <div className="loading-container">
             <div className="loading-spinner"></div>
             <p>Loading evaluation form...</p>
@@ -111,24 +119,46 @@ const ProStudentInternshipEvaluation = () => {
     <div className="pro-student-layout">
       <ProStudentSidebar />
       <div className="pro-student-content">
-        <BackButton />
+        <div className="hero-banner">
+          <h1>Internship Evaluation</h1>
+          <p>Share your feedback and experience for this internship</p>
+        </div>
+<div
+  className="back-btn"
+  onClick={() =>
+    navigate(`/pro-student/internships/${id}`, {
+      state: {
+        internship,
+        isCompleted: true
+      }
+    })
+  }
+>
+  ← Back to Internship Details
+</div>
+
+
+        {feedbackMessage && (
+          <div className="feedback-message">
+            {feedbackMessage}
+          </div>
+        )}
         <div className="evaluation-form-container">
           <div className="evaluation-form-card">
-            <h2>Internship Evaluation Form</h2>
             {isEditing && (
               <div className="editing-notice">
                 You are editing your previous evaluation
               </div>
             )}
             <div className="internship-info">
-              <h3>{internship.company}</h3>
-              <p>{internship.title}</p>
+              <h3>{internship.title}</h3>
+              <p className="company-name">{internship.company}</p>
               <p>Duration: {internship.startDate} to {internship.endDate}</p>
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label>Overall Rating</label>
+              <div className="form-group" style={{ '--item-index': 0 }}>
+                <label style={{ color: '#000000', fontWeight: '700' }}>Overall Rating</label>
                 <div className="rating-stars">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <span
@@ -148,18 +178,18 @@ const ProStudentInternshipEvaluation = () => {
                 </div>
               </div>
 
-              <div className="form-group">
-                <label>Feedback</label>
+              <div className="form-group" style={{ '--item-index': 1 }}>
+                <label style={{ color: '#000000', fontWeight: '700' }}>Feedback</label>
                 <textarea
                   value={evaluationData.feedback}
-                  onChange={(e) => setEvaluationData({...evaluationData, feedback: e.target.value})}
+                  onChange={(e) => setEvaluationData({ ...evaluationData, feedback: e.target.value })}
                   placeholder="Share your experience..."
                   required
                 />
               </div>
 
-              <div className="form-group">
-                <label>Skills Gained</label>
+              <div className="form-group" style={{ '--item-index': 2 }}>
+                <label style={{ color: '#000000', fontWeight: '700' }}>Skills Gained</label>
                 <input
                   type="text"
                   value={evaluationData.skillsGained.join(', ')}
@@ -171,37 +201,37 @@ const ProStudentInternshipEvaluation = () => {
                 />
               </div>
 
-              <div className="form-group">
-                <label>Challenges</label>
+              <div className="form-group" style={{ '--item-index': 3 }}>
+                <label style={{ color: '#000000', fontWeight: '700' }}>Challenges</label>
                 <textarea
                   value={evaluationData.challenges}
-                  onChange={(e) => setEvaluationData({...evaluationData, challenges: e.target.value})}
+                  onChange={(e) => setEvaluationData({ ...evaluationData, challenges: e.target.value })}
                   placeholder="Describe the challenges you faced..."
                 />
               </div>
 
-              <div className="form-group">
-                <label>Recommendations</label>
+              <div className="form-group" style={{ '--item-index': 4 }}>
+                <label style={{ color: '#000000', fontWeight: '700' }}>Recommendations</label>
                 <textarea
                   value={evaluationData.recommendations}
-                  onChange={(e) => setEvaluationData({...evaluationData, recommendations: e.target.value})}
+                  onChange={(e) => setEvaluationData({ ...evaluationData, recommendations: e.target.value })}
                   placeholder="Share your recommendations..."
                 />
               </div>
 
               <div className="form-actions">
-                <button type="button" className="action-button download" onClick={handleDownload}>
-                  <FaDownload /> Download Form
-                </button>
-                <button type="button" className="action-button cancel" onClick={handleCancel}>
-                  <FaTimes /> Cancel
-                </button>
                 <button type="submit" className="action-button submit">
                   <FaCheck /> {isEditing ? 'Update Evaluation' : 'Submit Evaluation'}
                 </button>
               </div>
             </form>
+            <div className="form-actions">
+              <button type="button" className="action-button download" onClick={handleDownload}>
+                <FaDownload /> Download Form
+              </button>
+            </div>
           </div>
+          
         </div>
       </div>
     </div>

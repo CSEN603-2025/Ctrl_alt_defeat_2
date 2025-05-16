@@ -7,7 +7,10 @@
 .workshops-content {
   flex: 1;
   padding: 2rem;
-  margin-left: 250px;
+  margin: 0 auto 0 270px;
+  max-width: 1200px;
+  position: relative;
+  z-index: 20;
 }
 
 .workshop-tabs {
@@ -19,7 +22,7 @@
 
 .tab-button {
   flex: 1;
-  background: #f4f7f9;
+  background: transparent;
   border: 1px solid #0a3d62;
   padding: 12px 20px;
   color: #0a3d62;
@@ -38,7 +41,6 @@
 .tab-button:hover {
   background: #0a3d62;
   color: white;
-  transform: scale(1.02);
 }
 
 .tab-button.active {
@@ -64,8 +66,8 @@
   border-bottom: 1px solid #ddd;
   text-align: left;
   min-width: 100px;
-  font-size: 14px; /* Default font size for table data */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* Default font family */
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .workshop-table th {
@@ -79,24 +81,22 @@
 }
 
 .workshop-type {
-  padding: 12px 16px; /* Match padding with .workshop-table td */
-  border-bottom: 1px solid #ddd; /* Match border with .workshop-table td */
-  text-align: left; /* Match text alignment with .workshop-table td */
-  min-width: 100px; /* Match min-width with .workshop-table td */
-  font-size: 14px; /* Match font size with .workshop-table td */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* Match font family with .workshop-table td */
-  color: #000000; /* Ensure black text */
-  background-color: transparent; /* Remove badge background to align with duration styling */
+  padding: 12px 16px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  min-width: 100px;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #000000;
+  background-color: transparent;
 }
 
 .workshop-type.live {
-  color: #000000; /* Override to black for consistency */
-  background-color: #2ecc71; /* Keep background for visual distinction */
+  color: #000000; /* Removed background color */
 }
 
 .workshop-type.recorded {
-  color: #000000; /* Override to black for consistency */
-  background-color: #3498db; /* Keep background for visual distinction */
+  color: #000000; /* Removed background color */
 }
 
 .status-tag {
@@ -148,33 +148,70 @@
   pointer-events: none;
 }
 
-.action-button {
-  padding: 4px 8px;
-  border: 1px solid #0a3d62;
-  border-radius: 6px;
-  background: #f4f7f9;
+.floating-notif {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #ffffff;
   color: #0a3d62;
-  font-weight: bold;
-  cursor: pointer;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  font-size: 13px;
-  transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  height: 32px;
-  min-width: 120px;
-  max-width: 160px;
-  box-sizing: border-box;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
 
-.action-button:hover {
-  background: #0a3d62;
-  color: #fff;
-  border-color: #0a3d62;
-  transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(10, 61, 98, 0.12);
+.wiggle-bell {
+  animation: wiggle 1s infinite ease-in-out;
+  font-size: 20px;
+}
+
+.wiggle-bell.animating {
+  animation: wiggle 0.5s ease-in-out;
+}
+
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(10deg);
+  }
+  50% {
+    transform: rotate(-10deg);
+  }
+  75% {
+    transform: rotate(6deg);
+  }
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #e74c3c;
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  min-width: 1.5rem;
+  text-align: center;
+  animation: badgePulse 2s infinite;
+}
+
+@keyframes badgePulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .feedback-modal {
@@ -242,7 +279,9 @@
 
 .feedback-actions button {
   padding: 0.75rem 1.5rem;
-  border: none;
+  background: transparent;
+  border: 1px solid #0a3d62;
+  color: #0a3d62;
   border-radius: 6px;
   cursor: pointer;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -251,18 +290,19 @@
   transition: all 0.3s;
 }
 
-.feedback-actions button:first-child {
-  background-color: #e74c3c;
-  color: white;
-}
-
-.feedback-actions button:last-child {
+.feedback-actions button:hover {
   background-color: #0a3d62;
   color: white;
 }
 
-.feedback-actions button:hover {
-  opacity: 0.9;
+.feedback-actions button:first-child {
+  border: 1px solid #e74c3c;
+  color: #e74c3c;
+}
+
+.feedback-actions button:first-child:hover {
+  background-color: #e74c3c;
+  color: white;
 }
 
 @keyframes fadeInUp {
@@ -315,6 +355,12 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   animation: fadeSlideUp 0.7s ease-out both;
   margin-bottom: 30px;
+  position: relative;
+}
+
+.banner-content {
+  display: flex;
+  flex-direction: column;
 }
 
 .hero-banner h2 {
@@ -329,28 +375,21 @@
   margin-top: 4px;
 }
 
-@keyframes fadeSlideUp {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @media (max-width: 1024px) {
   .workshop-table th,
   .workshop-table td {
     padding: 10px;
     min-width: 80px;
   }
+
+  .workshops-content {
+    margin: 0 auto 0 220px;
+  }
 }
 
 @media (max-width: 768px) {
   .workshops-content {
-    margin-left: 0;
+    margin: 0 auto;
     padding: 1rem;
   }
 
@@ -375,12 +414,17 @@
     padding: 1.5rem;
   }
 
-  .action-button {
-    min-width: 100px;
-    font-size: 12px;
-  }
-
   .hero-banner {
     padding: 20px;
+    text-align: center;
+  }
+
+  .banner-content {
+    margin-bottom: 10px;
+  }
+
+  .floating-notif {
+    top: 10px;
+    right: 10px;
   }
 }

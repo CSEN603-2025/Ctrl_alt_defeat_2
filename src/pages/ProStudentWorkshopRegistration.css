@@ -10,22 +10,71 @@
   margin-left: 250px;
 }
 
-.back-button {
+.back-btn {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  gap: 8px;
   background: none;
-  border: 1px solid #0a3d62;
   color: #0a3d62;
-  border-radius: 6px;
+  font-weight: bold;
+  border: none;
+  margin-bottom: 20px;
   cursor: pointer;
-  transition: all 0.3s;
-  margin-bottom: 2rem;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  transition: color 0.3s ease;
 }
 
-.back-button:hover {
-  background-color: rgba(10, 61, 98, 0.1);
+.back-btn:hover {
+  color: #e55039;
+}
+
+.feedback-message {
+  background: linear-gradient(to right, #0a3d62, #3c6382);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  margin: 0 0 20px 0;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s;
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(10, 61, 98, 0.3),
+    0 8px 30px rgba(10, 61, 98, 0.2);
+  min-width: 320px;
+  text-align: center;
+  letter-spacing: 0.3px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
 }
 
 .registration-container {
@@ -140,26 +189,22 @@
 .submit-button {
   width: 100%;
   padding: 1rem;
-  background-color: #0a3d62;
-  color: white;
-  border: none;
+  background: transparent;
+  border: 1px solid #0a3d62;
+  color: #0a3d62;
   border-radius: 6px;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s;
+  box-sizing: border-box;
 }
 
 .submit-button:hover {
-  background-color: #0c4b6e;
-  transform: translateY(-1px);
+  background-color: #0a3d62;
+  color: white;
 }
 
-.submit-button:active {
-  transform: translateY(0);
-}
-
-/* Responsive Design */
 @media (max-width: 1024px) {
   .registration-container {
     grid-template-columns: 1fr;
@@ -174,6 +219,6 @@
 
   .workshop-info,
   .registration-form {
-    padding: amina.5rem;
+    padding: 1.5rem;
   }
 }

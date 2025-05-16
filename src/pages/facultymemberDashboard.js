@@ -41,14 +41,14 @@ function FacultyMemberDashboard() {
   const [submittedClarification, setSubmittedClarification] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
   const [isClarificationVisible, setIsClarificationVisible] = useState(true);
+  const [clarificationError, setClarificationError] = useState(''); // Fix ESLint no-undef
+  const [clarificationMessage, setClarificationMessage] = useState('');
   const clarificationRef = useRef(null);
+  
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    navigate('/SignIn');
-  };
-
-  const internshipReports = [
+  // Move internshipReports to state
+  const [internshipReports, setInternshipReports] = useState([
     {
       id: 1,
       title: 'Frontend Developer Internship Report',
@@ -79,7 +79,7 @@ function FacultyMemberDashboard() {
       id: 3,
       title: 'Finance Analyst Internship Report',
       student: 'Ali Mostafa',
-      photo: '/images/man3.png',
+      photo: '/images/user.png',
       company: 'Valeo',
       major: 'Finance',
       status: 'Rejected',
@@ -88,7 +88,7 @@ function FacultyMemberDashboard() {
       cycle: 'Cycle 3',
       reviewTime: 2
     }
-  ];
+  ]);
 
   const evaluations = [
     {
@@ -129,6 +129,11 @@ function FacultyMemberDashboard() {
     }
   ];
 
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/');
+  };
+
   const generatePDF = (content, filename) => {
     const latexContent = `
 \\documentclass{article}
@@ -161,7 +166,7 @@ ${content}
 \\textbf{Document:} \\href{run:${report.document}}{${report.document}}
     `;
     const latex = generatePDF(content, `Report_${report.id}`);
-    setStatusMessage(`✔️ PDF for ${report.title} generated.`);
+    setStatusMessage(`✔️ PDF for ${report.title} Downloaded successfully.`);
     setTimeout(() => setStatusMessage(''), 3000);
     return latex;
   };
@@ -184,7 +189,7 @@ ${content}
 \\textbf{Cycle:} ${evaluation.cycle}
     `;
     const latex = generatePDF(content, `Evaluation_${evaluation.id}`);
-    setStatusMessage(`✔️ PDF for ${evaluation.student}'s evaluation generated.`);
+    setStatusMessage(`✔️ PDF for ${evaluation.student}'s evaluation Dowloaded Successfully.`);
     setTimeout(() => setStatusMessage(''), 3000);
     return latex;
   };
@@ -255,46 +260,43 @@ Average: 3.5 days\\\\
       );
   };
 
-  const submitClarification = (evaluationId) => {
-    if (!clarification) {
-      setStatusMessage('⚠️ Please provide a clarification.');
-      setTimeout(() => setStatusMessage(''), 3000);
-      return;
-    }
-    setSubmittedClarification(clarification);
-    setIsEditing(false);
-    setStatusMessage(`✔️ Clarification for evaluation ${evaluationId} submitted.`);
-    setTimeout(() => setStatusMessage(''), 3000);
-  };
+const submitClarification = (reportId) => {
+  if (!clarification) {
+    setClarificationError('Please provide a clarification.');
+    setClarificationMessage('⚠️ Please provide a clarification.');
+    setTimeout(() => {
+      setClarificationMessage('');
+      setClarificationError('');
+    }, 3000);
+    return;
+  }
+  setSubmittedClarification(clarification);
+  setIsEditing(false);
+  setClarificationError('');
+  setClarificationMessage(`✔️ Clarification for report ${reportId} submitted.`);
+  setTimeout(() => {
+    setClarificationMessage('');
+    /* setSelectedReport(null); */ // Redirect after message animation completes
+  }, 3500); // Increase to 3.5s to ensure animation (2.7s fadeOut + 0.3s slideIn) completes
+};
 
   const startEditing = () => {
     setClarification(submittedClarification);
     setIsEditing(true);
   };
 
-  const updateEvaluationStatus = (newRecommendation) => {
-    if (selectedEvaluation) {
-      if (newRecommendation === 'Yes' && selectedEvaluation.recommendation === 'No') {
-        setIsClarificationVisible(false);
-        setTimeout(() => {
-          setSelectedEvaluation({ ...selectedEvaluation, recommendation: newRecommendation });
-          setSubmittedClarification('');
-          setIsEditing(false);
-        }, 300);
-      } else {
-        if (newRecommendation === 'No') {
-          setIsClarificationVisible(true);
-          setTimeout(() => {
-            clarificationRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }, 100);
-        }
-        setSelectedEvaluation({ ...selectedEvaluation, recommendation: newRecommendation });
-      }
-    }
-  };
-
   const updateReportStatus = (newStatus) => {
     if (selectedReport) {
+      // Update the internshipReports state
+      setInternshipReports(prevReports =>
+        prevReports.map(report =>
+          report.id === selectedReport.id
+            ? { ...report, status: newStatus }
+            : report
+        )
+      );
+
+      // Update the selected report
       if (newStatus === 'Accepted' && (selectedReport.status === 'Rejected' || selectedReport.status === 'Flagged')) {
         setIsClarificationVisible(false);
         setTimeout(() => {
@@ -336,8 +338,16 @@ Average: 3.5 days\\\\
       case 'dashboard':
         return (
           <div className="dashboard-overview">
-            <h2 className="animated-title">Faculty Dashboard</h2>
-            <p className="dashboard-subtext">Monitor and manage internship reports and evaluations.</p>
+            <section className="hero-banner animated fadeSlideUp">
+              <h2>Welcome back, Dr. Salem 👋</h2>
+              <p className="subtext">
+                Today is {new Date().toLocaleString('en-US', {
+                  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                  hour: '2-digit', minute: '2-digit'
+                })}
+              </p>
+            </section>
+           
             <div className="stats-grid">
               <div className="stat-card fade-in">
                 <h3>Total Reports</h3>
@@ -385,24 +395,33 @@ Average: 3.5 days\\\\
           </div>
         );
 
-      case 'reports':
+ case 'reports':
         return (
           <div className="internship-section animated fadeInUp">
+            <section className="hero-banner animated fadeSlideUp">
+              <h2>Reports</h2>
+              <p className="subtext">
+                Today is {new Date().toLocaleString('en-US', {
+                  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                  hour: '2-digit', minute: '2-digit'
+                })}
+              </p>
+            </section>
             {selectedReport ? (
               <div className="internship-details-container fadeIn">
-                <button onClick={() => setSelectedReport(null)} className="back-btn">← Back to Reports</button>
+                <button onClick={() => setSelectedReport(null)} className="back-btn">← Back to Internships</button>
                 <div className="details-card-grid">
                   <div className="details-box" style={{ animation: 'fadeInUpSubmitter 0.6s cubic-bezier(0.23, 1, 0.32, 1)', position: 'relative' }}>
                     <div className="details-header">
                       <img src={selectedReport.photo} alt={selectedReport.student} />
                       <div>
-                        <h3 style={{ color: '#0a3d62' }}>{selectedReport.student}</h3>
-                        <p style={{ color: '#0a3d62', fontWeight: 'bold' }}>{selectedReport.title}</p>
-                        <p style={{ color: '#0a3d62', fontSize: '0.9em', marginTop: '5px' }}>{selectedReport.company}</p>
-                        <div style={{ display: 'flex', alignItems: 'center', marginTop: '8px', fontSize: '0.98em' }}>
-                          <span style={{ marginRight: '18px' }}><b>Major:</b> {selectedReport.major}</span>
+                        <h3 style={{ color: '#0a3d62', margin: '0 0 8px 0', fontSize: '1.5em', fontWeight: 'bold' }}>{selectedReport.student}</h3>
+                        <p style={{ color: '#0a3d62', margin: '0 0 8px 0', fontSize: '1.2em', fontWeight: 'bold' }}>{selectedReport.title}</p>
+                        <p style={{ color: '#0a3d62', margin: '0 0 8px 0', fontSize: '1.1em' }}>{selectedReport.company}</p>
+                        <p style={{ color: '#000', margin: '0', fontSize: '1em' }}>
+                          <span style={{ marginRight: '15px' }}><b>Major:</b> {selectedReport.major}</span>
                           <span><b>Cycle:</b> {selectedReport.cycle}</span>
-                        </div>
+                        </p>
                       </div>
                     </div>
                     <span style={{ position: 'absolute', top: '18px', right: '24px', color: '#0a3d62', fontWeight: 500, fontSize: '1em', display: 'flex', alignItems: 'center', gap: '5px' }}>
@@ -412,7 +431,7 @@ Average: 3.5 days\\\\
                   </div>
                   <div className="details-box" style={{ animation: 'slideInRight 0.5s ease-out 0.25s' }}>
                     <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Report Preview</h3>
-                    <div style={{ minHeight: '80px', color: '#222', fontSize: '15px', marginBottom: '18px', fontFamily: 'Georgia, Times, \"Times New Roman\", serif', lineHeight: '1.7', background: '#fff', border: '1.5px solid #b0b0b0', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', padding: '28px 24px', position: 'relative' }}>
+                    <div style={{ minHeight: '80px', color: '#222', fontSize: '15px', marginBottom: '18px', fontFamily: 'Georgia, Times, "Times New Roman", serif', lineHeight: '1.7', background: '#fff', border: '1.5px solid #b0b0b0', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', padding: '28px 24px', position: 'relative' }}>
                       <h2 style={{ color: '#0a3d62', margin: '0 0 10px 0', fontSize: '1.4em' }}>{selectedReport.title}</h2>
                       <p style={{ margin: '0 0 8px 0', fontWeight: 'bold' }}>
                         Student: <span style={{ color: '#111' }}>{selectedReport.student}</span> &nbsp; | &nbsp; Company: <span style={{ color: '#111' }}>{selectedReport.company}</span>
@@ -439,7 +458,7 @@ Average: 3.5 days\\\\
                       <ul style={{ margin: '0 0 8px 18px' }}>
                         <li>Successfully delivered assigned project modules on time.</li>
                         <li>Improved proficiency in industry-standard tools and technologies.</li>
-                        <li>Received positive feedback from mentors and team leads.</li>
+                        <li>Received positive feedback from mentors and team leaders.</li>
                       </ul>
                       <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Conclusion</h3>
                       <p>The internship at <b style={{ color: '#111' }}>{selectedReport.company}</b> was a transformative experience that enhanced my professional and personal growth. I am grateful for the opportunity and look forward to applying these learnings in my future career.</p>
@@ -463,350 +482,299 @@ Average: 3.5 days\\\\
                       ))}
                     </div>
                   </div>
-                  {(selectedReport.status === 'Rejected' || selectedReport.status === 'Flagged') && (
-                    <div
-                      ref={clarificationRef}
-                      className="details-box"
-                      style={{
-                        opacity: isClarificationVisible ? 1 : 0,
-                        transform: `translateY(${isClarificationVisible ? '0' : '-20px'})`,
-                        transition: 'all 0.3s ease-out',
-                        height: isClarificationVisible ? 'auto' : '0',
-                        overflow: 'hidden',
-                        marginBottom: isClarificationVisible ? '20px' : '0',
-                        animation: 'slideInRight 0.5s ease-out 0.3s'
-                      }}
-                    >
-                      <h3 style={{ marginBottom: '15px', color: '#0a3d62' }}>Clarification</h3>
-                      {isEditing ? (
-                        <>
-                          <textarea
-                            className="evaluation-textarea"
-                            value={clarification}
-                            onChange={(e) => setClarification(e.target.value)}
-                            placeholder="Explain why this report was flagged or rejected..."
-                          />
-                          <button className="status-btn" style={{ height: '36px' }} onClick={() => submitClarification(selectedReport.id)}>Submit Clarification</button>
-                        </>
-                      ) : (
-                        <>
-                          <p style={{
-                            whiteSpace: 'pre-wrap',
-                            marginBottom: '15px',
-                            backgroundColor: '#f5f6fa',
-                            padding: '15px',
-                            borderRadius: '8px',
-                            border: '1px solid #e0e0e0',
-                            color: submittedClarification ? 'inherit' : '#888',
-                            fontFamily: 'Consolas, \"Liberation Mono\", Menlo, Courier, monospace',
-                            fontSize: '14px',
-                            lineHeight: '1.5',
-                            fontStyle: 'normal',
-                            fontWeight: 'normal'
-                          }}>{submittedClarification || 'Add clarification on why report is rejected/flagged'}</p>
-                          <button className="status-btn" style={{ height: '36px' }} onClick={startEditing}>
-                            {submittedClarification ? '✏️ Edit' : 'Add Clarification'}
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  )}
+           {(selectedReport.status === 'Rejected' || selectedReport.status === 'Flagged') && (
+  <div
+    ref={clarificationRef}
+    className="details-box"
+    style={{
+      opacity: isClarificationVisible ? 1 : 0,
+      transform: `translateY(${isClarificationVisible ? '0' : '-20px'})`,
+      transition: 'all 0.3s ease-out',
+      height: isClarificationVisible ? 'auto' : '0',
+      overflow: 'hidden',
+      marginBottom: isClarificationVisible ? '20px' : '0',
+      animation: 'slideInRight 0.5s ease-out 0.3s'
+    }}
+  >
+    <h3 style={{ marginBottom: '15px', color: '#0a3d62' }}>Clarification</h3>
+    {clarificationMessage && (
+      <p className={`feedback-message ${clarificationMessage.includes('✔️') ? 'success' : 'error'}`}>
+        {clarificationMessage}
+      </p>
+    )}
+    {isEditing ? (
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (!e.target.checkValidity()) {
+            e.target.reportValidity();
+            return;
+          }
+          submitClarification(selectedReport.id);
+        }}
+        noValidate
+      >
+        <textarea
+          className="evaluation-textarea"
+          value={clarification}
+          onChange={(e) => setClarification(e.target.value)}
+          placeholder="Explain why this report was flagged or rejected..."
+          required
+        />
+        {clarificationError && (
+          <p style={{ color: 'red', fontSize: '12px', margin: '4px 0 8px' }}>
+            {clarificationError}
+          </p>
+        )}
+        <button className="status-btn" style={{ width: '100%', height: '38px', marginTop: '5px' }} type="submit">
+          Submit Clarification
+        </button>
+      </form>
+    ) : (
+      <>
+        <p style={{
+          whiteSpace: 'pre-wrap',
+          marginBottom: '15px',
+          backgroundColor: '#f5f6fa',
+          padding: '15px',
+          borderRadius: '8px',
+          border: '1px solid #e0e0e0',
+          color: submittedClarification ? 'inherit' : '#888',
+          fontFamily: 'Consolas, "Liberation Mono", Menlo, Courier, monospace',
+          fontSize: '14px',
+          lineHeight: '1.5'
+        }}>{submittedClarification || 'Add clarification on why report is rejected/flagged'}</p>
+        <button className="status-btn" style={{ width: '100%', height: '38px', marginTop: '5px' }} onClick={startEditing}>
+          {submittedClarification ? '✏️ Edit' : 'Add Clarification'}
+        </button>
+      </>
+    )}
+  </div>
+)}
                 </div>
               </div>
             ) : (
-              <>
-                <div className="filter-bar fade-in-delayed">
-                  <div className="icon-field">
-                    <FaSearch className="input-icon" />
-                    <input
-                      type="text"
-                      placeholder="Search by position, student, or company"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                  <div className="icon-field">
-                    <FaFilter className="input-icon" />
-                    <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-                      <option value="">Status</option>
-                      <option value="Pending">Pending</option>
-                      <option value="Accepted">Accepted</option>
-                      <option value="Rejected">Rejected</option>
-                      <option value="Flagged">Flagged</option>
-                    </select>
-                  </div>
-                  <div className="icon-field">
-                    <FaFilter className="input-icon" />
-                    <select value={filterMajor} onChange={(e) => setFilterMajor(e.target.value)}>
-                      <option value="">All Majors</option>
-                      <option value="CS">CS</option>
-                      <option value="Marketing">Marketing</option>
-                      <option value="Finance">Finance</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="internship-table-container animated fadeInUp">
-                  <table className="internship-table">
-                    <thead>
-                      <tr>
-                        <th>Intern Name</th>
-                        <th>Position</th>
-                        <th>Company</th>
-                        <th>Submission Date</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filterAndSortReports(internshipReports).map((report, idx) => (
-                        <tr key={idx} className="pop-in delay-0" onClick={() => setSelectedReport(report)} style={{ cursor: 'pointer' }}>
-                          <td>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                              <img
-                                src={report.photo}
-                                alt={report.student}
-                                style={{
-                                  width: '35px',
-                                  height: '35px',
-                                  borderRadius: '50%',
-                                  objectFit: 'cover',
-                                  border: '1px solid #ccc'
-                                }}
-                              />
-                              {report.student}
-                            </div>
-                          </td>
-                          <td>{report.title}</td>
-                          <td>{report.company}</td>
-                          <td>{report.date}</td>
-                          <td><span className={`status-tag ${report.status.toLowerCase()}`}>{report.status}</span></td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </>
-            )}
+        <>
+          <div className="filter-bar fade-in-delayed">
+            <div className="icon-field">
+              <FaSearch className="input-icon" />
+              <input
+                type="text"
+                placeholder="Search by position, student, or company"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="icon-field">
+              <FaFilter className="input-icon" />
+              <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+                <option value="">Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Accepted">Accepted</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Flagged">Flagged</option>
+              </select>
+            </div>
+            <div className="icon-field">
+              <FaFilter className="input-icon" />
+              <select value={filterMajor} onChange={(e) => setFilterMajor(e.target.value)}>
+                <option value="">All Majors</option>
+                <option value="CS">CS</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Finance">Finance</option>
+              </select>
+            </div>
           </div>
-        );
-
-      case 'evaluations':
-        return (
-          <div className="internship-section animated fadeInUp">
-            {selectedEvaluation ? (
-              <div className="internship-details-container fadeIn">
-                <button onClick={() => setSelectedEvaluation(null)} className="back-btn">← Back to Evaluations</button>
-                <div className="details-card-grid">
-                  {/* Box 1: Student Profile */}
-                  <div className="details-box" style={{ animation: 'fadeInUpSubmitter 0.6s cubic-bezier(0.23, 1, 0.32, 1)', position: 'relative' }}>
-                    <div className="details-header">
-                      <img src={selectedEvaluation.photo} alt={selectedEvaluation.student} />
-                      <div>
-                        <h3 style={{ color: '#0a3d62' }}>{selectedEvaluation.student}</h3>
-                        <p style={{ color: '#0a3d62', fontWeight: 'bold' }}>{selectedEvaluation.title}</p>
-                        <p style={{ color: '#0a3d62', fontSize: '0.9em', marginTop: '5px' }}>{selectedEvaluation.company}</p>
-                        <div style={{ display: 'flex', alignItems: 'center', marginTop: '8px', fontSize: '0.98em' }}>
-                          <span style={{ marginRight: '18px' }}><b>Major:</b> {selectedEvaluation.major}</span>
-                          <span><b>Cycle:</b> {selectedEvaluation.cycle}</span>
-                        </div>
+          <div className="internship-table-container animated fadeInUp">
+            <table className="internship-table">
+              <thead>
+                <tr>
+                  <th>Intern Name</th>
+                  <th>Position</th>
+                  <th>Company</th>
+                  <th>Submission Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filterAndSortReports(internshipReports).map((report, idx) => (
+                  <tr key={idx} className="pop-in delay-0" onClick={() => setSelectedReport(report)} style={{ cursor: 'pointer' }}>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <img
+                          src={report.photo}
+                          alt={report.student}
+                          style={{
+                            width: '35px',
+                            height: '35px',
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                            border: '1px solid #ccc'
+                          }}
+                        />
+                        {report.student}
                       </div>
-                    </div>
-                    <span style={{ position: 'absolute', top: '18px', right: '24px', color: '#0a3d62', fontWeight: 500, fontSize: '1em', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <FaRegCalendarAlt style={{ fontSize: '1.1em', marginRight: '3px' }} />
-                      {selectedEvaluation.date}
-                    </span>
-                  </div>
-
-                  {/* Box 2: Evaluation Preview */}
-                  <div className="details-box" style={{ animation: 'slideInRight 0.5s ease-out 0.25s' }}>
-                    <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Evaluation Preview</h3>
-                    <div style={{ minHeight: '80px', color: '#222', fontSize: '15px', marginBottom: '18px', fontFamily: 'Georgia, Times, \"Times New Roman\", serif', lineHeight: '1.7', background: '#fff', border: '1.5px solid #b0b0b0', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', padding: '28px 24px', position: 'relative' }}>
-                      <h2 style={{ color: '#0a3d62', margin: '0 0 10px 0', fontSize: '1.4em' }}>{selectedEvaluation.title} Evaluation</h2>
-                      <p style={{ margin: '0 0 8px 0', fontWeight: 'bold' }}>
-                        Student: <span style={{ color: '#111' }}>{selectedEvaluation.student}</span> &nbsp; | &nbsp; Company: <span style={{ color: '#111' }}>{selectedEvaluation.company}</span>
-                      </p>
-                      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', fontSize: '0.98em' }}>
-                        <span style={{ marginRight: '18px' }}><b>Major:</b> <span style={{ color: '#111' }}>{selectedEvaluation.major}</span></span>
-                        <span><b>Cycle:</b> <span style={{ color: '#111' }}>{selectedEvaluation.cycle}</span></span>
-                      </div>
-                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Supervisor</h3>
-                      <p>{selectedEvaluation.supervisor}</p>
-                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Period</h3>
-                      <p>From <b style={{ color: '#111' }}>{selectedEvaluation.startDate}</b> to <b style={{ color: '#111' }}>{selectedEvaluation.endDate}</b></p>
-                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Rating</h3>
-                      <p>{'★'.repeat(selectedEvaluation.rating)}{'☆'.repeat(5 - selectedEvaluation.rating)} ({selectedEvaluation.rating}/5)</p>
-                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Strengths</h3>
-                      <ul style={{ margin: '0 0 8px 18px' }}>
-                        {selectedEvaluation.strengths.map((strength, idx) => (
-                          <li key={idx}>{strength}</li>
-                        ))}
-                      </ul>
-                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Weaknesses</h3>
-                      <ul style={{ margin: '0 0 8px 18px' }}>
-                        {selectedEvaluation.weaknesses.map((weakness, idx) => (
-                          <li key={idx}>{weakness}</li>
-                        ))}
-                      </ul>
-                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Comments</h3>
-                      <p>{selectedEvaluation.comments}</p>
-                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Recommendation</h3>
-                      <p>{selectedEvaluation.recommendation}</p>
-                    </div>
-                    <button className="status-btn" style={{ width: '100%', height: '38px', marginTop: '5px' }} onClick={() => downloadEvaluationPDF(selectedEvaluation)}>
-                      📄 Download Evaluation as PDF
-                    </button>
-                  </div>
-
-                  {/* Box 3: Status Control */}
-                  <div className="details-box" style={{ animation: 'slideInRight 0.5s ease-out 0.2s' }}>
-                    <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Update Recommendation</h3>
-                    <div className="status-buttons">
-                      {['Yes', 'No'].map((option) => (
-                        <button
-                          key={option}
-                          className={`status-btn-outline ${option.toLowerCase()} ${selectedEvaluation.recommendation === option ? 'active' : ''}`}
-                          onClick={() => updateEvaluationStatus(option)}
-                          style={{ height: '36px' }}
-                        >
-                          {option}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Box 4: Clarification (for No recommendation) */}
-                  {selectedEvaluation.recommendation === 'No' && (
-                    <div
-                      ref={clarificationRef}
-                      className="details-box"
-                      style={{
-                        opacity: isClarificationVisible ? 1 : 0,
-                        transform: `translateY(${isClarificationVisible ? '0' : '-20px'})`,
-                        transition: 'all 0.3s ease-out',
-                        height: isClarificationVisible ? 'auto' : '0',
-                        overflow: 'hidden',
-                        marginBottom: isClarificationVisible ? '20px' : '0',
-                        animation: 'slideInRight 0.5s ease-out 0.3s'
-                      }}
-                    >
-                      <h3 style={{ marginBottom: '15px', color: '#0a3d62' }}>Clarification</h3>
-                      {isEditing ? (
-                        <>
-                          <textarea
-                            className="evaluation-textarea"
-                            value={clarification}
-                            onChange={(e) => setClarification(e.target.value)}
-                            placeholder="Explain why this evaluation is not recommended..."
-                          />
-                          <button className="status-btn" style={{ height: '36px' }} onClick={() => submitClarification(selectedEvaluation.id)}>
-                            Submit Clarification
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <p style={{
-                            whiteSpace: 'pre-wrap',
-                            marginBottom: '15px',
-                            backgroundColor: '#f5f6fa',
-                            padding: '15px',
-                            borderRadius: '8px',
-                            border: '1px solid #e0e0e0',
-                            color: submittedClarification ? 'inherit' : '#888',
-                            fontFamily: 'Consolas, \"Liberation Mono\", Menlo, Courier, monospace',
-                            fontSize: '14px',
-                            lineHeight: '1.5',
-                            fontStyle: 'normal',
-                            fontWeight: 'normal'
-                          }}>
-                            {submittedClarification || 'Add clarification on why evaluation is not recommended'}
-                          </p>
-                          <button className="status-btn" style={{ height: '36px' }} onClick={startEditing}>
-                            {submittedClarification ? '✏️ Edit' : 'Add Clarification'}
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  )}
+                    </td>
+                    <td>{report.title}</td>
+                    <td>{report.company}</td>
+                    <td>{report.date}</td>
+                    <td><span className={`status-tag ${report.status.toLowerCase()}`}>{report.status}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+    </div>
+  );
+ case 'evaluations':
+  return (
+    <div className="internship-section animated fadeInUp">
+      <section className="hero-banner animated fadeSlideUp">
+        <h2>Evaluations</h2>
+        <p className="subtext">
+          Today is {new Date().toLocaleString('en-US', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+          })}
+        </p>
+      </section>
+      {selectedEvaluation ? (
+        <div className="internship-details-container fadeIn">
+          <button onClick={() => setSelectedEvaluation(null)} className="back-btn">← Back to Evaluations</button>
+          <div className="details-card-grid">
+            <div className="details-box" style={{ animation: 'fadeInUpSubmitter 0.6s cubic-bezier(0.23, 1, 0.32, 1)', position: 'relative' }}>
+              <div className="details-header">
+                <img src={selectedEvaluation.photo} alt={selectedEvaluation.student} />
+                <div>
+                  <h3 style={{ color: '#0a3d62', margin: '0 0 8px 0', fontSize: '1.5em', fontWeight: 'bold' }}>{selectedEvaluation.student}</h3>
+                  <p style={{ color: '#0a3d62', margin: '0 0 8px 0', fontSize: '1.2em', fontWeight: 'bold' }}>{selectedEvaluation.title}</p>
+                  <p style={{ color: '#0a3d62', margin: '0 0 8px 0', fontSize: '1.1em' }}>{selectedEvaluation.company}</p>
+                  <p style={{ color: '#000', margin: '0', fontSize: '1em' }}>
+                    <span style={{ marginRight: '15px' }}><b>Major:</b> {selectedEvaluation.major}</span>
+                    <span><b>Cycle:</b> {selectedEvaluation.cycle}</span>
+                  </p>
                 </div>
               </div>
-            ) : (
-              <>
-                <div className="filter-bar fade-in-delayed">
-                  <div className="icon-field">
-                    <FaSearch className="input-icon" />
-                    <input
-                      type="text"
-                      placeholder="Search by student, company, or title"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                  <div className="icon-field">
-                    <FaFilter className="input-icon" />
-                    <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-                      <option value="">Recommendation</option>
-                      <option value="Yes">Yes</option>
-                      <option value="No">No</option>
-                    </select>
-                  </div>
-                  <div className="icon-field">
-                    <FaFilter className="input-icon" />
-                    <select value={filterMajor} onChange={(e) => setFilterMajor(e.target.value)}>
-                      <option value="">All Majors</option>
-                      <option value="CS">CS</option>
-                      <option value="Marketing">Marketing</option>
-                      <option value="Finance">Finance</option>
-                    </select>
-                  </div>
+              <span style={{ position: 'absolute', top: '18px', right: '24px', color: '#0a3d62', fontWeight: 500, fontSize: '1em', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <FaRegCalendarAlt style={{ fontSize: '1.1em', marginRight: '3px' }} />
+                {selectedEvaluation.date}
+              </span>
+            </div>
+            <div className="details-box" style={{ animation: 'slideInRight 0.5s ease-out 0.25s' }}>
+              <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Evaluation Preview</h3>
+              <div style={{ minHeight: '80px', color: '#222', fontSize: '15px', marginBottom: '18px', fontFamily: 'Georgia, Times, "Times New Roman", serif', lineHeight: '1.7', background: '#fff', border: '1.5px solid #b0b0b0', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', padding: '28px 24px', position: 'relative' }}>
+                <h2 style={{ color: '#0a3d62', margin: '0 0 10px 0', fontSize: '1.4em' }}>{selectedEvaluation.title} Evaluation</h2>
+                <p style={{ margin: '0 0 8px 0', fontWeight: 'bold' }}>
+                  Student: <span style={{ color: '#111' }}>{selectedEvaluation.student}</span>   |   Company: <span style={{ color: '#111' }}>{selectedEvaluation.company}</span>
+                </p>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', fontSize: '0.98em' }}>
+                  <span style={{ marginRight: '18px' }}><b>Major:</b> <span style={{ color: '#111' }}>{selectedEvaluation.major}</span></span>
+                  <span><b>Cycle:</b> <span style={{ color: '#111' }}>{selectedEvaluation.cycle}</span></span>
                 </div>
-                <div className="internship-table-container animated fadeInUp">
-                  <table className="internship-table">
-                    <thead>
-                      <tr>
-                        <th>Student</th>
-                        <th>Title</th>
-                        <th>Company</th>
-                        <th>Submission Date</th>
-                        <th>Recommendation</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filterAndSortEvaluations(evaluations).map((evaluation, idx) => (
-                        <tr key={idx} className="pop-in delay-0" onClick={() => setSelectedEvaluation(evaluation)} style={{ cursor: 'pointer' }}>
-                          <td>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                              <img
-                                src={evaluation.photo}
-                                alt={evaluation.student}
-                                style={{
-                                  width: '35px',
-                                  height: '35px',
-                                  borderRadius: '50%',
-                                  objectFit: 'cover',
-                                  border: '1px solid #ccc'
-                                }}
-                              />
-                              {evaluation.student}
-                            </div>
-                          </td>
-                          <td>{evaluation.title}</td>
-                          <td>{evaluation.company}</td>
-                          <td>{evaluation.date}</td>
-                          <td><span className={`status-tag ${evaluation.recommendation.toLowerCase()}`}>{evaluation.recommendation}</span></td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </>
-            )}
+                <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Supervisor</h3>
+                <p>{selectedEvaluation.supervisor}</p>
+                <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Period</h3>
+                <p>From <b style={{ color: '#111' }}>{selectedEvaluation.startDate}</b> to <b style={{ color: '#111' }}>{selectedEvaluation.endDate}</b></p>
+                <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Rating</h3>
+                <p>{'★'.repeat(selectedEvaluation.rating)}{'☆'.repeat(5 - selectedEvaluation.rating)} ({selectedEvaluation.rating}/5)</p>
+                <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Strengths</h3>
+                <ul style={{ margin: '0 0 8px 18px' }}>
+                  {selectedEvaluation.strengths.map((strength, idx) => (
+                    <li key={idx}>{strength}</li>
+                  ))}
+                </ul>
+                <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Weaknesses</h3>
+                <ul style={{ margin: '0 0 8px 18px' }}>
+                  {selectedEvaluation.weaknesses.map((weakness, idx) => (
+                    <li key={idx}>{weakness}</li>
+                  ))}
+                </ul>
+                <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Comments</h3>
+                <p>{selectedEvaluation.comments}</p>
+              </div>
+              <button className="status-btn" style={{ width: '100%', height: '38px', marginTop: '5px' }} onClick={() => downloadEvaluationPDF(selectedEvaluation)}>
+                📄 Download Evaluation as PDF
+              </button>
+            </div>
           </div>
-        );
-
+        </div>
+      ) : (
+        <>
+          <div className="filter-bar fade-in-delayed">
+            <div className="icon-field">
+              <FaSearch className="input-icon" />
+              <input
+                type="text"
+                placeholder="Search by student, company, or title"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="icon-field">
+              <FaFilter className="input-icon" />
+              <select value={filterMajor} onChange={(e) => setFilterMajor(e.target.value)}>
+                <option value="">All Majors</option>
+                <option value="CS">CS</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Finance">Finance</option>
+              </select>
+            </div>
+          </div>
+          <div className="internship-table-container animated fadeInUp">
+            <table className="internship-table">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Title</th>
+                  <th>Company</th>
+                  <th>Submission Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filterAndSortEvaluations(evaluations).map((evaluation, idx) => (
+                  <tr key={idx} className="pop-in delay-0" onClick={() => setSelectedEvaluation(evaluation)} style={{ cursor: 'pointer' }}>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <img
+                          src={evaluation.photo}
+                          alt={evaluation.student}
+                          style={{
+                            width: '35px',
+                            height: '35px',
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                            border: '1px solid #ccc'
+                          }}
+                        />
+                        {evaluation.student}
+                      </div>
+                    </td>
+                    <td>{evaluation.title}</td>
+                    <td>{evaluation.company}</td>
+                    <td>{evaluation.date}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+    </div>
+  );
       case 'statistics':
         return (
           <div className="internship-section animated fadeInUp">
-            <h2 className="animated-title">Internship Statistics</h2>
-            <p className="dashboard-subtext">Insights into internship reports, review activity, and company rankings.</p>
+            <section className="hero-banner animated fadeSlideUp">
+              <h2>Statistics</h2>
+              <p className="subtext">
+                Today is {new Date().toLocaleString('en-US', {
+                  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                  hour: '2-digit', minute: '2-digit'
+                })}
+              </p>
+            </section>
             <button className="status-btn" onClick={downloadStatisticsPDF}>📄 Generate Statistics Report</button>
             <div className="statistics-grid">
               <div className="statistics-tile fade-in delay-1">
@@ -925,36 +893,12 @@ Average: 3.5 days\\\\
         </div>
       </aside>
       <main className="main-content">
-        <div className="floating-notif">
-          <FaBell className="wiggle-bell" />
-        </div>
-        <section className="hero-banner animated fadeSlideUp">
-          <h2>Welcome back, Dr. Salem 👋</h2>
-          <p className="subtext">
-            Today is {new Date().toLocaleString('en-US', {
-              weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-              hour: '2-digit', minute: '2-digit'
-            })}
-          </p>
-        </section>
-        {statusMessage && (
-          <div className="fade-out-message" style={{
-            position: 'fixed',
-            top: '20px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            background: '#38ada9',
-            padding: '10px 20px',
-            color: 'white',
-            borderRadius: '8px',
-            fontWeight: 'bold',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
-            transition: 'opacity 0.6s ease',
-            zIndex: 1000
-          }}>
-            {statusMessage}
-          </div>
-        )}
+       
+   {statusMessage && (
+  <div className="feedback-message">
+    {statusMessage}
+  </div>
+)}
         <section className="content-area">{renderContent()}</section>
       </main>
     </div>

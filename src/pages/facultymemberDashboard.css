@@ -770,29 +770,57 @@ body {
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
 }
-
 .details-header {
   display: flex;
-  align-items: center;
-  gap: 20px;
+  align-items: flex-start; /* Align items to the top */
+  gap: 15px; /* Space between image and text */
   margin-bottom: 20px;
+  text-align: left; /* Ensure left alignment */
 }
 
 .details-header img {
   width: 60px;
   height: 60px;
   border-radius: 50%;
+  flex-shrink: 0; /* Prevent image from shrinking */
 }
 
-.details-body h3 {
+.details-header div {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: left; /* Ensure text is left-aligned */
+  flex-grow: 1; /* Allow text container to take available space */
+}
+
+.details-header h3,
+.details-header p {
+  margin: 0 0 8px 0; /* Consistent vertical spacing */
   color: #0a3d62;
-  margin-bottom: 10px;
+  text-align: left;
+}
+.details-header h3 {
+  font-size: 1.5em; /* Larger for student name */
+  font-weight: bold;
 }
 
-.details-body p {
-  margin: 6px 0;
-  color: #333;
+.details-header p:nth-child(2) {
+  font-size: 1.2em; /* Title */
+  font-weight: bold;
+}
+
+.details-header p:nth-child(3) {
+  font-size: 1.1em; /* Company */
+}
+
+.details-header p:last-child {
+  font-size: 1em; /* Major and Cycle */
+}
+
+.details-header p:last-child span {
+  margin-right: 15px; /* Space between Major and Cycle */
 }
 
 .details-body .description {
@@ -802,7 +830,18 @@ body {
 .status-btn {
   margin: 6px;
   padding: 4px 14px;
-  background: #f4f7f9;
+  background: white;
+  border: 1px solid #0a3d62;
+  color: #0a3d62;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.status-btn2 {
+  margin: 6px;
+  padding: 4px 14px;
+  background: white;
   border: 1px solid #0a3d62;
   color: #0a3d62;
   border-radius: 8px;
@@ -816,13 +855,26 @@ body {
   color: white;
   transform: scale(1.02);
 }
+.status-btn:last-child {
+  margin-right: 0;
+}
+
+.status-btn2:hover {
+  background: #0a3d62;
+  color: white;
+  transform: scale(1.02);
+}
 
 .status-btn.selected {
   color: white !important;
   background-color: var(--btn-color);
   border-color: var(--btn-color);
 }
-
+.status-btn.selected2 {
+  color: white !important;
+  background-color: var(--btn-color);
+  border-color: var(--btn-color);
+}
 .status-dropdown {
   padding: 6px 10px;
   border-radius: 6px;
@@ -845,8 +897,26 @@ body {
 }
 
 .fade-out-message {
-  opacity: 1;
-  animation: fadeOutSmooth 3s forwards;
+  background: linear-gradient(to right, #0a3d62, #3c6382);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  margin: 0 0 20px 0;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s;
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(10, 61, 98, 0.3), 0 8px 30px rgba(10, 61, 98, 0.2);
+  min-width: 320px;
+  text-align: center;
+  letter-spacing: 0.3px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 @keyframes fadeOutSmooth {
@@ -992,12 +1062,22 @@ body {
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  text-align: left
 }
 
 .status-buttons {
   display: flex;
   gap: 10px;
   margin-top: 10px;
+  
+}
+.status-buttons.active {
+  background: #38ada9;
+  
+  
+}
+.status-buttons.closed {
+  background: #e55039;
 }
 
 .status-btn-outline {
@@ -1009,22 +1089,75 @@ body {
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
+  width: 100%;
 }
 
 .status-btn-outline:hover {
-  background-color: #0a3d62;
+  background-color: #2892a7;
   /* Change to desired hover color */
   color: white;
   transform: scale(1.05);
   /* Add a slight zoom effect */
   transition: all 0.3s ease;
   /* Smooth transition for hover effect */
+   border: 1px solid #2892a7;
+
+}
+/* Non-active hover styles */
+.status-btn-outline.flagged:hover:not(.active) {
+  background-color: #fce4b3; /* Pale orange */
+  border-color: #e07b00; /* Darker orange */
+  color: #e07b00;
 }
 
-.status-btn-outline.active {
-  background-color: #0a3d62;
+.status-btn-outline.rejected:hover:not(.active) {
+  background-color: #f8d7da; /* Pale red */
+  border-color: #c82333; /* Darker red */
+  color: #c82333;
+}
+
+.status-btn-outline.accepted:hover:not(.active) {
+  background-color: #d4edda; /* Pale green */
+  border-color: #2892a7; /* Darker green */
+  color: #2892a7;
+}
+/* Active hover styles */
+.status-btn-outline.flagged.active:hover {
+  background-color: #e07b00; /* Darker orange */
+  border-color: #e07b00;
   color: white;
 }
+
+.status-btn-outline.rejected.active:hover {
+  background-color: #c82333; /* Darker red */
+  border-color: #c82333;
+  color: white;
+}
+
+.status-btn-outline.accepted.active:hover {
+  background-color: #2892a7; /* Darker green */
+  border-color: #2892a7;
+  color: white;
+}
+
+.status-btn-outline.flagged.active {
+  background-color: #f39c12; /* Orange for Flagged */
+  border-color: #f39c12;
+  color: white;
+}
+
+.status-btn-outline.rejected.active {
+  background-color: #dc3545; /* Red for Rejected */
+  border-color: #dc3545;
+  color: white;
+}
+
+.status-btn-outline.accepted.active {
+  background-color: #2892a7; /* Green for Accepted */
+  border-color: #2892a7;
+  color: white;
+}
+
 
 .statistics-grid {
   display: flex;
@@ -1114,4 +1247,49 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+  
+}
+@keyframes slideIn {
+  from {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+}
+.clarification-message {
+  background: linear-gradient(to right, #0a3d62, #3c6382);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  margin: 0 0 20px 0;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s;
+  position: relative;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(10, 61, 98, 0.3), 0 8px 30px rgba(10, 61, 98, 0.2);
+  min-width: 320px;
+  text-align: center;
+  letter-spacing: 0.3px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.clarification-message.success,
+.clarification-message.error {
+  background: linear-gradient(to right, #0a3d62, #3c6382);
 }

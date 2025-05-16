@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FaArrowLeft, FaCalendarAlt, FaClock, FaUser } from 'react-icons/fa';
+import { FaCalendarAlt, FaClock, FaUser } from 'react-icons/fa';
 import ProStudentSidebar from '../components/ProStudentSidebar';
 import { WorkshopContext } from './WorkshopContext';
 import './ProStudentWorkshopRegistration.css';
@@ -102,12 +102,16 @@ const ProStudentWorkshopRegistration = () => {
       <ProStudentSidebar />
       <div className="pro-student-content">
         {showFeedback && (
-          <div className="feedback-message">
+          <div
+            className="feedback-message"
+            role="alert"
+            aria-live="polite"
+          >
             Registration submitted successfully!
           </div>
         )}
-        <button className="back-button" onClick={() => navigate('/pro-student/workshops')}>
-          <FaArrowLeft /> Back to Workshops
+        <button className="back-btn" onClick={() => navigate('/pro-student/workshops')} aria-label="Back to workshops">
+          ← Back to Workshops
         </button>
 
         <div className="registration-container">

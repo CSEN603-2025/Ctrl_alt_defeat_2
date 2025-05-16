@@ -1,3 +1,18 @@
+.pro-student-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.pro-student-content {
+  flex: 1;
+  padding: 2rem;
+  background-color: #f5f6fa;
+  margin-left: 250px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
 .application-details {
   background: white;
   border-radius: 10px;
@@ -5,18 +20,26 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.application-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.hero-banner {
+  background: linear-gradient(135deg, #0a3d62 0%, #0c4b6e 100%);
+  color: white;
+  padding: 2.5rem;
+  border-radius: 12px;
   margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #eee;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.application-header h1 {
-  color: #0a3d62;
+.hero-banner h1 {
   margin: 0;
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.hero-banner p {
+  margin: 0;
+  font-size: 1.1rem;
+  opacity: 0.9;
 }
 
 .status-badge {
@@ -24,6 +47,10 @@
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 500;
+  background-color: #fff3e0;
+  color: #e65100;
+  display: inline-block;
+  margin-top: 1rem;
 }
 
 .status-badge.under-review {
@@ -169,7 +196,7 @@
 }
 
 .form-group {
-  display: flex;
+  display: flex 과;
   flex-direction: column;
   gap: 0.5rem;
 }
@@ -244,4 +271,4 @@
   .form-actions button {
     width: 100%;
   }
-} 
+}

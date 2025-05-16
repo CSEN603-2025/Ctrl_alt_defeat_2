@@ -7,29 +7,20 @@ const AssessmentQuestions = ({ assessmentId, onComplete }) => {
   const [timeLeft, setTimeLeft] = useState(3600); // 60 minutes in seconds
   const [answers, setAnswers] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('');
 
   // Mock questions data - replace with actual API call
   const questions = [
     {
       id: 1,
       question: "What is the time complexity of binary search?",
-      options: [
-        "O(1)",
-        "O(log n)",
-        "O(n)",
-        "O(n log n)"
-      ],
+      options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
       correctAnswer: 1
     },
     {
       id: 2,
       question: "Which data structure follows LIFO principle?",
-      options: [
-        "Queue",
-        "Stack",
-        "Tree",
-        "Graph"
-      ],
+      options: ["Queue", "Stack", "Tree", "Graph"],
       correctAnswer: 1
     },
     // Add more questions here
@@ -76,20 +67,31 @@ const AssessmentQuestions = ({ assessmentId, onComplete }) => {
   };
 
   const handleSubmit = () => {
+    const unanswered = questions.some(question => answers[question.id] === undefined);
+    if (unanswered) {
+      setStatusMessage('⚠️ Please answer all questions before submitting.');
+      setTimeout(() => setStatusMessage(''), 3000); // Clear after 3 seconds
+      return;
+    }
     setIsSubmitting(true);
-    // Calculate score
     const score = questions.reduce((acc, q) => {
       return acc + (answers[q.id] === q.correctAnswer ? 1 : 0);
     }, 0);
-    
     const percentage = (score / questions.length) * 100;
-    
-    // Call onComplete with the score
     onComplete(percentage);
+    setIsSubmitting(false);
+   setStatusMessage('✔️ Assessment submitted successfully.');
+console.log('Success message set');
+setTimeout(() => setStatusMessage(''), 3000);
   };
 
   return (
     <div className="assessment-questions">
+      {statusMessage && (
+        <div className="fade-out-message">
+          {statusMessage}
+        </div>
+      )}
       <div className="assessment-header">
         <div className="timer">
           <FaClock />
@@ -129,7 +131,7 @@ const AssessmentQuestions = ({ assessmentId, onComplete }) => {
         
         {currentQuestion === questions.length - 1 ? (
           <button
-            className="submit-button"
+            className="nav-button"
             onClick={handleSubmit}
             disabled={isSubmitting}
           >
@@ -148,4 +150,4 @@ const AssessmentQuestions = ({ assessmentId, onComplete }) => {
   );
 };
 
-export default AssessmentQuestions; 
+export default AssessmentQuestions;

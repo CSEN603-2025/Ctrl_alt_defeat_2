@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { FaSearch, FaBuilding, FaClock, FaMoneyBillWave, FaGraduationCap, FaCalendarAlt, FaStar, FaUsers, FaIndustry, FaFilter, FaSortAmountDown, FaLinkedin, FaTwitter, FaGlobe, FaFileAlt } from 'react-icons/fa';
+import { FaSearch, FaBuilding, FaClock, FaMoneyBillWave, FaGraduationCap, FaCalendarAlt, FaStar, FaUsers, FaIndustry,FaBell, FaFilter, FaSortAmountDown, FaLinkedin, FaTwitter, FaGlobe, FaFileAlt } from 'react-icons/fa';
 import ProStudentSidebar from '../components/ProStudentSidebar';
-import BackButton from '../components/BackButton';
 import './ProStudentInternships.css';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+
 
 const ProStudentInternships = () => {
   const [selectedMajor, setSelectedMajor] = useState(null);
@@ -11,7 +12,10 @@ const ProStudentInternships = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedInternship, setSelectedInternship] = useState(null);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
-  const [activeTab, setActiveTab] = useState('all');
+const location = useLocation();
+const [activeTab, setActiveTab] = useState(() =>
+  location.state?.from === 'completed' ? 'my' : 'all'
+);
   const [filterIndustry, setFilterIndustry] = useState('');
   const [filterDuration, setFilterDuration] = useState('');
   const [filterCompensation, setFilterCompensation] = useState('');
@@ -100,7 +104,8 @@ const ProStudentInternships = () => {
       date: '2024-03-10',
       social: {
         linkedin: 'https://linkedin.com/company/breadfast',
-        website: 'https://breadfast.com'
+        website: 'https://breadfast.com',
+        twitter: 'https://twitter.com/breadfast'
       }
     },
     {
@@ -165,14 +170,14 @@ const ProStudentInternships = () => {
           title: 'Quantum Software Intern',
           company: 'Quantum Computing Corp',
           logo: '/images/quantum.png',
-      duration: '3 months',
-      type: 'Full-time',
+          duration: '3 months',
+          type: 'Full-time',
           salary: '$4,000/month',
           compensation: 'Paid',
           industry: 'Quantum Computing',
           requirements: ['Python', 'Quantum Computing', 'Linear Algebra', 'C++'],
           description: 'Work on the cutting edge of quantum computing software development. Help develop algorithms and software for quantum computers.',
-      major: 'Computer Science',
+          major: 'Computer Science',
           semester: 'Summer 2024',
           date: '2024-07-01',
           social: {
@@ -201,14 +206,14 @@ const ProStudentInternships = () => {
           title: 'Robotics Software Intern',
           company: 'RoboTech Industries',
           logo: '/images/robotech.png',
-      duration: '4 months',
-      type: 'Full-time',
+          duration: '4 months',
+          type: 'Full-time',
           salary: '$3,500/month',
           compensation: 'Paid',
           industry: 'Robotics',
           requirements: ['C++', 'ROS', 'Computer Vision', 'Control Systems'],
           description: 'Develop software for autonomous robots and robotic systems. Work on motion planning, computer vision, and control systems.',
-      major: 'Computer Science',
+          major: 'Computer Science',
           semester: 'Fall 2024',
           date: '2024-09-15',
           social: {
@@ -238,13 +243,13 @@ const ProStudentInternships = () => {
           company: 'BioTech Innovations',
           logo: '/images/biotech.png',
           duration: '6 months',
-      type: 'Full-time',
+          type: 'Full-time',
           salary: '$3,200/month',
           compensation: 'Paid',
           industry: 'Biotechnology',
           requirements: ['Python', 'Bioinformatics', 'Machine Learning', 'Statistics'],
           description: 'Work on computational biology and bioinformatics projects. Analyze genetic data and develop algorithms for biological research.',
-      major: 'Computer Science',
+          major: 'Computer Science',
           semester: 'Spring 2024',
           date: '2024-03-15',
           social: {
@@ -268,13 +273,13 @@ const ProStudentInternships = () => {
         'Growing industry'
       ],
       internships: [
-    {
-      id: 18,
+        {
+          id: 18,
           title: 'Smart Grid Software Intern',
           company: 'GreenTech Solutions',
           logo: '/images/greentech.png',
-      duration: '3 months',
-      type: 'Full-time',
+          duration: '3 months',
+          type: 'Full-time',
           salary: '$3,300/month',
           compensation: 'Paid',
           industry: 'Clean Energy',
@@ -294,7 +299,7 @@ const ProStudentInternships = () => {
 
   const myInternships = {
     current: [
-    {
+      {
         id: 101,
         title: 'Software Development Intern',
         company: 'Instabug',
@@ -304,8 +309,8 @@ const ProStudentInternships = () => {
         status: 'In Progress',
         mentor: 'John Doe',
         progress: 60,
-      duration: '3 months',
-      type: 'Full-time',
+        duration: '3 months',
+        type: 'Full-time',
         salary: '$25/hour',
         compensation: 'Paid',
         industry: 'Technology',
@@ -321,7 +326,7 @@ const ProStudentInternships = () => {
       }
     ],
     completed: [
-    {
+      {
         id: 102,
         title: 'Web Development Intern',
         company: 'Bosta',
@@ -332,9 +337,9 @@ const ProStudentInternships = () => {
         mentor: 'Jane Smith',
         finalGrade: 'A',
         certificate: '/certificates/bosta-internship.pdf',
-      duration: '3 months',
-      type: 'Full-time',
-      salary: '$22/hour',
+        duration: '3 months',
+        type: 'Full-time',
+        salary: '$22/hour',
         compensation: 'Paid',
         industry: 'Logistics',
         requirements: ['JavaScript', 'Node.js', 'MongoDB'],
@@ -343,10 +348,11 @@ const ProStudentInternships = () => {
         semester: 'Semester 3',
         social: {
           linkedin: 'https://linkedin.com/company/bosta',
-          website: 'https://bosta.co'
+          twitter: 'https://twitter.com/bosta_ksa/status/1731301173364215847',
+          website: 'https://bosta.co',
         }
       }
-      ]
+    ]
   };
 
   const suggestedInternships = [
@@ -507,16 +513,16 @@ const ProStudentInternships = () => {
 
   const filterAndSort = (data) => {
     let filtered = [...data];
-    
+
     // Apply filters
     if (activeTab === 'my') {
       return [...myInternships.current, ...myInternships.completed];
     }
-    
+
     if (activeTab === 'suggested') {
       return suggestedInternships;
     }
-    
+
     if (filterIndustry) {
       filtered = filtered.filter(item => item.industry === filterIndustry);
     }
@@ -580,7 +586,7 @@ const ProStudentInternships = () => {
                   <span
                     key={star}
                     className={`star ${star <= evaluationData.rating ? 'filled' : ''}`}
-                    onClick={() => setEvaluationData({...evaluationData, rating: star})}
+                    onClick={() => setEvaluationData({ ...evaluationData, rating: star })}
                   >
                     ★
                   </span>
@@ -591,7 +597,7 @@ const ProStudentInternships = () => {
               <label>Feedback</label>
               <textarea
                 value={evaluationData.feedback}
-                onChange={(e) => setEvaluationData({...evaluationData, feedback: e.target.value})}
+                onChange={(e) => setEvaluationData({ ...evaluationData, feedback: e.target.value })}
                 placeholder="Share your experience..."
                 required
               />
@@ -612,7 +618,7 @@ const ProStudentInternships = () => {
               <label>Challenges</label>
               <textarea
                 value={evaluationData.challenges}
-                onChange={(e) => setEvaluationData({...evaluationData, challenges: e.target.value})}
+                onChange={(e) => setEvaluationData({ ...evaluationData, challenges: e.target.value })}
                 placeholder="Describe the challenges you faced..."
               />
             </div>
@@ -620,7 +626,7 @@ const ProStudentInternships = () => {
               <label>Recommendations</label>
               <textarea
                 value={evaluationData.recommendations}
-                onChange={(e) => setEvaluationData({...evaluationData, recommendations: e.target.value})}
+                onChange={(e) => setEvaluationData({ ...evaluationData, recommendations: e.target.value })}
                 placeholder="Share your recommendations..."
               />
             </div>
@@ -651,7 +657,7 @@ const ProStudentInternships = () => {
               <input
                 type="text"
                 value={reportData.title}
-                onChange={(e) => setReportData({...reportData, title: e.target.value})}
+                onChange={(e) => setReportData({ ...reportData, title: e.target.value })}
                 placeholder="Enter report title"
                 required
               />
@@ -660,7 +666,7 @@ const ProStudentInternships = () => {
               <label>Content</label>
               <textarea
                 value={reportData.content}
-                onChange={(e) => setReportData({...reportData, content: e.target.value})}
+                onChange={(e) => setReportData({ ...reportData, content: e.target.value })}
                 placeholder="Write your report content..."
                 required
               />
@@ -725,12 +731,15 @@ const ProStudentInternships = () => {
     <div className="pro-student-layout">
       <ProStudentSidebar />
       <div className="pro-student-content">
-        <BackButton />
-        <h1>Internships</h1>
+      
+        <div className="hero-banner">
+          <h1>Internships</h1>
+          <p>Find and apply for internships that match your interests</p>
+        </div>
 
         {/* Tab Navigation */}
         <div className="internship-tabs">
-                <button 
+          <button
             className={`tab-button ${activeTab === 'all' ? 'active' : ''}`}
             onClick={() => setActiveTab('all')}
           >
@@ -745,10 +754,10 @@ const ProStudentInternships = () => {
           <button
             className={`tab-button ${activeTab === 'my' ? 'active' : ''}`}
             onClick={() => setActiveTab('my')}
-                >
+          >
             My Internships
-                </button>
-              </div>
+          </button>
+        </div>
 
         {activeTab === 'my' ? (
           <div className="my-internships-section">
@@ -767,20 +776,20 @@ const ProStudentInternships = () => {
                 </thead>
                 <tbody>
                   {myInternships.current.map((internship) => (
-                    <tr 
+                    <tr
                       key={internship.id}
                       onClick={() => handleInternshipSelect(internship)}
                       style={{ cursor: 'pointer' }}
                     >
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <img 
-                            src={internship.logo} 
+                          <img
+                            src={internship.logo}
                             alt={internship.company}
                             style={{ width: '30px', height: '30px', borderRadius: '50%' }}
                           />
                           {internship.company}
-          </div>
+                        </div>
                       </td>
                       <td>{internship.title}</td>
                       <td>{internship.startDate}</td>
@@ -788,7 +797,7 @@ const ProStudentInternships = () => {
                       <td>{internship.status}</td>
                       <td>
                         <div className="progress-bar">
-                          <div 
+                          <div
                             className="progress-fill"
                             style={{ width: `${internship.progress}%` }}
                           />
@@ -799,7 +808,7 @@ const ProStudentInternships = () => {
                   ))}
                 </tbody>
               </table>
-        </div>
+            </div>
 
             <h2>Completed Internships</h2>
             <div className="internship-table-container">
@@ -811,20 +820,19 @@ const ProStudentInternships = () => {
                     <th>Duration</th>
                     <th>Status</th>
                     <th>Final Grade</th>
-                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {myInternships.completed.map((internship) => (
-                    <tr 
+                    <tr
                       key={internship.id}
                       onClick={() => handleInternshipSelect(internship)}
                       style={{ cursor: 'pointer' }}
                     >
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <img 
-                            src={internship.logo} 
+                          <img
+                            src={internship.logo}
                             alt={internship.company}
                             style={{ width: '30px', height: '30px', borderRadius: '50%' }}
                           />
@@ -835,87 +843,65 @@ const ProStudentInternships = () => {
                       <td>{internship.duration}</td>
                       <td>{internship.status}</td>
                       <td>{internship.finalGrade}</td>
-                      <td>
-                        <div className="action-buttons">
-              <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedCompletedInternship(internship);
-                              setShowEvaluationModal(true);
-                            }}
-              >
-                            Evaluation
-              </button>
-              <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedCompletedInternship(internship);
-                              setShowReportModal(true);
-                            }}
-              >
-                            Report
-              </button>
-                        </div>
-                      </td>
                     </tr>
-            ))}
+                  ))}
                 </tbody>
               </table>
+            </div>
           </div>
-        </div>
         ) : (
           <>
-        <div className="search-filters">
-          <div className="icon-field">
-            <FaSearch className="input-icon" />
-            <input
-              type="text"
-              placeholder="Search internships..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-        </div>
+            <div className="search-filters">
+              <div className="icon-field">
+                <FaSearch className="input-icon" />
+                <input
+                  type="text"
+                  placeholder="Search internships..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
 
-          <div className="icon-field">
-            <FaGraduationCap className="input-icon" />
-            <select value={selectedMajor || ''} onChange={(e) => setSelectedMajor(e.target.value || null)}>
-              <option value="">All Majors</option>
-              {majors.map(major => (
-                <option key={major} value={major}>{major}</option>
-              ))}
-            </select>
-                </div>
+              <div className="icon-field">
+                <FaGraduationCap className="input-icon" />
+                <select value={selectedMajor || ''} onChange={(e) => setSelectedMajor(e.target.value || null)}>
+                  <option value="">All Majors</option>
+                  {majors.map(major => (
+                    <option key={major} value={major}>{major}</option>
+                  ))}
+                </select>
+              </div>
 
-          <div className="icon-field">
-            <FaCalendarAlt className="input-icon" />
-            <select value={selectedSemester || ''} onChange={(e) => setSelectedSemester(e.target.value || null)}>
-              <option value="">All Semesters</option>
-              {semesters.map(semester => (
-                <option key={semester} value={semester}>{semester}</option>
-            ))}
-            </select>
-          </div>
+              <div className="icon-field">
+                <FaCalendarAlt className="input-icon" />
+                <select value={selectedSemester || ''} onChange={(e) => setSelectedSemester(e.target.value || null)}>
+                  <option value="">All Semesters</option>
+                  {semesters.map(semester => (
+                    <option key={semester} value={semester}>{semester}</option>
+                  ))}
+                </select>
+              </div>
 
-          <div className="icon-field">
-            <FaFilter className="input-icon" />
-            <select 
-              value={activeTab} 
-              onChange={(e) => setActiveTab(e.target.value)}
-            >
-              <option value="all">All Internships</option>
-              <option value="my">My Internships</option>
-              <option value="suggested">Suggested Internships</option>
-            </select>
-                  </div>
+              <div className="icon-field">
+                <FaFilter className="input-icon" />
+                <select
+                  value={activeTab}
+                  onChange={(e) => setActiveTab(e.target.value)}
+                >
+                  <option value="all">All Internships</option>
+                  <option value="my">My Internships</option>
+                  <option value="suggested">Suggested Internships</option>
+                </select>
+              </div>
 
-          <div className="icon-field">
-            <FaSortAmountDown className="input-icon" />
-            <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-              <option value="newest">Newest First</option>
-              <option value="oldest">Oldest First</option>
-            </select>
-                  </div>
-                      </div>
+              <div className="icon-field">
+                <FaSortAmountDown className="input-icon" />
+                <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+                  <option value="newest">Newest First</option>
+                  <option value="oldest">Oldest First</option>
+                </select>
+              </div>
+            </div>
 
             <div className="internship-table-container animated fadeInUp">
               <table className="internship-table">
@@ -923,25 +909,25 @@ const ProStudentInternships = () => {
                   <tr>
                     <th>Company</th>
                     <th>Job Title</th>
-                    <th>Major</th>
-                    <th>Semester</th>
+                    <th>Industry</th>
+                    <th>Compensation</th>
                     <th>Duration</th>
                     <th>Posted Date</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filterAndSort(activeTab === 'suggested' ? suggestedInternships : internships).map((internship) => (
-                    <tr 
-                      key={internship.id} 
-                      className="pop-in delay-0"
+                  {filterAndSort(activeTab === 'suggested' ? suggestedInternships : internships).map((internship, index) => (
+                    <tr
+                      key={internship.id}
                       onClick={() => handleInternshipSelect(internship)}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: 'pointer', '--item-index': `${index * 0.08}s` }}
+                      className="pop-in delay-0"
                     >
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <img 
-                            src={internship.logo} 
-                            alt={internship.company} 
+                          <img
+                            src={internship.logo}
+                            alt={internship.company}
                             style={{ width: '30px', height: '30px', borderRadius: '50%' }}
                             onError={(e) => {
                               e.target.onerror = null;
@@ -949,18 +935,18 @@ const ProStudentInternships = () => {
                             }}
                           />
                           {internship.company}
-                      </div>
+                        </div>
                       </td>
                       <td>{internship.title}</td>
-                      <td>{internship.major}</td>
-                      <td>{internship.semester}</td>
+                      <td>{internship.industry}</td>
+                      <td>{internship.compensation}</td>
                       <td>{internship.duration}</td>
                       <td>{internship.date}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-                    </div>
+            </div>
           </>
         )}
 
@@ -977,6 +963,20 @@ const ProStudentInternships = () => {
           internship={selectedCompletedInternship}
           onSubmit={handleReportSubmit}
         />
+        <div className="floating-notif"  onClick={() => navigate('/pro-student/notifications')}
+>  
+  <FaBell className="wiggle-bell" />
+  <div className="notification-badge">3</div>
+</div>
+
+  <div className="pro-student-layout">
+    <ProStudentSidebar />
+    <div className="pro-student-content">
+      {/* ... your page content here ... */}
+    </div>
+  </div>
+);
+
       </div>
     </div>
   );

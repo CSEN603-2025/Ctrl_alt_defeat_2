@@ -1,0 +1,266 @@
+/* Existing styles */
+.pro-student-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.scad-sidebar {
+  width: 250px;
+  background-color: #0a3d62;
+  color: white;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.scad-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.scad-logo-img {
+  width: 40px;
+  height: 40px;
+}
+
+.scad-logo-text {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.scad-sidebar ul {
+  list-style: none;
+  padding: 0;
+  flex-grow: 1;
+}
+
+.scad-sidebar li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 25px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background-color 0.3s;
+}
+
+.scad-sidebar li:hover,
+.scad-sidebar li.active {
+  background-color: #3c6382;
+}
+
+.scad-sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.scad-sidebar-footer-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.scad-sidebar-footer-info {
+  font-size: 14px;
+}
+
+.scad-sidebar-footer-name {
+  font-weight: bold;
+}
+
+.scad-sidebar-footer-role {
+  color: #b0d7f7;
+}
+
+.scad-sidebar-logout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.scad-logout-icon {
+  font-size: 16px;
+}
+
+.pro-student-content {
+  flex: 1;
+  padding: 2rem;
+  background-color: #f4f7f9;
+}
+
+.hero-banner {
+  background: linear-gradient(to right, #0a3d62, #3c6382);
+  color: white;
+  padding: 20px 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.banner-content h2 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.subtext {
+  font-size: 13px;
+  opacity: 0.9;
+  margin-top: 4px;
+}
+
+.floating-notif {
+  background: #ffffff;
+  color: #0a3d62;
+  padding: 10px;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.wiggle-bell {
+  font-size: 20px;
+}
+
+.wiggle-bell.animating {
+  animation: wiggle 0.5s ease-in-out;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(10deg); }
+  50% { transform: rotate(-10deg); }
+  75% { transform: rotate(6deg); }
+}
+
+.notification-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #e55039;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 50%;
+}
+
+.button-container {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between; /* Align back button left, request button right */
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #0a3d62;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.appointments-section {
+  margin-top: 20px;
+}
+
+.category-header {
+  font-size: 24px;
+  color: #0a3d62;
+  margin-bottom: 10px;
+}
+
+.appointments-table-container {
+  overflow-x: auto;
+}
+
+.appointments-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.appointments-table th,
+.appointments-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.appointments-table th {
+  background-color: #f4f7f9;
+  color: #0a3d62;
+  font-weight: bold;
+}
+
+.appointments-table tr:hover {
+  background-color: #e2ecf6;
+}
+
+.action-button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-button.accept {
+  background: #38ada9;
+  color: white;
+  border: none;
+}
+
+.action-button.accept:hover {
+  background: #2e8b86;
+}
+
+.action-button.reject {
+  background: #e55039;
+  color: white;
+  border: none;
+}
+
+.action-button.reject:hover {
+  background: #c63924;
+}
+
+/* Updated styles for Request Appointment button */
+.status-btn-outline {
+  padding: 6px 12px; /* Match Accept button */
+  border-radius: 6px; /* Match Accept button */
+  background-color: #38ada9; /* Match Accept button */
+  color: white; /* Match Accept button */
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease; /* Match Accept button */
+  width: auto; /* Content-driven, like Accept */
+  text-align: center;
+  border: none; /* Match Accept button */
+}
+
+.status-btn-outline:hover {
+  background-color: #2e8b86; /* Match Accept button hover */
+}
+
+.status-btn-outline.accepted.active {
+  background-color: #2e8b86; /* Darker green for active state */
+  color: white;
+}
+
+.status-btn-outline.accepted.active:hover {
+  background-color: #267773; /* Slightly darker for active hover */
+}
