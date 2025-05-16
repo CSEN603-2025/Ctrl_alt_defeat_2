@@ -57,6 +57,9 @@
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   position: relative;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
 }
 
 .notification-card:hover {
@@ -247,4 +250,32 @@
 
 .notification-card.read:hover {
   opacity: 1;
+}
+
+/* Add specific styling for incoming call notification */
+.notification-card.incoming-call {
+  background-color: #ffffff;
+  border-left: 4px solid #0a3d62;
+}
+
+.notification-card.incoming-call:hover {
+  background-color: #f8f9fa;
+}
+
+.notification-card.incoming-call .notification-type {
+  background-color: #e3f2fd;
+  color: #0a3d62;
+}
+
+.notification-card.incoming-call h3 {
+  color: #0a3d62;
+}
+
+.notification-card.incoming-call .notification-time {
+  color: #666;
+}
+
+.notification-card .notification-details {
+  flex: 1;
+  margin-top: 0.5rem;
 }

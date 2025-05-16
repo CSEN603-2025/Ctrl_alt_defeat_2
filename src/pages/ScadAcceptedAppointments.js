@@ -146,6 +146,9 @@ const ScadAcceptedAppointments = () => {
         <li onClick={() => navigate('/scad/appointments')}>
           <FaCalendarCheck /> Career/Report Appointment
         </li>
+        <li onClick={() => navigate('/scad/notifications')}>
+          <FaBell /> Notifications
+        </li>
       </ul>
       <div className="scad-sidebar-footer">
         <img src="/images/Scad Logo.jpg" alt="SCAD Logo" className="scad-sidebar-footer-img" />

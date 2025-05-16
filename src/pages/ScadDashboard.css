@@ -306,6 +306,26 @@ body {
   font-size: 20px;
 }
 
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #e74c3c;
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  min-width: 1.5rem;
+  text-align: center;
+  animation: badgePulse 2s infinite;
+}
+
+@keyframes badgePulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
 @keyframes scadWiggle {
   0%, 100% { transform: rotate(0); }
   25% { transform: rotate(-10deg); }
@@ -966,6 +986,16 @@ body {
   color: #333;
 }
 
+.info-item a {
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.info-item a:hover {
+  color: #0a3d62;
+}
+
 .details-footer {
   margin-top: 30px;
   display: flex;
@@ -1359,43 +1389,58 @@ body {
   }
 }
 
-.scad-status-message {
+.feedback-message {
+  background: linear-gradient(to right, #0a3d62, #3c6382);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  margin: 0 0 20px 0;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s;
   position: fixed;
-  top: 20px;
+  top: 24px;
   left: 50%;
   transform: translateX(-50%);
-  background: #38ada9;
-  padding: 16px 24px;
-  color: white;
-  border-radius: 8px;
-  font-weight: bold;
-  box-shadow: 0 4px 20px rgba(10, 61, 98, 0.3), 0 8px 30px rgba(10, 61, 98, 0.2);
   z-index: 1000;
+  box-shadow: 0 4px 20px rgba(10, 61, 98, 0.3), 0 8px 30px rgba(10, 61, 98, 0.2);
   min-width: 320px;
   text-align: center;
   letter-spacing: 0.3px;
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s;
+}
+
+.feedback-message.success {
+  background: linear-gradient(to right, #0a3d62, #3c6382);
+  color: white;
+}
+
+.feedback-message.error {
+  background: linear-gradient(to right, #0a3d62, #3c6382);
+  color: white;
 }
 
 @keyframes slideIn {
-  0% {
+  from {
+    transform: translate(-50%, -100%);
     opacity: 0;
-    transform: translate(-50%, -20px);
   }
-  100% {
-    opacity: 1;
+  to {
     transform: translate(-50%, 0);
+    opacity: 1;
   }
 }
 
 @keyframes fadeOut {
-  0% {
+  from {
     opacity: 1;
+    transform: translate(-50%, 0);
   }
-  100% {
+  to {
     opacity: 0;
+    transform: translate(-50%, -20px);
   }
 }
 
@@ -1485,15 +1530,13 @@ body {
   width: 100%;
   min-height: 120px;
   padding: 12px;
-  border: 1.5px solid #e0e0e0;
+  border: 1px solid #ccc;
   border-radius: 8px;
-  font-family: 'Inter', sans-serif;
   font-size: 14px;
   line-height: 1.5;
   resize: vertical;
-  transition: border-color 0.3s ease;
-  background-color: #fff;
-  color: #333;
+  margin-bottom: 15px;
+  font-family: inherit;
 }
 
 .evaluation-textarea:focus {
@@ -1502,94 +1545,145 @@ body {
   box-shadow: 0 0 0 2px rgba(10, 61, 98, 0.1);
 }
 
-.evaluation-textarea::placeholder {
-  color: #999;
-}
-
-.clarification-message {
-  background: linear-gradient(135deg, #38ada9, #0a3d62);
-  color: white;
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin: 12px 0;
-  font-size: 14px;
-  font-weight: 500;
+.evaluation-view {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  animation: slideIn 0.3s ease-out;
+  margin-bottom: 20px;
 }
 
-.clarification-message.success {
-  background: linear-gradient(135deg, #38ada9, #0a3d62);
-}
-
-.clarification-message.error {
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Additional styles from ScadInternshipDetails.css */
-.back-button {
-  display: inline-flex;
+.view-header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background-color: #0a3d62;
+  margin-bottom: 20px;
+}
+
+.view-header h3 {
+  color: #0a3d62;
+  margin: 0;
+  font-size: 1.4em;
+}
+
+.view-content {
+  color: #333;
+}
+
+.view-section {
+  margin-bottom: 20px;
+}
+
+.view-section h4 {
+  color: #3c6382;
+  margin: 0 0 8px 0;
+  font-size: 1.1em;
+}
+
+.view-section p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.edit-button {
+  background: #0a3d62;
   color: white;
   border: none;
+  padding: 8px 16px;
   border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
 }
 
-.back-button:hover {
-  background-color: #e55039;
+.edit-button:hover {
+  background: #1e3799;
+  transform: translateY(-1px);
+}
+
+/* Star rating styles */
+.star-rating {
+  color: #f6b93b;
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
+/* Evaluation list styles */
+.evaluation-list {
+  margin-top: 20px;
+}
+
+.evaluation-item {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.evaluation-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.back-button i {
-  font-size: 1rem;
-  transition: transform 0.3s;
+.evaluation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
-.back-button:hover i {
-  transform: translateX(-3px);
-}
-
-@keyframes fadeSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.details-card a {
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.details-card a:hover {
+.evaluation-title {
+  font-size: 1.1em;
   color: #0a3d62;
-  text-decoration: underline;
+  margin: 0;
+}
+
+.evaluation-date {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.evaluation-content {
+  color: #333;
+  font-size: 0.95em;
+  line-height: 1.5;
+}
+
+.evaluation-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.evaluation-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .evaluation-view {
+    padding: 16px;
+  }
+
+  .view-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .evaluation-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
 }
 
 /* Statistics Section Styles */

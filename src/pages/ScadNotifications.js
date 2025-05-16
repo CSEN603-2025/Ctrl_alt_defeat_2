@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaArrowLeft, FaHome, FaBuilding, FaUserGraduate, FaBriefcase, FaFileAlt, FaChartBar, FaCalendarCheck } from 'react-icons/fa';
+import { FaArrowLeft, FaHome, FaBuilding, FaUserGraduate, FaBriefcase, FaFileAlt, FaChartBar, FaCalendarCheck, FaBell, FaClipboardList } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
 import notificationsData from './notificationsData';
 import './ProStudentNotifications.css';
@@ -69,17 +69,23 @@ const ScadNotifications = () => {
           <FaBriefcase /> Internship Postings
         </li>
         <li onClick={() => navigate('/Scad-Dashboard', { state: { activeSection: 'reports' }})}>
-          <FaFileAlt /> Reports
+          <FaFileAlt /> Internship Reports
         </li>
         <li onClick={() => navigate('/Scad-Dashboard', { state: { activeSection: 'statistics' }})}>
           <FaChartBar /> Statistics
         </li>
+        <li onClick={() => navigate('/Scad-Dashboard', { state: { activeSection: 'evaluations' }})}>
+          <FaClipboardList /> Evaluations
+        </li>
         <li onClick={() => navigate('/scad/appointments')}>
           <FaCalendarCheck /> Career/Report Appointment
         </li>
+        <li onClick={() => navigate('/scad/notifications')}>
+          <FaBell /> Notifications
+        </li>
       </ul>
       <div className="scad-sidebar-footer">
-        <img src="/images/Scad Logo.jpg" alt="SCAD Logo" className="scad-sidebar-footer-img" />
+        <img src="/images/Scad Logo.png" alt="SCAD Logo" className="scad-sidebar-footer-img" />
         <div className="scad-sidebar-footer-info">
           <p className="scad-sidebar-footer-name">Amr Adel</p>
           <p className="scad-sidebar-footer-role">SCAD Office Admin</p>

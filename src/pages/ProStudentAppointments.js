@@ -177,12 +177,23 @@ const ProStudentAppointments = () => {
 
   // Handle accept SCAD appointment
   const handleAccept = (appointmentId) => {
+    const appointment = scadAppointments.find(appt => appt.id === appointmentId);
     setScadAppointments((prev) =>
       prev.map((appt) =>
         appt.id === appointmentId ? { ...appt, status: 'accepted' } : appt
       )
     );
-    socketRef.current.emit('acceptAppointment', { appointmentId, studentId: mockUser.id });
+    socketRef.current.emit('acceptAppointment', { 
+      appointmentId, 
+      studentId: mockUser.id,
+      appointmentDetails: {
+        date: appointment.date,
+        time: appointment.time,
+        purpose: appointment.purpose,
+        type: appointment.type,
+        mentorName: appointment.mentorName
+      }
+    });
     showNotification('Appointment accepted!');
     setNotifications((prev) => [
       ...prev,

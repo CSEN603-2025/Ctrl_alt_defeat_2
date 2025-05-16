@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   FaArrowLeft, FaLinkedin, FaTwitter, FaGlobe, FaHome, FaBuilding, 
-  FaUserGraduate, FaBriefcase, FaFileAlt, FaChartBar, FaBell 
+  FaUserGraduate, FaBriefcase, FaFileAlt, FaChartBar, FaBell, FaCalendarCheck,
+  FaClipboardList
 } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
 import './ScadDashboard.css';
@@ -12,6 +13,7 @@ function ScadInternshipDetails() {
   const location = useLocation();
   const internship = location.state?.internship;
   const [activeSection, setActiveSection] = useState('internship-postings');
+  const [unreadNotifications, setUnreadNotifications] = useState(3);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -58,7 +60,7 @@ function ScadInternshipDetails() {
               className={activeSection === 'reports' ? 'active' : ''}
               onClick={() => navigate('/scad-dashboard', { state: { activeSection: 'reports' } })}
             >
-              <FaFileAlt /> Reports
+              <FaFileAlt /> Internship Reports
             </li>
             <li 
               className={activeSection === 'statistics' ? 'active' : ''}
@@ -66,10 +68,28 @@ function ScadInternshipDetails() {
             >
               <FaChartBar /> Statistics
             </li>
+            <li 
+              className={activeSection === 'evaluations' ? 'active' : ''}
+              onClick={() => navigate('/scad-dashboard', { state: { activeSection: 'evaluations' } })}
+            >
+              <FaClipboardList /> Evaluations
+            </li>
+            <li 
+              className={activeSection === 'appointments' ? 'active' : ''}
+              onClick={() => navigate('/scad-dashboard', { state: { activeSection: 'appointments' } })}
+            >
+              <FaCalendarCheck /> Career/Report Appointment
+            </li>
+            <li 
+              className={activeSection === 'notifications' ? 'active' : ''}
+              onClick={() => navigate('/scad/notifications')}
+            >
+              <FaBell /> Notifications
+            </li>
           </ul>
 
           <div className="scad-sidebar-footer">
-            <img src="/images/Scad Logo.png" alt="SCAD Logo" className="scad-sidebar-footer-img" />
+            <img src="/images/Scad Logo.jpg" alt="SCAD Logo" className="scad-sidebar-footer-img" />
             <div className="scad-sidebar-footer-info">
               <p className="scad-sidebar-footer-name">Amr Adel</p>
               <p className="scad-sidebar-footer-role">SCAD Office Admin</p>
@@ -159,7 +179,7 @@ function ScadInternshipDetails() {
             className={activeSection === 'reports' ? 'active' : ''}
             onClick={() => navigate('/scad-dashboard', { state: { activeSection: 'reports' } })}
           >
-            <FaFileAlt /> Reports
+            <FaFileAlt /> Internship Reports
           </li>
           <li 
             className={activeSection === 'statistics' ? 'active' : ''}
@@ -167,10 +187,28 @@ function ScadInternshipDetails() {
           >
             <FaChartBar /> Statistics
           </li>
+          <li 
+            className={activeSection === 'evaluations' ? 'active' : ''}
+            onClick={() => navigate('/scad-dashboard', { state: { activeSection: 'evaluations' } })}
+          >
+            <FaClipboardList /> Evaluations
+          </li>
+          <li 
+            className={activeSection === 'appointments' ? 'active' : ''}
+            onClick={() => navigate('/scad-dashboard', { state: { activeSection: 'appointments' } })}
+          >
+            <FaCalendarCheck /> Career/Report Appointment
+          </li>
+          <li 
+            className={activeSection === 'notifications' ? 'active' : ''}
+            onClick={() => navigate('/scad/notifications')}
+          >
+            <FaBell /> Notifications
+          </li>
         </ul>
 
         <div className="scad-sidebar-footer">
-          <img src="/images/Scad Logo.png" alt="SCAD Logo" className="scad-sidebar-footer-img" />
+          <img src="/images/Scad Logo.jpg" alt="SCAD Logo" className="scad-sidebar-footer-img" />
           <div className="scad-sidebar-footer-info">
             <p className="scad-sidebar-footer-name">Amr Adel</p>
             <p className="scad-sidebar-footer-role">SCAD Office Admin</p>
@@ -191,8 +229,11 @@ function ScadInternshipDetails() {
           </div>
         </div>
 
-        <div className="scad-floating-notif">
+        <div className="scad-floating-notif" onClick={() => navigate('/scad/notifications')}>
           <FaBell className="scad-wiggle-bell" />
+          {unreadNotifications > 0 && (
+            <span className="notification-badge">{unreadNotifications}</span>
+          )}
         </div>
 
         <section className="scad-hero-banner scad-animated scad-fadeSlideUp">
@@ -248,24 +289,22 @@ function ScadInternshipDetails() {
                   </div>
 
                   <div className="details-section">
-                    <h4>Description</h4>
-                    <p>{internship.description}</p>
-                  </div>
-
-                  <div className="details-section">
                     <h4>Required Skills</h4>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
+                    <div className="skills-grid">
                       {internship.skills.map((skill, index) => (
-                        <span key={index} style={{ backgroundColor: '#e8f4f8', color: '#0a3d62', padding: '5px 12px', borderRadius: '15px', fontSize: '0.9rem' }}>
-                          {skill}
-                        </span>
+                        <span key={index} className="skill-tag">{skill}</span>
                       ))}
                     </div>
                   </div>
 
                   <div className="details-section">
-                    <h4>Company Social Links</h4>
-                    <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
+                    <h4>Description</h4>
+                    <p>{internship.description}</p>
+                  </div>
+
+                  <div className="details-section">
+                    <h4>Social Media</h4>
+                    <div className="social-links">
                       {internship.social.linkedin && (
                         <a href={internship.social.linkedin} target="_blank" rel="noopener noreferrer" className="social-link">
                           <FaLinkedin /> LinkedIn

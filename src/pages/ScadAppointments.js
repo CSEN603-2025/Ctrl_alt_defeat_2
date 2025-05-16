@@ -1,11 +1,106 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaHome, FaBuilding, FaUserGraduate, FaBriefcase, FaFileAlt, FaChartBar, FaCalendarCheck, FaBell, FaArrowLeft, FaVideo, FaVideoSlash, FaMicrophone, FaMicrophoneSlash, FaShareSquare, FaPhoneSlash } from 'react-icons/fa';
+import { FaHome, FaBuilding, FaUserGraduate, FaBriefcase, FaFileAlt, FaChartBar, FaCalendarCheck, FaBell, FaArrowLeft, FaVideo, FaVideoSlash, FaMicrophone, FaMicrophoneSlash, FaShareSquare, FaPhoneSlash, FaClipboardList } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
 import io from 'socket.io-client';
 import Peer from 'simple-peer';
 import './ScadAppointments.css';
 import './ScadDashboard.css'; // For sidebar styling
+
+// Add this new component before the main ScadAppointments component
+const AppointmentForm = ({ onSubmit, onClose, initialData = { purpose: '', type: 'career', date: '', time: '' } }) => {
+  const [formData, setFormData] = useState(initialData);
+  const [errors, setErrors] = useState({});
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newErrors = {};
+    if (!formData.purpose) newErrors.purpose = 'Purpose is required';
+    if (!formData.type) newErrors.type = 'Type is required';
+    if (!formData.date) newErrors.date = 'Date is required';
+    if (!formData.time) newErrors.time = 'Time is required';
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      onSubmit(formData);
+    }
+  };
+
+  return (
+    <div className="appointment-modal" onClick={onClose}>
+      <div className="appointment-form" onClick={e => e.stopPropagation()}>
+        <h3>Request Appointment</h3>
+        <form onSubmit={handleSubmit} noValidate>
+          <div className="form-group">
+            <label htmlFor="purpose">Purpose</label>
+            <input
+              type="text"
+              id="purpose"
+              name="purpose"
+              value={formData.purpose}
+              onChange={handleInputChange}
+              className={errors.purpose ? 'input-error' : ''}
+              autoComplete="off"
+            />
+            {errors.purpose && <span className="error-message">{errors.purpose}</span>}
+          </div>
+          <div className="form-group">
+            <label htmlFor="type">Type</label>
+            <select
+              id="type"
+              name="type"
+              value={formData.type}
+              onChange={handleInputChange}
+              className={errors.type ? 'input-error' : ''}
+            >
+              <option value="career">Career</option>
+              <option value="report">Report</option>
+            </select>
+            {errors.type && <span className="error-message">{errors.type}</span>}
+          </div>
+          <div className="form-group">
+            <label htmlFor="date">Date</label>
+            <input
+              type="date"
+              id="date"
+              name="date"
+              value={formData.date}
+              onChange={handleInputChange}
+              className={errors.date ? 'input-error' : ''}
+            />
+            {errors.date && <span className="error-message">{errors.date}</span>}
+          </div>
+          <div className="form-group">
+            <label htmlFor="time">Time</label>
+            <input
+              type="time"
+              id="time"
+              name="time"
+              value={formData.time}
+              onChange={handleInputChange}
+              className={errors.time ? 'input-error' : ''}
+            />
+            {errors.time && <span className="error-message">{errors.time}</span>}
+          </div>
+          <div className="form-actions">
+            <button type="button" onClick={onClose}>
+              Cancel
+            </button>
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
 
 function ScadAppointments({ isEmbedded = false }) {
   const [activeSection, setActiveSection] = useState('appointments');
@@ -150,44 +245,39 @@ function ScadAppointments({ isEmbedded = false }) {
   }, [peer, incomingCall]);
 
   // Handle form submission
-  const handleSubmitAppointment = (e) => {
-    e.preventDefault();
-    const newErrors = {};
-    if (!formData.purpose) newErrors.purpose = 'Purpose is required';
-    if (!formData.type) newErrors.type = 'Type is required';
-    if (!formData.date) newErrors.date = 'Date is required';
-    if (!formData.time) newErrors.time = 'Time is required';
-    setErrors(newErrors);
+  const handleFormSubmit = (formData) => {
+    const newAppointment = {
+      id: appointments.length + 1,
+      studentId: mockUser.id,
+      mentorId: 'mentor1',
+      mentorName: 'Dr. Jane Doe',
+      purpose: formData.purpose,
+      type: formData.type,
+      date: formData.date,
+      time: formData.time,
+      status: 'pending',
+    };
+    setAppointments([...appointments, newAppointment]);
+    socketRef.current.emit('requestAppointment', newAppointment);
+    setShowForm(false);
+    setIsRequestActive(false);
+    showNotification('Appointment requested successfully!');
+    setNotifications((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        message: 'Appointment request submitted successfully',
+        isRead: false,
+        type: 'success',
+        timestamp: new Date().toISOString(),
+      },
+    ]);
+  };
 
-    if (Object.keys(newErrors).length === 0) {
-      const newAppointment = {
-        id: appointments.length + 1,
-        studentId: mockUser.id,
-        mentorId: 'mentor1',
-        mentorName: 'Dr. Jane Doe',
-        purpose: formData.purpose,
-        type: formData.type,
-        date: formData.date,
-        time: formData.time,
-        status: 'pending',
-      };
-      setAppointments([...appointments, newAppointment]);
-      socketRef.current.emit('requestAppointment', newAppointment);
-      setFormData({ purpose: '', type: 'career', date: '', time: '' });
-      setShowForm(false);
-      setIsRequestActive(false);
-      showNotification('Appointment requested successfully!');
-      setNotifications((prev) => [
-        ...prev,
-        {
-          id: Date.now(),
-          message: 'Appointment request submitted successfully',
-          isRead: false,
-          type: 'success',
-          timestamp: new Date().toISOString(),
-        },
-      ]);
-    }
+  // Handle form close
+  const handleFormClose = () => {
+    setShowForm(false);
+    setIsRequestActive(false);
   };
 
   // Handle accept SCAD appointment
@@ -451,7 +541,7 @@ function ScadAppointments({ isEmbedded = false }) {
     navigate('/');
   };
 
-  // Handle request appointment
+  // Handle request appointment button click
   const handleRequestAppointment = () => {
     setIsRequestActive(true);
     setShowForm(true);
@@ -500,7 +590,7 @@ function ScadAppointments({ isEmbedded = false }) {
           className={activeSection === 'reports' ? 'active' : ''}
           onClick={() => navigate('/Scad-Dashboard', { state: { activeSection: 'reports' }})}
         >
-          <FaFileAlt /> Reports
+          <FaFileAlt /> Internship Reports
         </li>
         <li
           className={activeSection === 'statistics' ? 'active' : ''}
@@ -509,10 +599,22 @@ function ScadAppointments({ isEmbedded = false }) {
           <FaChartBar /> Statistics
         </li>
         <li
+          className={activeSection === 'evaluations' ? 'active' : ''}
+          onClick={() => navigate('/Scad-Dashboard', { state: { activeSection: 'evaluations' }})}
+        >
+          <FaClipboardList /> Evaluations
+        </li>
+        <li
           className={activeSection === 'appointments' ? 'active' : ''}
-          onClick={() => navigate('/scad/appointments')}
+          onClick={() => navigate('/scad-dashboard', { state: { activeSection: 'appointments' } })}
         >
           <FaCalendarCheck /> Career/Report Appointment
+        </li>
+        <li
+          className={activeSection === 'notifications' ? 'active' : ''}
+          onClick={() => navigate('/scad/notifications')}
+        >
+          <FaBell /> Notifications
         </li>
       </ul>
       <div className="scad-sidebar-footer">
@@ -657,65 +759,10 @@ function ScadAppointments({ isEmbedded = false }) {
       </div>
 
       {showForm && (
-        <div className="appointment-modal">
-          <div className="appointment-form">
-            <h3>Request Appointment</h3>
-            <form onSubmit={handleSubmitAppointment}>
-              <div className="form-group">
-                <label htmlFor="purpose">Purpose</label>
-                <input
-                  type="text"
-                  id="purpose"
-                  value={formData.purpose}
-                  onChange={(e) => setFormData({ ...formData, purpose: e.target.value })}
-                  className={errors.purpose ? 'input-error' : ''}
-                />
-                {errors.purpose && <span className="error-message">{errors.purpose}</span>}
-              </div>
-              <div className="form-group">
-                <label htmlFor="type">Type</label>
-                <select
-                  id="type"
-                  value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  className={errors.type ? 'input-error' : ''}
-                >
-                  <option value="career">Career</option>
-                  <option value="report">Report</option>
-                </select>
-                {errors.type && <span className="error-message">{errors.type}</span>}
-              </div>
-              <div className="form-group">
-                <label htmlFor="date">Date</label>
-                <input
-                  type="date"
-                  id="date"
-                  value={formData.date}
-                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                  className={errors.date ? 'input-error' : ''}
-                />
-                {errors.date && <span className="error-message">{errors.date}</span>}
-              </div>
-              <div className="form-group">
-                <label htmlFor="time">Time</label>
-                <input
-                  type="time"
-                  id="time"
-                  value={formData.time}
-                  onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                  className={errors.time ? 'input-error' : ''}
-                />
-                {errors.time && <span className="error-message">{errors.time}</span>}
-              </div>
-              <div className="form-actions">
-                <button type="button" onClick={() => { setShowForm(false); setIsRequestActive(false); }}>
-                  Cancel
-                </button>
-                <button type="submit">Submit</button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <AppointmentForm
+          onSubmit={handleFormSubmit}
+          onClose={handleFormClose}
+        />
       )}
 
       {incomingCall && (

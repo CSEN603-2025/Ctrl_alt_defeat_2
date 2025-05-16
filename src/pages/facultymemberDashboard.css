@@ -896,7 +896,7 @@ body {
   transition: all 0.3s ease;
 }
 
-.fade-out-message {
+.feedback-message {
   background: linear-gradient(to right, #0a3d62, #3c6382);
   color: white;
   padding: 16px 24px;
@@ -917,6 +917,16 @@ body {
   letter-spacing: 0.3px;
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.feedback-message.success {
+  background: linear-gradient(to right, #0a3d62, #3c6382);
+  color: white;
+}
+
+.feedback-message.error {
+  background: linear-gradient(to right, #0a3d62, #3c6382);
+  color: white;
 }
 
 @keyframes fadeOutSmooth {

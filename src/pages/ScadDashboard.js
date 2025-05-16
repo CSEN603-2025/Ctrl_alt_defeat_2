@@ -46,6 +46,7 @@ function ScadDashboard() {
   const [filterDuration, setFilterDuration] = useState('');
   const [filterCompensation, setFilterCompensation] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+  const [filterMajor, setFilterMajor] = useState('');
   const [sortOrder, setSortOrder] = useState('newest');
   const [selectedInternship, setSelectedInternship] = useState(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -59,9 +60,11 @@ function ScadDashboard() {
   const [isClarificationVisible, setIsClarificationVisible] = useState(false);
   const [clarificationError, setClarificationError] = useState('');
   const [clarificationMessage, setClarificationMessage] = useState('');
+  const [unreadNotifications, setUnreadNotifications] = useState(3); // Add this line
   const clarificationRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const [downloadMessage, setDownloadMessage] = useState('');
 
   const [companies, setCompanies] = useState([
     {
@@ -80,7 +83,7 @@ function ScadDashboard() {
     {
       id: 2,
       name: 'Tech Solutions',
-      logo: '/images/Tech Solutions.jpg',
+      logo: '/images/Tech Solutions.png',
       industry: 'Technology',
       location: 'Alexandria, Egypt',
       applicationDate: '2024-03-14',
@@ -93,7 +96,7 @@ function ScadDashboard() {
     {
       id: 3,
       name: 'Nile Bank',
-      logo: '/images/Nile Bank.jpg',
+      logo: '/images/Nile Bank.png',
       industry: 'Banking',
       location: 'Giza, Egypt',
       applicationDate: '2024-03-13',
@@ -156,6 +159,48 @@ function ScadDashboard() {
   const [reportFilterStatus, setReportFilterStatus] = useState('');
   const [reportSortOrder, setReportSortOrder] = useState('newest');
   const [reportStatusSearch, setReportStatusSearch] = useState('');
+
+  // Add evaluations state
+  const [evaluations, setEvaluations] = useState([
+    {
+      id: 1,
+      student: 'John Doe',
+      photo: '/images/man2.png',
+      company: 'InstaBug',
+      title: 'Frontend Developer Intern',
+      supervisor: 'Jane Smith',
+      startDate: '2025-01-01',
+      endDate: '2025-04-01',
+      date: '2025-04-02',
+      rating: 4,
+      strengths: ['JavaScript', 'Teamwork'],
+      weaknesses: ['Time Management'],
+      comments: 'Excellent technical skills but needs to improve punctuality.',
+      recommendation: 'Yes',
+      major: 'CS',
+      cycle: 'Cycle 1'
+    },
+    {
+      id: 2,
+      student: 'Sarah Smith',
+      photo: '/images/woman.png',
+      company: 'Breadfast',
+      title: 'Marketing Intern',
+      supervisor: 'Mark Johnson',
+      startDate: '2025-02-01',
+      endDate: '2025-04-01',
+      date: '2025-04-03',
+      rating: 3,
+      strengths: ['Creativity', 'Communication'],
+      weaknesses: ['Analytical Skills'],
+      comments: 'Creative ideas but needs to work on data analysis.',
+      recommendation: 'No',
+      major: 'Marketing',
+      cycle: 'Cycle 2'
+    }
+  ]);
+
+  const [selectedEvaluation, setSelectedEvaluation] = useState(null);
 
   useEffect(() => {
     if (location.state?.activeSection) {
@@ -239,8 +284,8 @@ function ScadDashboard() {
     link.click();
     document.body.removeChild(link);
     
-    setStatusMessage('✔️ Statistics report generated successfully.');
-    setTimeout(() => setStatusMessage(''), 3000);
+    setDownloadMessage('✔️ Statistics report generated successfully.');
+    setTimeout(() => setDownloadMessage(''), 3000);
   };
 
   // Define status colors for buttons
@@ -306,7 +351,12 @@ function ScadDashboard() {
   };
 
   const handleInternshipClick = (internship) => {
-    navigate('/internship-details', { state: { internship } });
+    navigate(`/scad/internships/${internship.id}`, { 
+      state: { 
+        internship,
+        activeSection: 'internship-postings'
+      } 
+    });
   };
 
   const handleStudentClick = (student) => {
@@ -357,9 +407,9 @@ function ScadDashboard() {
     setSubmittedClarification(clarification);
     setIsEditing(false);
     setClarificationError('');
-    setClarificationMessage(`✔️ Clarification for report ${reportId} submitted.`);
+    setStatusMessage(`✔️ Clarification for report ${reportId} submitted.`);
     setTimeout(() => {
-      setClarificationMessage('');
+      setStatusMessage('');
     }, 3000);
   };
 
@@ -423,8 +473,60 @@ function ScadDashboard() {
     link.click();
     document.body.removeChild(link);
     
-    setStatusMessage(`✔️ PDF for ${report.title} generated.`);
-    setTimeout(() => setStatusMessage(''), 3000);
+    setDownloadMessage(`✔️ PDF for ${report.title} generated.`);
+    setTimeout(() => setDownloadMessage(''), 3000);
+  };
+
+  const filterAndSortEvaluations = (list) => {
+    return list
+      .filter(e =>
+        (e.student.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          e.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          e.title.toLowerCase().includes(searchTerm.toLowerCase())) &&
+        (!filterMajor || e.major === filterMajor) &&
+        (!filterStatus || e.recommendation === filterStatus)
+      )
+      .sort((a, b) => sortOrder === 'newest'
+        ? new Date(b.date) - new Date(a.date)
+        : new Date(a.date) - new Date(b.date)
+      );
+  };
+
+  const downloadEvaluationPDF = (evaluation) => {
+    const content = `
+\\section{Evaluation Report}
+\\textbf{Student:} ${evaluation.student}\\\\
+\\textbf{Company:} ${evaluation.company}\\\\
+\\textbf{Title:} ${evaluation.title}\\\\
+\\textbf{Supervisor:} ${evaluation.supervisor}\\\\
+\\textbf{Start Date:} ${evaluation.startDate}\\\\
+\\textbf{End Date:} ${evaluation.endDate}\\\\
+\\textbf{Rating:} ${evaluation.rating}/5\\\\
+\\textbf{Strengths:} ${evaluation.strengths.join(', ')}\\\\
+\\textbf{Weaknesses:} ${evaluation.weaknesses.join(', ')}\\\\
+\\textbf{Comments:} ${evaluation.comments}\\\\
+\\textbf{Recommendation:} ${evaluation.recommendation}\\\\
+\\textbf{Major:} ${evaluation.major}\\\\
+\\textbf{Cycle:} ${evaluation.cycle}
+    `;
+    const latex = generatePDF(content, `Evaluation_${evaluation.id}`);
+    setDownloadMessage(`✔️ PDF for ${evaluation.student}'s evaluation Downloaded Successfully.`);
+    setTimeout(() => setDownloadMessage(''), 3000);
+    return latex;
+  };
+
+  const generatePDF = (content, filename) => {
+    // Create a temporary link element
+    const link = document.createElement('a');
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    link.href = url;
+    link.download = `${filename}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    return content;
   };
 
   const renderContent = () => {
@@ -850,15 +952,15 @@ function ScadDashboard() {
 
                   <div className="icon-field">
                     <FaFilter className="input-icon" style={{ color: '#0a3d62' }} />
-                <select
-                  value={filterIndustry}
-                  onChange={(e) => setFilterIndustry(e.target.value)}
-                >
+                    <select
+                      value={filterIndustry}
+                      onChange={(e) => setFilterIndustry(e.target.value)}
+                    >
                       <option value="">All Majors</option>
                       {[...new Set(allInternships.map(i => i.industry))].map(industry => (
                         <option key={industry} value={industry}>{industry}</option>
                       ))}
-                </select>
+                    </select>
                   </div>
 
                   <div className="icon-field">
@@ -1058,7 +1160,7 @@ function ScadDashboard() {
                     }}>
                       <h2 style={{ color: '#0a3d62', margin: '0 0 10px 0', fontSize: '1.4em' }}>{selectedReport.title}</h2>
                       <p style={{ margin: '0 0 8px 0', fontWeight: 'bold' }}>
-                        Student: <span style={{ color: '#111' }}>{selectedReport.student}</span>   |   Company: <span style={{ color: '#111' }}>{selectedReport.company}</span>
+                        Student: <span style={{ color: '#111' }}>{selectedReport.student}</span>   |   Company: <span style={{ color: '#111' }}>{selectedReport.company}</span>
                       </p>
                       <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', fontSize: '0.98em' }}>
                         <span style={{ marginRight: '18px' }}><b>Major:</b> <span style={{ color: '#111' }}>{selectedReport.major}</span></span>
@@ -1144,10 +1246,23 @@ function ScadDashboard() {
                       ref={clarificationRef}
                       className="details-box"
                       style={{
-                        animation: 'slideInRight 0.5s ease-out 0.3s'
+                        animation: 'slideInRight 0.5s ease-out 0.3s',
+                        position: 'relative'
                       }}
                     >
                       <h3 style={{ marginBottom: '15px', color: '#0a3d62' }}>Clarification</h3>
+                      {statusMessage && (
+                        <div className="feedback-message" style={{ 
+                          position: 'absolute', 
+                          top: '20px', 
+                          left: '50%', 
+                          transform: 'translateX(-50%)',
+                          margin: '0',
+                          zIndex: '1'
+                        }}>
+                          {statusMessage}
+                        </div>
+                      )}
                       {isEditing ? (
                         <form
                           onSubmit={(e) => {
@@ -1170,22 +1285,6 @@ function ScadDashboard() {
                           {clarificationError && (
                             <p style={{ color: 'red', fontSize: '12px', margin: '4px 0 8px' }}>
                               {clarificationError}
-                            </p>
-                          )}
-                          {clarificationMessage && (
-                            <p
-                              className={`clarification-message ${clarificationMessage.includes('✔️') ? 'success' : 'error'}`}
-                              style={{
-                                fontSize: '12px',
-                                margin: '8px 0',
-                                padding: '10px',
-                                borderRadius: '8px',
-                                fontWeight: 'bold',
-                                boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
-                                color: 'white'
-                              }}
-                            >
-                              {clarificationMessage}
                             </p>
                           )}
                           <button type="submit" className="status-btn" style={{ width: '100%', height: '38px', marginTop: '5px' }}>
@@ -1397,6 +1496,138 @@ function ScadDashboard() {
           </div>
         );
 
+      case 'evaluations':
+        return (
+          <div className="internship-section animated fadeInUp">
+            {selectedEvaluation ? (
+              <div className="internship-details-container fadeIn">
+                <button onClick={() => setSelectedEvaluation(null)} className="back-btn">← Back to Evaluations</button>
+                <div className="details-card-grid">
+                  <div className="details-box" style={{ animation: 'fadeInUpSubmitter 0.6s cubic-bezier(0.23, 1, 0.32, 1)', position: 'relative' }}>
+                    <div className="details-header">
+                      <img src={selectedEvaluation.photo} alt={selectedEvaluation.student} />
+                      <div>
+                        <h3 style={{ color: '#0a3d62', margin: '0 0 8px 0', fontSize: '1.5em', fontWeight: 'bold' }}>{selectedEvaluation.student}</h3>
+                        <p style={{ color: '#0a3d62', margin: '0 0 8px 0', fontSize: '1.2em', fontWeight: 'bold' }}>{selectedEvaluation.title}</p>
+                        <p style={{ color: '#0a3d62', margin: '0 0 8px 0', fontSize: '1.1em' }}>{selectedEvaluation.company}</p>
+                        <p style={{ color: '#000', margin: '0', fontSize: '1em' }}>
+                          <span style={{ marginRight: '15px' }}><b>Major:</b> {selectedEvaluation.major}</span>
+                          <span><b>Cycle:</b> {selectedEvaluation.cycle}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <span style={{ position: 'absolute', top: '18px', right: '24px', color: '#0a3d62', fontWeight: 500, fontSize: '1em', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <FaRegCalendarAlt style={{ fontSize: '1.1em', marginRight: '3px' }} />
+                      {selectedEvaluation.date}
+                    </span>
+                  </div>
+                  <div className="details-box" style={{ animation: 'slideInRight 0.5s ease-out 0.25s' }}>
+                    <h3 style={{ color: '#0a3d62', marginBottom: '15px' }}>Evaluation Preview</h3>
+                    <div style={{ minHeight: '80px', color: '#222', fontSize: '15px', marginBottom: '18px', fontFamily: 'Georgia, Times, "Times New Roman", serif', lineHeight: '1.7', background: '#fff', border: '1.5px solid #b0b0b0', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', padding: '28px 24px', position: 'relative' }}>
+                      <h2 style={{ color: '#0a3d62', margin: '0 0 10px 0', fontSize: '1.4em' }}>{selectedEvaluation.title} Evaluation</h2>
+                      <p style={{ margin: '0 0 8px 0', fontWeight: 'bold' }}>
+                        Student: <span style={{ color: '#111' }}>{selectedEvaluation.student}</span>   |   Company: <span style={{ color: '#111' }}>{selectedEvaluation.company}</span>
+                      </p>
+                      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', fontSize: '0.98em' }}>
+                        <span style={{ marginRight: '18px' }}><b>Major:</b> <span style={{ color: '#111' }}>{selectedEvaluation.major}</span></span>
+                        <span><b>Cycle:</b> <span style={{ color: '#111' }}>{selectedEvaluation.cycle}</span></span>
+                      </div>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Supervisor</h3>
+                      <p>{selectedEvaluation.supervisor}</p>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Period</h3>
+                      <p>{selectedEvaluation.startDate} - {selectedEvaluation.endDate}</p>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Rating</h3>
+                      <p>{'★'.repeat(selectedEvaluation.rating)}{'☆'.repeat(5 - selectedEvaluation.rating)} ({selectedEvaluation.rating}/5)</p>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Strengths</h3>
+                      <ul style={{ margin: '0 0 8px 18px' }}>
+                        {selectedEvaluation.strengths.map((strength, idx) => (
+                          <li key={idx}>{strength}</li>
+                        ))}
+                      </ul>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Weaknesses</h3>
+                      <ul style={{ margin: '0 0 8px 18px' }}>
+                        {selectedEvaluation.weaknesses.map((weakness, idx) => (
+                          <li key={idx}>{weakness}</li>
+                        ))}
+                      </ul>
+                      <h3 style={{ color: '#3c6382', margin: '18px 0 6px 0', fontSize: '1.1em' }}>Comments</h3>
+                      <p>{selectedEvaluation.comments}</p>
+                    </div>
+                    <button className="status-btn" style={{ width: '100%', height: '38px', marginTop: '5px' }} onClick={() => downloadEvaluationPDF(selectedEvaluation)}>
+                      <FaDownload /> Download Evaluation as PDF
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="filter-bar fade-in-delayed">
+                  <div className="icon-field">
+                    <FaSearch className="input-icon" style={{ color: '#0a3d62' }} />
+                    <input
+                      type="text"
+                      placeholder="Search by student, company, or title..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  <div className="icon-field">
+                    <FaFilter className="input-icon" style={{ color: '#0a3d62' }} />
+                    <select
+                      value={filterMajor}
+                      onChange={(e) => setFilterMajor(e.target.value)}
+                    >
+                      <option value="">All Majors</option>
+                      <option value="CS">Computer Science</option>
+                      <option value="Marketing">Marketing</option>
+                      <option value="Finance">Finance</option>
+                      <option value="Engineering">Engineering</option>
+                      <option value="Business">Business</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="internship-table-container animated fadeInUp">
+                  <table className="internship-table">
+                    <thead>
+                      <tr>
+                        <th>Student</th>
+                        <th>Title</th>
+                        <th>Company</th>
+                        <th>Submission Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filterAndSortEvaluations(evaluations).map((evaluation, idx) => (
+                        <tr key={idx} className="pop-in delay-0" onClick={() => setSelectedEvaluation(evaluation)} style={{ cursor: 'pointer' }}>
+                          <td>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                              <img
+                                src={evaluation.photo}
+                                alt={evaluation.student}
+                                style={{
+                                  width: '35px',
+                                  height: '35px',
+                                  borderRadius: '50%',
+                                  objectFit: 'cover',
+                                  border: '1px solid #ccc'
+                                }}
+                              />
+                              {evaluation.student}
+                            </div>
+                          </td>
+                          <td>{evaluation.title}</td>
+                          <td>{evaluation.company}</td>
+                          <td>{evaluation.date}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+          </div>
+        );
+
       case 'appointments':
         return <ScadAppointments />;
 
@@ -1407,9 +1638,9 @@ function ScadDashboard() {
 
   return (
     <div className="scad-dashboard-layout">
-      {statusMessage && (
-        <div className="scad-status-message">
-          {statusMessage}
+      {downloadMessage && (
+        <div className="feedback-message">
+          {downloadMessage}
         </div>
       )}
       <aside className="scad-sidebar">
@@ -1449,7 +1680,7 @@ function ScadDashboard() {
             className={activeSection === 'reports' ? 'active' : ''}
             onClick={() => setActiveSection('reports')}
           >
-            <FaFileAlt /> Reports
+            <FaFileAlt /> Internship Reports
           </li>
           <li 
             className={activeSection === 'statistics' ? 'active' : ''}
@@ -1458,10 +1689,22 @@ function ScadDashboard() {
             <FaChartBar /> Statistics
           </li>
           <li 
+            className={activeSection === 'evaluations' ? 'active' : ''}
+            onClick={() => setActiveSection('evaluations')}
+          >
+            <FaClipboardList /> Evaluations
+          </li>
+          <li 
             className={activeSection === 'appointments' ? 'active' : ''}
-            onClick={() => setActiveSection('appointments')} // Updated to set activeSection
+            onClick={() => setActiveSection('appointments')}
           >
             <FaCalendarCheck /> Career/Report Appointment
+          </li>
+          <li 
+            className={activeSection === 'notifications' ? 'active' : ''}
+            onClick={() => navigate('/scad/notifications')}
+          >
+            <FaBell /> Notifications
           </li>
         </ul>
 
@@ -1490,8 +1733,11 @@ function ScadDashboard() {
           </div>
         </div>
 
-        <div className="scad-floating-notif">
+        <div className="scad-floating-notif" onClick={() => navigate('/scad/notifications')}>
           <FaBell className="scad-wiggle-bell" />
+          {unreadNotifications > 0 && (
+            <span className="notification-badge">{unreadNotifications}</span>
+          )}
         </div>
 
     {activeSection !== 'appointments' && (
@@ -1504,6 +1750,7 @@ function ScadDashboard() {
        activeSection === 'students' ? 'Students' :
        activeSection === 'reports' ? 'Internship Reports' :
        activeSection === 'statistics' ? 'Statistics' :
+       activeSection === 'evaluations' ? 'Evaluations' :
        `Welcome back, Amr Adel 👋`}
     </h2>
     <p className="scad-subtext">
