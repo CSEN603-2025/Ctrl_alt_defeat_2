@@ -1,70 +1,66 @@
-# Getting Started with Create React App
+# 🎓 GUC Internship System – React Prototype
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This repository contains the front-end prototype for the **GUC Internship System**, developed as part of the Software Engineering course at the German University in Cairo (Spring 2025).
 
-## Available Scripts
+The project is built using **React** and **JavaScript**, and simulates a digital platform that manages the end-to-end process of internship application, review, and evaluation — all through an intuitive user interface.  
+This system is designed for students, faculty members, companies, and the SCAD office.
 
-In the project directory, you can run:
+> **Note:** This is a **front-end only prototype**, built without a backend or database. Dummy data is used to simulate functionality.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🧩 Project Overview
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The system is intended to streamline the following processes:
 
-### `npm test`
+- Internship application and enrollment
+- Submission of student internship reports and company evaluations
+- Review and validation by SCAD
+- Academic review and decision-making by faculty
+- Internship status updates and feedback delivery
+- Access to PRO services for eligible students (e.g., workshops, assessments)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 📁 Project Milestones
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### ✅ Milestone 1 – Requirements Engineering
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### 📄 Part 1 (Manual)
+- Analyzed the internship process at GUC
+- Wrote **50 functional requirements** in user story format (manually)
+- Defined key system modules:
+  - Profile & Identity
+  - Internship Search & Recruitment
+  - Evaluation & Reporting
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### 🤖 Part 2 (AI + Manual Improvement)
+- Generated a new set of **50 functional + 7 non-functional requirements** using chosen AI models
+- Manually improved and validated the AI-generated requirements
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 🎨 Milestone 2 – React Front-End Prototype
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Designed and implemented the full UI using **React**
+- Simulated all key workflows using dummy data
+- Followed UI/UX guidelines from lectures and PM guidance
+- Ensured:
+  - Smooth navigation
+  - Clear feedback
+  - Consistent styling and layout
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🚀 How to Run the Project
 
-## Learn More
+1. Clone the repository and navigate to directory: ctrl-alt-defeat-MS1-P2-A
+2. Install dependencies
+```bash
+npm install 
+```
+3.Start the development server
+```bash
+npm start 
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
